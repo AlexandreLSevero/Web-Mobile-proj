@@ -1,550 +1,162 @@
-Comparação de Localidades — Monitor de Eventos Climáticos
-1. Visão geral
+# Tutorial de Ideação — ClimaMonitor
+### Planejamento de projeto de extensão (Web-mobile) para monitoramento de eventos climáticos
+**ODS 11** — Cidades e Comunidades Sustentáveis · **ODS 13** — Ação contra a Mudança Global do Clima
 
-A funcionalidade "Comparar com outra localidade" pode ser a principal interação do sistema.
+---
 
-Em vez de o usuário apenas consultar as condições climáticas de uma cidade, ele poderá selecionar duas localidades e comparar suas condições climáticas.
+## 1. Contexto e justificativa
 
-Exemplo:
+Eventos climáticos extremos — chuvas intensas, ondas de calor, ventos fortes — têm se tornado mais frequentes e mais intensos, afetando diretamente a rotina e a segurança da população em áreas urbanas.
 
-São Paulo × Rio de Janeiro
+Duas lacunas motivam este projeto:
 
-O objetivo é transformar os dados obtidos pelas APIs em informações compreensíveis, permitindo identificar diferenças, situações extremas e possíveis impactos para a população.
+1. **Falta de informação comparativa e compreensível** sobre condições climáticas: hoje o cidadão comum consulta o clima de um único lugar por vez, sem uma forma simples de entender diferenças e riscos relativos entre localidades.
+2. **Dados meteorológicos dispersos em múltiplas fontes**, cada uma com sua própria unidade e estrutura, o que dificulta que uma pessoa comum extraia uma leitura clara da situação.
 
-O fluxo principal será:
+O projeto **ClimaMonitor** propõe uma solução Web-mobile, de uso direto pelo cidadão, cujo mecanismo central é permitir a **comparação do clima entre duas localidades**, transformando dados brutos de múltiplas APIs em informação compreensível — identificando diferenças, situações extremas e possíveis impactos para quem consulta. Tem caráter de **extensão universitária**: aproxima conhecimento técnico (integração de APIs, tratamento e normalização de dados, visualização de informação) da comunidade, com função educativa e de conscientização.
 
+> Esta versão do planejamento não contempla um usuário gestor público / Defesa Civil. O projeto está desenhado como uma ferramenta de uso direto pelo cidadão.
+
+### Alinhamento com os ODS
+
+| ODS | Meta relacionada | Como o projeto contribui |
+|---|---|---|
+| **ODS 11** | 11.5 — Reduzir mortes e perdas causadas por desastres, incluindo os relacionados à água | Ao comparar localidades, o usuário identifica com mais clareza chuva intensa, risco de alagamento e condições adversas para deslocamento |
+| **ODS 11** | 11.b — Fortalecer a capacidade de planejamento e gestão de riscos nas cidades | Mesmo sem um usuário gestor nesta versão, os dados comparativos ajudam qualquer pessoa a entender riscos do ambiente urbano onde vive ou pretende ir |
+| **ODS 13** | 13.1 — Fortalecer a resiliência e a capacidade de adaptação a riscos climáticos | A orientação gerada a partir da comparação (ex: atenção a alagamentos, calor ou vento) fortalece a capacidade de resposta individual |
+| **ODS 13** | 13.3 — Melhorar a educação, conscientização e capacidade sobre mudança do clima | O fluxo dados → informação → interpretação → conscientização é o núcleo educativo da aplicação |
+
+---
+
+## 2. Objetivos
+
+**Objetivo geral:** desenvolver uma aplicação Web-mobile que permita ao cidadão comparar o clima entre duas localidades de forma simples, compreensível e útil, promovendo consciência sobre riscos climáticos urbanos.
+
+**Objetivos específicos:**
+- Permitir que o usuário compare temperatura, umidade, chuva e vento entre duas localidades, em tempo real;
+- Agregar e normalizar dados de múltiplas fontes (APIs meteorológicas) em uma leitura única e confiável;
+- Classificar a condição de cada localidade por meio de um índice climático próprio da aplicação;
+- Interpretar automaticamente a comparação, explicando qual localidade apresenta maior nível de atenção e por quê;
+- Gerar orientações simples e práticas para a população a partir dessa interpretação;
+- Evoluir, em versões futuras, para comparação por indicador específico e por período histórico.
+
+---
+
+## 3. Público-alvo e persona
+
+O projeto tem **um único tipo de usuário: o cidadão**, que usa o app tanto para curiosidade e planejamento pessoal quanto para se informar sobre riscos.
+
+### Persona — Cidadão
+- **Nome fictício:** Maria, 34 anos.
+- **Cenários de uso:**
+  - Quer saber se está mais seguro viajar para a casa de um familiar em outra cidade esta semana;
+  - Mora em uma região sujeita a alagamentos e quer entender se a situação atual é mais ou menos crítica que a de um bairro vizinho;
+  - Quer decidir, no dia a dia, como se vestir ou se planejar comparando sua cidade com outra.
+- **Necessidade:** uma resposta rápida, visual e em linguagem simples — não um boletim técnico.
+- **Dor:** hoje precisa abrir vários apps de previsão do tempo, um para cada cidade, e ainda assim não tem uma leitura clara de "qual lugar está em situação mais preocupante e por quê".
+
+---
+
+## 4. Metodologia de ideação
+
+O planejamento seguiu estas etapas:
+
+1. **Levantamento do problema** — dificuldade de comparar condições climáticas entre localidades de forma acessível, e mapeamento das metas dos ODS 11 e 13 relacionadas.
+2. **Definição da persona e dos cenários de uso** — construção do perfil do cidadão e das situações em que ele buscaria comparar duas localidades.
+3. **Detalhamento da funcionalidade central** — a comparação de localidades deixou de ser "mais um recurso" e passou a ser o **principal mecanismo de interação do sistema**, estruturando fluxo, backend, cálculo de índice e orientação.
+4. **Wireframe de baixa fidelidade** — tradução do fluxo em telas esquemáticas (`wireframe-climamonitor.html`), validando a navegação antes de qualquer investimento em design visual ou código.
+
+### Funcionalidades priorizadas
+
+| Funcionalidade | Plataforma | Impacto | Prioridade |
+|---|---|---|---|
+| Comparar clima entre duas localidades ("agora") | Mobile + Web | Alto | P0 |
+| Classificação por índice climático próprio | Mobile + Web | Alto | P0 |
+| Análise automática + orientação à população | Mobile + Web | Alto | P0 |
+| Comparação por indicador específico (temperatura, chuva, umidade, vento) | Mobile + Web | Médio | P1 |
+| Mapa simples das duas localidades comparadas | Mobile + Web | Médio | P1 |
+| Localidades favoritas (sem login) | Mobile + Web | Baixo | P2 |
+| Comparação por período (24h / 7 dias / 30 dias) com gráfico histórico | Web (prioritário) + Mobile | Baixo | P2 |
+
+---
+
+## 5. Funcionalidade central: Comparar Localidades
+
+### 5.1 Visão geral
+
+Em vez de o usuário apenas consultar o clima de uma cidade isoladamente, ele seleciona **duas localidades** e recebe uma comparação direta entre elas — por exemplo, **São Paulo × Rio de Janeiro**. O objetivo é transformar dados de múltiplas APIs em informação compreensível, destacando diferenças, situações extremas e possíveis impactos.
+
+### 5.2 Fluxo principal
+
+```
 Usuário
    │
-   │ Escolhe duas localidades
+   │ Escolhe duas localidades (+ período)
    ▼
-Frontend
-   │
-   │ Requisição HTTP
-   ▼
-Backend
-   │
-   ├── Consulta API 1
-   ├── Consulta API 2
-   ├── Consulta API 3
-   └── Consulta API 4
-          │
-          ▼
-     Normalização
-          │
-          ▼
-     Cálculo das médias
-          │
-          ▼
-      Comparação
-          │
-          ▼
-     Classificação
-          │
-          ▼
-       Orientação
-          │
-          ▼
-Frontend
+Frontend ── requisição HTTP ──► Backend
+                                   │
+                    ┌──────────────┼──────────────┬──────────────┐
+                    ▼              ▼              ▼              ▼
+                 API 1          API 2          API 3          API 4
+                    └──────────────┴──────────────┴──────────────┘
+                                   │
+                             Normalização
+                                   │
+                          Cálculo das médias
+                                   │
+                              Comparação
+                                   │
+                             Classificação
+                                   │
+                              Orientação
+                                   │
+                                   ▼
+                               Frontend
+```
 
-2. Objetivo da funcionalidade
+### 5.3 Interface inicial (referência para o wireframe)
 
-A funcionalidade deve permitir que o usuário responda perguntas como:
-
-Qual das duas localidades está mais quente?
-Qual apresenta maior umidade?
-Onde houve maior volume de chuva?
-Qual possui maior velocidade do vento?
-Qual localidade apresenta maior nível de atenção?
-Qual indicador é responsável pela diferença?
-Que orientação pode ser dada à população?
-
-Dessa forma, o sistema não apenas apresenta dados, mas transforma os dados em informação útil para tomada de consciência sobre eventos climáticos.
-
-3. Interface inicial
-
-A tela pode ser simples e conter duas entradas de localização:
-
+```
 ┌─────────────────────────────────────────────┐
-│           COMPARAR LOCALIDADES              │
-│                                             │
-│  Localidade A                               │
-│  [ São Paulo, SP                       ]    │
-│                                             │
-│             ↕ Comparar                      │
-│                                             │
-│  Localidade B                               │
-│  [ Rio de Janeiro, RJ                  ]    │
-│                                             │
-│           [ COMPARAR CLIMA ]                │
+│           COMPARAR LOCALIDADES               │
+│                                               │
+│  Localidade A: [ São Paulo, SP           ]   │
+│  Localidade B: [ Rio de Janeiro, RJ      ]   │
+│  Período:      [ Agora ▾ ]                   │
+│                                               │
+│              [ COMPARAR CLIMA ]              │
 └─────────────────────────────────────────────┘
+```
 
+Recomenda-se implementar inicialmente apenas o período **"Agora"**; as demais opções (24h, 7 dias, 30 dias) entram em versões seguintes.
 
-O usuário seleciona as duas localidades e clica em "Comparar clima".
+### 5.4 Requisição ao backend
 
-Esse clique é responsável por iniciar a comunicação:
-
-Frontend → Backend → APIs → Processamento → Backend → Frontend
-
-4. Fluxo da comparação
-4.1. Seleção das localidades
-
-O usuário informa:
-
-Localidade A: São Paulo, SP
-Localidade B: Rio de Janeiro, RJ
-
-
-Também pode selecionar um período:
-
-Período:
-
-[ Agora ▼ ]
-
-- Agora
-- Últimas 24 horas
-- Últimos 7 dias
-- Últimos 30 dias
-
-
-Inicialmente, recomenda-se implementar apenas "Agora". Os outros períodos podem ser adicionados posteriormente.
-
-4.2. Requisição ao backend
-
-Ao clicar em:
-
-[ COMPARAR CLIMA ]
-
-
-o frontend envia uma requisição para o backend.
-
-Uma possibilidade seria:
-
+```
 POST /comparar
-
-
-Com um corpo semelhante a:
-
 {
   "localidadeA": "São Paulo, SP",
   "localidadeB": "Rio de Janeiro, RJ",
   "periodo": "agora"
 }
+```
 
-5. Processamento no backend
+### 5.5 Processamento no backend
 
-O backend recebe as duas localidades e realiza as consultas necessárias.
+O backend consulta as APIs configuradas para cada localidade, normaliza as unidades (ex.: Fahrenheit → Celsius) e calcula a média entre as fontes antes de comparar os indicadores (temperatura, umidade, chuva, vento).
 
-                 ┌── API 1 ──┐
-São Paulo ───────┼── API 2 ──┤
-                 ├── API 3 ──┤
-                 └── API 4 ──┘
-                       │
-                       ▼
-                  Normalização
-                       │
-                       ▼
-                     Média
+```
+API 1: 24°C        ┐
+API 2: 25°C        ├─► Normalização ─► Média = 24,25°C
+API 3: 23°C (77°F) │
+API 4: 25°C        ┘
+```
 
+O mesmo processo é repetido para a segunda localidade e para os demais indicadores.
 
-                 ┌── API 1 ──┐
-Rio de Janeiro ──┼── API 2 ──┤
-                 ├── API 3 ──┤
-                 └── API 4 ──┘
-                       │
-                       ▼
-                  Normalização
-                       │
-                       ▼
-                     Média
+### 5.6 Resposta do backend (exemplo de contrato)
 
-
-Depois disso, o backend pode comparar:
-
-Temperatura
-Umidade
-Chuva
-Vento
-6. Média das APIs
-
-Como serão utilizadas quatro APIs, o sistema pode combinar os resultados antes de apresentar os dados ao usuário.
-
-Por exemplo:
-
-API 1: 24°C
-API 2: 25°C
-API 3: 23°C
-API 4: 25°C
-
-Média = 24,25°C
-
-
-O mesmo processo pode ser aplicado aos demais indicadores.
-
-É importante que o backend faça a normalização dos dados, pois diferentes APIs podem utilizar unidades ou estruturas diferentes.
-
-Exemplo:
-
-API 1 → temperatura em Celsius
-API 2 → temperatura em Celsius
-API 3 → temperatura em Fahrenheit
-API 4 → temperatura em Celsius
-
-
-Antes da média, todos os valores devem estar na mesma unidade.
-
-7. Resultado da comparação
-
-Depois do processamento, o frontend pode apresentar os dados lado a lado.
-
-┌─────────────────────────────────────────────────┐
-│              RESULTADO DA COMPARAÇÃO            │
-│                                                 │
-│  SÃO PAULO              RIO DE JANEIRO          │
-│                                                 │
-│  🌡️ 24°C                  🌡️ 29°C              │
-│  💧 78%                   💧 72%                │
-│  🌧️ 12 mm                 🌧️ 3 mm              │
-│  💨 18 km/h                💨 21 km/h            │
-│                                                 │
-│  🟡 ATENÇÃO              🟢 NORMAL              │
-└─────────────────────────────────────────────────┘
-
-
-Isso permite que o usuário identifique rapidamente as diferenças.
-
-8. Índice de Condição Climática
-
-Uma evolução interessante é criar um Índice de Condição Climática próprio do projeto.
-
-Esse índice não deve ser apresentado como um índice meteorológico oficial. Ele seria uma metodologia desenvolvida pela própria aplicação para classificar as condições encontradas.
-
-Exemplo:
-
-0 ─────────────────────────────── 100
-
-🟢 0–30     Normal
-🟡 31–60    Atenção
-🟠 61–80    Alerta
-🔴 81–100   Crítico
-
-
-O índice pode considerar os principais indicadores:
-
-Temperatura ──┐
-Umidade ──────┤
-Chuva ────────┼──► Índice climático
-Vento ────────┘
-
-
-Cada indicador pode receber um peso definido pela equipe.
-
-Por exemplo, em uma situação de chuva intensa, o volume de precipitação pode possuir maior influência na classificação.
-
-9. Interpretação da comparação
-
-O sistema não deve limitar-se a mostrar:
-
-São Paulo: 24°C
-Rio de Janeiro: 29°C
-
-
-Ele pode interpretar os resultados.
-
-Exemplo:
-
-São Paulo apresenta maior nível de atenção atualmente.
-
-E explicar:
-
-A classificação está relacionada principalmente ao maior volume de chuva combinado com umidade elevada.
-
-Isso torna o resultado mais compreensível para usuários que não possuem conhecimento técnico sobre meteorologia.
-
-10. Comparação por indicador
-
-Outra interação simples é permitir que o usuário escolha qual indicador deseja analisar.
-
-Comparar por:
-
-(•) Condição geral
-( ) Temperatura
-( ) Chuva
-( ) Umidade
-( ) Vento
-
-
-Se o usuário selecionar chuva, por exemplo:
-
-COMPARAÇÃO DE CHUVA
-
-São Paulo
-████████████████████████ 12 mm
-
-Rio de Janeiro
-██████ 3 mm
-
-São Paulo apresentou
-9 mm a mais de chuva.
-
-
-Essa funcionalidade pode utilizar a mesma estrutura do backend, alterando apenas o indicador solicitado.
-
-11. Comparação geral
-
-Quando o usuário selecionar "Condição geral", o sistema pode analisar todos os indicadores.
-
-Exemplo:
-
-SÃO PAULO
-Temperatura: 24°C
-Umidade: 78%
-Chuva: 12 mm
-Vento: 18 km/h
-
-Índice: 58
-Classificação: 🟡 Atenção
-
-
-RIO DE JANEIRO
-Temperatura: 29°C
-Umidade: 72%
-Chuva: 3 mm
-Vento: 21 km/h
-
-Índice: 32
-Classificação: 🟢 Normal
-
-
-Depois:
-
-ANÁLISE
-
-São Paulo apresenta maior nível de atenção
-em relação ao Rio de Janeiro.
-
-O principal fator de diferença é o volume
-de precipitação registrado.
-
-12. Orientação para a população
-
-Essa é uma das partes mais importantes para relacionar o projeto aos ODS 11 e ODS 13.
-
-O sistema pode transformar a classificação em uma orientação simples.
-
-Exemplo — chuva
-🌧️ Atenção para chuva
-
-O volume de precipitação observado está elevado
-em comparação à outra localidade.
-
-Recomenda-se atenção em áreas sujeitas a
-alagamentos e acompanhamento dos canais
-oficiais de emergência.
-
-Exemplo — temperatura
-🌡️ Temperatura elevada
-
-A temperatura apresenta valores elevados.
-
-Recomenda-se evitar exposição prolongada ao sol,
-manter hidratação adequada e ter atenção especial
-com pessoas mais vulneráveis.
-
-Exemplo — vento
-💨 Ventos fortes
-
-A velocidade do vento está elevada em comparação
-à outra localidade.
-
-Recomenda-se atenção durante deslocamentos e
-acompanhamento dos alertas oficiais.
-
-
-O objetivo não é substituir órgãos oficiais, mas conscientizar o usuário sobre possíveis condições de risco.
-
-13. Relação com os ODS
-ODS 11 — Cidades e Comunidades Sustentáveis
-
-A aplicação pode contribuir para o ODS 11 ao fornecer informações que ajudem a população a compreender condições climáticas que podem afetar o ambiente urbano.
-
-Exemplos:
-
-Chuva intensa;
-Possibilidade de alagamentos;
-Temperaturas elevadas;
-Ventos fortes;
-Condições potencialmente adversas para deslocamento.
-ODS 13 — Ação Contra a Mudança Global do Clima
-
-A aplicação também pode contribuir para o ODS 13 ao aumentar a conscientização sobre eventos e condições climáticas.
-
-A ideia é:
-
-Dados climáticos
-       ↓
-Informação
-       ↓
-Interpretação
-       ↓
-Conscientização
-       ↓
-Comportamento mais informado
-
-
-Assim, o sistema possui uma função educativa além da função técnica.
-
-14. Comparação entre períodos
-
-Depois da primeira versão, a funcionalidade pode evoluir para comparação temporal.
-
-Em vez de:
-
-São Paulo × Rio de Janeiro
-
-
-o usuário poderia escolher:
-
-São Paulo × Rio de Janeiro
-Período: últimos 7 dias
-
-
-O sistema poderia então apresentar a evolução dos indicadores.
-
-Exemplo:
-
-Temperatura média
-
-30° ┤             ╭───╮
-28° ┤       ╭─────╯   ╰──╮
-26° ┤───────╯             ╰
-24° ┤
-    └────────────────────────
-      Seg Ter Qua Qui Sex Sáb
-
-
-Com duas séries, uma para cada localidade.
-
-Isso permite responder perguntas como:
-
-Qual cidade teve maior temperatura média?
-Qual teve maior variação?
-Qual apresentou mais chuva?
-Em qual localidade ocorreram condições mais extremas?
-15. Níveis de evolução
-
-A funcionalidade pode ser desenvolvida progressivamente.
-
-Nível 1 — Comparar agora
-São Paulo × Rio de Janeiro
-
-
-O sistema apresenta:
-
-Temperatura;
-Umidade;
-Chuva;
-Vento;
-Classificação;
-Orientação.
-Nível 2 — Comparar indicadores
-
-O usuário escolhe:
-
-Temperatura
-Chuva
-Umidade
-Vento
-Condição geral
-
-
-O sistema destaca o indicador selecionado.
-
-Nível 3 — Comparar períodos
-
-O usuário escolhe:
-
-Agora
-Últimas 24 horas
-Últimos 7 dias
-Últimos 30 dias
-
-
-O sistema apresenta a evolução dos dados.
-
-Nível 4 — Identificação de condições extremas
-
-O sistema pode identificar situações em que determinados valores ultrapassam os limites definidos pela metodologia.
-
-Exemplo:
-
-⚠️ Condição extrema identificada
-
-São Paulo apresentou volume de chuva
-significativamente superior ao da localidade
-comparada.
-
-16. Interface completa proposta
-
-Uma tela inicial poderia ser estruturada assim:
-
-┌─────────────────────────────────────────────────┐
-│              MONITOR CLIMÁTICO                  │
-│                                                 │
-│ Compare as condições climáticas de localidades  │
-│                                                 │
-│  Localidade A            Localidade B           │
-│ ┌─────────────────┐     ┌─────────────────┐    │
-│ │ São Paulo       │ ⇄   │ Rio de Janeiro  │    │
-│ └─────────────────┘     └─────────────────┘    │
-│                                                 │
-│ Período: [ Agora ▼ ]                            │
-│                                                 │
-│             [ COMPARAR ]                        │
-│                                                 │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│              RESULTADO                          │
-│                                                 │
-│  SÃO PAULO              RIO DE JANEIRO          │
-│                                                 │
-│  🌡️ 24°C                  🌡️ 29°C              │
-│  💧 78%                   💧 72%                │
-│  🌧️ 12 mm                 🌧️ 3 mm              │
-│  💨 18 km/h                💨 21 km/h            │
-│                                                 │
-│  🟡 ATENÇÃO              🟢 NORMAL              │
-│                                                 │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│             ANÁLISE DA COMPARAÇÃO               │
-│                                                 │
-│  São Paulo apresenta maior nível de atenção.    │
-│                                                 │
-│  O principal fator de diferença é o volume      │
-│  de precipitação.                               │
-│                                                 │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│       ORIENTAÇÃO PARA A POPULAÇÃO               │
-│                                                 │
-│  🌧️ Atenção para áreas sujeitas a alagamentos. │
-│                                                 │
-└─────────────────────────────────────────────────┘
-
-17. API do backend
-
-Uma estrutura inicial simples pode ser:
-
-POST /comparar
-
-Request
-{
-  "localidadeA": "São Paulo, SP",
-  "localidadeB": "Rio de Janeiro, RJ",
-  "periodo": "agora"
-}
-
-Response
+```json
 {
   "localidadeA": {
     "nome": "São Paulo",
@@ -576,156 +188,178 @@ Response
     "mensagem": "Atenção para áreas sujeitas a alagamentos."
   }
 }
+```
+*Valores meramente ilustrativos; os dados reais virão das APIs integradas.*
 
+### 5.7 Índice Climático (classificação própria da aplicação)
 
-Os valores acima são apenas exemplos de estrutura. Os valores reais serão provenientes das APIs.
+Um **Índice de Condição Climática** próprio — não um índice meteorológico oficial — resume os indicadores (temperatura, umidade, chuva, vento, cada um com peso definido pela equipe) em uma escala única:
 
-18. Arquitetura
+| Faixa | Classificação |
+|---|---|
+| 0–30 | 🟢 Normal |
+| 31–60 | 🟡 Atenção |
+| 61–80 | 🟠 Alerta |
+| 81–100 | 🔴 Crítico |
 
-Uma arquitetura simples pode ser:
+### 5.8 Interpretação e orientação
 
+O sistema não se limita a mostrar números lado a lado — ele **interpreta** o resultado e **orienta** o usuário. Exemplo de leitura automática:
+
+> *"São Paulo apresenta maior nível de atenção atualmente. A classificação está relacionada principalmente ao maior volume de chuva combinado com umidade elevada."*
+
+E a orientação correspondente:
+
+> 🌧️ *Atenção para chuva* — o volume de precipitação está elevado em comparação à outra localidade. Recomenda-se atenção em áreas sujeitas a alagamentos e acompanhamento dos canais oficiais.
+
+O mesmo padrão se aplica a temperatura elevada (hidratação, evitar exposição prolongada ao sol) e ventos fortes (atenção em deslocamentos). O objetivo não é substituir órgãos oficiais, mas conscientizar o usuário sobre possíveis condições de risco.
+
+### 5.9 Comparação por indicador
+
+Além da visão geral, o usuário pode escolher analisar um único indicador:
+
+```
+Comparar por:  (•) Geral   ( ) Temperatura   ( ) Chuva   ( ) Umidade   ( ) Vento
+
+CHUVA
+São Paulo         ████████████████████████ 12 mm
+Rio de Janeiro    ██████ 3 mm
+
+São Paulo apresentou 9 mm a mais de chuva.
+```
+
+### 5.10 Evolução temporal (versão futura, priorizada na Web)
+
+Com a seleção de período (24h / 7 dias / 30 dias), o sistema passa a apresentar a evolução dos indicadores em um gráfico com duas séries — uma por localidade — respondendo perguntas como "qual cidade teve maior variação" ou "onde ocorreram condições mais extremas no período".
+
+---
+
+## 6. Níveis de evolução da funcionalidade
+
+| Nível | Escopo |
+|---|---|
+| **1 — Comparar agora** | Duas localidades, indicadores atuais, classificação e orientação |
+| **2 — Comparar por indicador** | Usuário escolhe temperatura, chuva, umidade, vento ou geral |
+| **3 — Comparar por período** | 24h, 7 dias, 30 dias, com gráfico de evolução |
+| **4 — Condições extremas** | Sistema sinaliza quando um valor ultrapassa limites definidos pela metodologia |
+
+### O que evitar na primeira versão
+
+Para manter o escopo enxuto e viável para um projeto de extensão, recomenda-se **não** implementar de início: login/cadastro de usuários, sistema de permissões, mapas avançados, notificações push, previsões de longo prazo, inteligência artificial, banco de dados complexo, muitos filtros ou dashboards com muitos gráficos. Esses itens ficam como evoluções futuras (Seção 8).
+
+---
+
+## 7. Arquitetura de telas (o que está no wireframe)
+
+O protótipo visual (`wireframe-climamonitor.html`) tem duas abas — **App Mobile** e **Versão Web** — ambas para o mesmo usuário (cidadão), sem tela ou fluxo de gestor público.
+
+### 7.1 App Mobile
+
+| # | Tela | Função no fluxo |
+|---|---|---|
+| 1 | Comparar (início) | Seleção de Localidade A, Localidade B e período; sem necessidade de login |
+| 2 | Resultado da comparação | Temperatura, umidade, chuva e vento lado a lado, com badge de classificação e índice climático |
+| 3 | Análise e orientação | Texto interpretativo automático + recomendação prática para a população |
+| 4 | Comparar por indicador | Seleção de um indicador específico com barras comparativas |
+| 5 | Mapa das localidades | Visualização espacial simples das duas localidades comparadas |
+| 6 | Favoritos | Pares de localidades salvos localmente, sem conta de usuário |
+
+### 7.2 Versão Web
+
+| # | Tela | Função no fluxo |
+|---|---|---|
+| 1 | Comparar clima (início) | Mesma seleção de localidades e período, em layout mais amplo |
+| 2 | Resultado e evolução histórica | KPIs comparativos e gráfico de série temporal (quando o período selecionado for diferente de "Agora") |
+| 3 | Comparação por indicador | Tabela comparativa detalhada por indicador |
+| 4 | Mapa das localidades comparadas | Mesma lógica do mobile, adaptada a tela maior |
+
+---
+
+## 8. Fluxo de uso resumido
+
+```
+CIDADÃO
+   │
+   ├─ Abre o app (sem login)
+   ├─ Escolhe Localidade A e Localidade B
+   ├─ Escolhe o período (inicialmente apenas "Agora")
+   ├─ Toca em "Comparar clima"
+   ├─ Vê o resultado lado a lado + índice climático
+   ├─ Lê a análise automática e a orientação
+   ├─ (Opcional) Aprofunda por indicador específico
+   ├─ (Opcional) Visualiza as localidades no mapa
+   └─ (Opcional) Salva a comparação em Favoritos
+```
+
+---
+
+## 9. Arquitetura técnica (visão geral)
+
+```
 ┌──────────────────────┐
 │      FRONTEND        │
-│                      │
-│ Escolha das cidades  │
-│ Seleção do período   │
-│ Botão comparar       │
-│ Visualização         │
+│  Escolha das cidades │
+│  Seleção do período  │
+│  Botão comparar      │
+│  Visualização        │
 └──────────┬───────────┘
-           │
            │ HTTP
            ▼
 ┌──────────────────────┐
 │       BACKEND        │
-│                      │
-│ Controller           │
-│        ↓             │
-│ Service              │
-│        ↓             │
-│ Normalização         │
-│        ↓             │
-│ Cálculo das médias   │
-│        ↓             │
-│ Comparação           │
-│        ↓             │
-│ Classificação        │
-│        ↓             │
-│ Orientação           │
+│  Controller          │
+│  Service             │
+│  Normalização        │
+│  Cálculo das médias  │
+│  Comparação          │
+│  Classificação       │
+│  Orientação          │
 └──────────┬───────────┘
            │
-           ├──────── API 1
-           ├──────── API 2
-           ├──────── API 3
-           └──────── API 4
+           ├──── API 1
+           ├──── API 2
+           ├──── API 3
+           └──── API 4
+```
 
-19. O que evitar inicialmente
+---
 
-Para manter o projeto simples e extensível, não é necessário implementar tudo de uma vez.
+## 10. Tecnologias sugeridas (para a próxima fase)
 
-Evitar inicialmente:
+> Sugestão de stack — a ser validada pela equipe conforme os recursos e conhecimentos disponíveis no grupo de extensão.
 
-Login;
-Cadastro de usuários;
-Sistema complexo de permissões;
-Mapas avançados;
-Notificações;
-Previsões de 30 dias;
-Inteligência artificial;
-Banco de dados complexo;
-Dezenas de filtros;
-Dashboard com muitos gráficos.
+- **Mobile:** React Native ou Flutter (multiplataforma, reduz custo de manutenção em equipe pequena).
+- **Web:** React ou Vue.js.
+- **Backend/API:** Node.js ou Python (Django/FastAPI), responsável por consultar as APIs meteorológicas, normalizar unidades, calcular médias e gerar a classificação/orientação.
+- **APIs meteorológicas:** integrar 2 a 4 fontes públicas (ex.: OpenWeatherMap, INMET, CEMADEN, WeatherAPI) para compor a média e reduzir a dependência de uma única fonte.
+- **Gráficos (versão futura):** Chart.js ou Recharts para a evolução temporal por período.
 
-Esses recursos podem ficar como possibilidades futuras.
+---
 
-20. Escopo recomendado para a primeira versão
+## 11. Próximos passos sugeridos
 
-A primeira versão pode possuir somente:
+1. **Validação do wireframe** com um pequeno grupo de usuários reais, coletando feedback sobre a clareza do resultado, do índice climático e da orientação.
+2. **Implementação do Nível 1** (comparar "agora", sem login) como primeira entrega funcional.
+3. **Definição dos pesos do índice climático** junto à equipe, com base em referências de órgãos meteorológicos, deixando claro que é uma metodologia própria da aplicação.
+4. **Testes de usabilidade** com tarefas guiadas (ex.: "compare o clima da sua cidade com o de um familiar e diga qual está em situação de maior atenção").
+5. **Evolução gradual**: comparação por indicador → comparação por período com gráficos → identificação de condições extremas → (possíveis versões futuras) mapas, alertas e monitoramento contínuo.
 
-1. Usuário escolhe Localidade A
-             ↓
-2. Usuário escolhe Localidade B
-             ↓
-3. Usuário clica em "Comparar"
-             ↓
-4. Frontend chama o backend
-             ↓
-5. Backend consulta as 4 APIs
-             ↓
-6. Backend normaliza os dados
-             ↓
-7. Backend calcula as médias
-             ↓
-8. Backend compara os indicadores
-             ↓
-9. Backend gera classificação
-             ↓
-10. Backend gera orientação
-             ↓
-11. Frontend apresenta resultado
+---
 
+## 12. Ideia central do projeto
 
-Isso já demonstra:
+> "Não apenas mostrar o clima, mas transformar diferentes fontes de dados climáticos em uma comparação simples, compreensível e útil para a população."
 
-Interação com o usuário;
-Comunicação frontend/backend;
-Consumo de APIs externas;
-Tratamento de dados;
-Normalização;
-Cálculos;
-Comparação;
-Classificação;
-Visualização;
-Orientação à população;
-Relação com os ODS 11 e 13.
-21. Possíveis extensões futuras
+```
+4 APIs → Dados climáticos → Normalização e média → Comparação entre localidades
+   → Classificação → Orientação → Conscientização da população
+```
 
-A arquitetura pode permitir evoluções como:
+A funcionalidade **Comparar Localidades** deixa de ser "mais um recurso visual" e passa a ser o principal mecanismo de interação do sistema, conectando a parte técnica do projeto à proposta extensionista e aos ODS 11 e 13.
 
-Versão 1
-└── Comparar duas localidades agora
+---
 
-Versão 2
-├── Comparar indicadores específicos
-└── Inverter localidades
+## 13. Como usar este material
 
-Versão 3
-├── Comparar últimos 24h
-├── Comparar últimos 7 dias
-└── Gráficos históricos
-
-Versão 4
-├── Identificação de eventos extremos
-├── Histórico de comparações
-└── Ranking de localidades
-
-Versão 5
-├── Alertas
-├── Mapas
-└── Monitoramento contínuo
-
-22. Ideia central do projeto
-
-A principal ideia pode ser resumida em:
-
-"Não apenas mostrar o clima, mas transformar diferentes fontes de dados climáticos em uma comparação simples, compreensível e útil para a população."
-
-O diferencial da aplicação estaria no fluxo:
-
-4 APIs
-   ↓
-Dados climáticos
-   ↓
-Média e normalização
-   ↓
-Comparação entre localidades
-   ↓
-Identificação de condições relevantes
-   ↓
-Classificação
-   ↓
-Orientação
-   ↓
-Conscientização da população
-
-
-Dessa forma, a funcionalidade "Comparar com outra localidade" deixa de ser apenas um recurso visual e passa a ser o principal mecanismo de interação do sistema, conectando a parte técnica do projeto com sua proposta extensionista e com os ODS 11 e 13.
+- **`wireframe-climamonitor.html`** — abra no navegador; use as abas "App Mobile" e "Versão Web" no topo. Todas as telas representam o mesmo usuário (cidadão); não há tela de gestor público nesta versão.
+- **Este documento** — serve como registro escrito do processo de ideação, podendo ser anexado ao relatório do projeto de extensão ou usado como roteiro de apresentação para a banca/orientador.

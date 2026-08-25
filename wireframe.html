@@ -47,22 +47,23 @@
   .caption-below{ font-size:10px; color:#777; margin-top:8px; text-align:left; }
 
   .phone{
-    width:220px; height:420px; border:2px solid var(--ink); border-radius:16px;
+    width:220px; height:430px; border:2px solid var(--ink); border-radius:16px;
     background:var(--paper); padding:12px 10px; overflow:hidden; position:relative;
   }
   .topbar{ font-size:11px; font-weight:bold; text-align:center; padding-bottom:6px; border-bottom:1px solid var(--ink); margin-bottom:8px; }
 
   .ph-line{ height:7px; background:#ddd; margin:5px 0; border-radius:2px; }
   .w40{ width:40%; } .w60{ width:60%; } .w80{ width:80%; } .w100{ width:100%; }
-  .ph-box{ border:1px solid var(--line); display:flex; align-items:center; justify-content:center; font-size:9px; color:#999; }
+  .ph-box{ border:1px solid var(--line); display:flex; align-items:center; justify-content:center; font-size:9px; color:#999; text-align:center; }
   .ph-button{ border:1px solid var(--ink); text-align:center; font-size:10px; padding:6px 0; margin:6px 0; background:#fff; }
   .ph-chip{ display:inline-block; border:1px solid var(--ink); font-size:9px; padding:3px 8px; margin:2px 3px 2px 0; border-radius:10px; }
+  .ph-chip.on{ background:var(--ink); color:#fff; }
 
-  .card{ border:1px solid var(--ink); padding:7px; margin-bottom:7px; }
+  .card{ border:1px solid var(--ink); padding:7px; margin-bottom:7px; text-align:left; }
   .row-between{ display:flex; justify-content:space-between; align-items:center; }
   .badge{ border:1px solid var(--ink); font-size:9px; padding:2px 6px; }
 
-  .list-item{ display:flex; gap:7px; border-bottom:1px solid #eee; padding:6px 0; }
+  .list-item{ display:flex; gap:7px; border-bottom:1px solid #eee; padding:6px 0; text-align:left; }
   .ic-sq{ width:22px;height:22px;border:1px solid var(--ink); flex:0 0 auto; display:flex;align-items:center;justify-content:center; font-size:9px;}
 
   .map-box{ height:110px; border:1px solid var(--line); position:relative; background:#fafafa; }
@@ -72,13 +73,18 @@
     position:absolute; bottom:6px; left:6px; right:6px;
     display:flex; justify-content:space-between; border-top:1px solid var(--ink); padding-top:5px;
   }
-  .bottomnav .item{ font-size:8px; text-align:center; width:19%; }
+  .bottomnav .item{ font-size:8px; text-align:center; width:24%; }
   .bottomnav .item .ic{ width:12px;height:12px;border:1px solid var(--ink); border-radius:50%; margin:0 auto 2px; }
   .bottomnav .item.on .ic{ background:var(--ink); }
 
   .compare-cols{ display:flex; gap:6px; }
-  .compare-col{ flex:1; border:1px solid var(--line); padding:5px; font-size:9px; }
-  .compare-col .val{ font-size:13px; font-weight:bold; }
+  .compare-col{ flex:1; border:1px solid var(--line); padding:5px; font-size:9px; text-align:left; }
+  .compare-col .val{ font-size:12px; font-weight:bold; }
+  .compare-col .name{ font-weight:bold; font-size:9px; margin-bottom:3px; }
+
+  .bar-row{ margin:6px 0; text-align:left; }
+  .bar-label{ font-size:9px; margin-bottom:2px; }
+  .bar{ height:12px; background:#ddd; border:1px solid var(--ink); }
 
   /* ---- web ---- */
   .browser{ border:2px solid var(--ink); background:var(--paper); margin-bottom:34px; }
@@ -86,14 +92,11 @@
   .browser-top .dot{ width:7px;height:7px;border-radius:50%; background:var(--ink); }
   .browser-top .url{ flex:1; font-size:10px; border:1px solid var(--line); background:#fff; padding:2px 8px; margin-left:8px; color:#666; }
   .browser-body{ padding:16px; }
-  .web-grid{ display:grid; grid-template-columns:150px 1fr; gap:16px; min-height:300px; }
-  .sidebar{ border-right:1px solid var(--line); padding-right:10px; }
-  .sidebar .ph-line{ margin:12px 0; }
+  .web-grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px; min-height:280px; }
   .kpi-row{ display:flex; gap:10px; margin-bottom:12px; }
   .kpi{ flex:1; border:1px solid var(--ink); padding:8px; text-align:center; }
   .kpi .big{ font-size:18px; font-weight:bold; }
   .kpi .cap{ font-size:9px; color:#666; }
-  .two-col{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
   table.wire{ width:100%; border-collapse:collapse; font-size:10px; }
   table.wire th, table.wire td{ border:1px solid var(--line); padding:6px 8px; text-align:left; }
   table.wire th{ background:#eee; }
@@ -105,7 +108,7 @@
 
 <header>
   <h1>ClimaMonitor — Wireframe</h1>
-  <p class="subtitle">Projeto de extensão · Monitor de eventos climáticos urbanos · Web-mobile</p>
+  <p class="subtitle">Projeto de extensão · Comparador de clima entre localidades · Web-mobile · Uso direto pelo cidadão</p>
   <div class="ods-tags">
     <div class="ods-tag">ODS 11 — Cidades e Comunidades Sustentáveis</div>
     <div class="ods-tag">ODS 13 — Ação contra a Mudança Global do Clima</div>
@@ -113,291 +116,259 @@
 </header>
 
 <nav class="tabs">
-  <button class="active" data-tab="mobile">App Mobile (Cidadão)</button>
-  <button data-tab="web">Painel Web (Gestor)</button>
+  <button class="active" data-tab="mobile">App Mobile</button>
+  <button data-tab="web">Versão Web</button>
 </nav>
 
 <!-- ================= MOBILE ================= -->
 <section class="panel active" id="mobile">
-  <div class="legend">Caixa cinza = texto · retângulo com borda = botão · caixa "IMG/GRÁFICO" = imagem ou gráfico</div>
+  <div class="legend">Sem login/cadastro na primeira versão. Caixa cinza = texto · retângulo com borda = botão · caixa "GRÁFICO" = imagem ou gráfico.</div>
 
   <div class="mobile-row">
 
-    <!-- 1 ENTRAR -->
+    <!-- 1 COMPARAR (TELA INICIAL) -->
     <div class="screen-block">
-      <div class="screen-label">1. Entrar</div>
+      <div class="screen-label">1. Comparar (início)</div>
       <div class="phone">
-        <div style="margin-top:70px; text-align:center;">
-          <div class="ph-box" style="width:60px;height:60px;margin:0 auto 12px;">LOGO</div>
-          <div class="ph-line w60" style="margin:0 auto 6px;"></div>
-          <div class="ph-line w40" style="margin:0 auto 24px;"></div>
-        </div>
-        <div class="ph-button">ENTRAR</div>
-        <div class="ph-button">CRIAR CONTA</div>
-      </div>
-      <div class="caption-below">Cadastro pede bairro/cidade para vincular o usuário a uma área monitorada.</div>
-    </div>
-
-    <!-- 2 INÍCIO -->
-    <div class="screen-block">
-      <div class="screen-label">2. Início</div>
-      <div class="phone">
-        <div class="topbar">OLÁ, MARIA</div>
-        <div class="card">
-          <div class="row-between"><div class="ph-line w60" style="margin:0;"></div><div class="badge">MODERADO</div></div>
-          <div class="ph-line w40"></div>
-        </div>
-        <div class="ph-line w60" style="font-weight:bold;">ALERTAS ATIVOS</div>
-        <div class="list-item"><div class="ic-sq">!</div><div style="flex:1;"><div class="ph-line w100"></div><div class="ph-line w60"></div></div></div>
-        <div class="list-item"><div class="ic-sq">!</div><div style="flex:1;"><div class="ph-line w80"></div><div class="ph-line w40"></div></div></div>
+        <div class="topbar">CLIMAMONITOR</div>
+        <div class="ph-line w80" style="margin:0 auto 10px;text-align:center;">Compare o clima de duas localidades</div>
+        <div class="ph-line w40" style="font-size:9px;">LOCALIDADE A</div>
+        <div class="ph-button" style="text-align:left;padding-left:8px;">São Paulo, SP</div>
+        <div class="ph-line w40" style="font-size:9px;margin-top:4px;">LOCALIDADE B</div>
+        <div class="ph-button" style="text-align:left;padding-left:8px;">Rio de Janeiro, RJ</div>
+        <div class="ph-line w40" style="font-size:9px;margin-top:4px;">PERÍODO</div>
+        <div class="ph-button" style="text-align:left;padding-left:8px;">Agora ▾</div>
+        <div class="ph-button" style="margin-top:10px;background:var(--ink);color:#fff;">COMPARAR CLIMA</div>
         <div class="bottomnav">
-          <div class="item on"><div class="ic"></div>Início</div>
-          <div class="item"><div class="ic"></div>Mapa</div>
-          <div class="item"><div class="ic"></div>Comparar</div>
-          <div class="item"><div class="ic"></div>Reportar</div>
-          <div class="item"><div class="ic"></div>Perfil</div>
-        </div>
-      </div>
-      <div class="caption-below">Resumo do risco atual da região do usuário e alertas em aberto.</div>
-    </div>
-
-    <!-- 3 MAPA -->
-    <div class="screen-block">
-      <div class="screen-label">3. Mapa de riscos</div>
-      <div class="phone">
-        <div class="topbar">MAPA DE EVENTOS</div>
-        <div><span class="ph-chip">Enchente</span><span class="ph-chip">Deslizamento</span><span class="ph-chip">Calor</span></div>
-        <div class="map-box" style="height:230px; margin-top:8px;">
-          <div class="pin" style="top:20px;left:30px;">E</div>
-          <div class="pin" style="top:70px;left:110px;">D</div>
-          <div class="pin" style="top:140px;left:50px;">C</div>
-        </div>
-        <div class="bottomnav">
-          <div class="item"><div class="ic"></div>Início</div>
-          <div class="item on"><div class="ic"></div>Mapa</div>
-          <div class="item"><div class="ic"></div>Comparar</div>
-          <div class="item"><div class="ic"></div>Reportar</div>
-          <div class="item"><div class="ic"></div>Perfil</div>
-        </div>
-      </div>
-      <div class="caption-below">Toque em um marcador abre um card resumo do evento naquele ponto.</div>
-    </div>
-
-    <!-- 4 COMPARAR (NOVA) -->
-    <div class="screen-block">
-      <div class="screen-label">4. Comparar clima ★ novo</div>
-      <div class="phone">
-        <div class="topbar">COMPARAR LOCALIDADES</div>
-        <div class="ph-line w40" style="font-size:9px;">LOCAL A</div>
-        <div class="ph-button" style="text-align:left;padding-left:8px;">Selecionar cidade/bairro ▾</div>
-        <div class="ph-line w40" style="font-size:9px;margin-top:4px;">LOCAL B</div>
-        <div class="ph-button" style="text-align:left;padding-left:8px;">Selecionar cidade/bairro ▾</div>
-
-        <div class="compare-cols" style="margin-top:8px;">
-          <div class="compare-col">
-            <div class="ph-line w60" style="margin:0 0 4px;"></div>
-            <div class="val">28°C</div>
-            <div>Umidade: 55%</div>
-            <div>Risco: Moderado</div>
-          </div>
-          <div class="compare-col">
-            <div class="ph-line w60" style="margin:0 0 4px;"></div>
-            <div class="val">19°C</div>
-            <div>Umidade: 80%</div>
-            <div>Risco: Alto</div>
-          </div>
-        </div>
-
-        <div class="ph-box" style="height:80px;margin-top:8px;">GRÁFICO COMPARATIVO (7 DIAS)</div>
-        <div class="ph-button" style="margin-top:6px;background:var(--ink);color:#fff;">COMPARAR</div>
-        <div class="bottomnav">
-          <div class="item"><div class="ic"></div>Início</div>
-          <div class="item"><div class="ic"></div>Mapa</div>
           <div class="item on"><div class="ic"></div>Comparar</div>
-          <div class="item"><div class="ic"></div>Reportar</div>
-          <div class="item"><div class="ic"></div>Perfil</div>
+          <div class="item"><div class="ic"></div>Indicador</div>
+          <div class="item"><div class="ic"></div>Mapa</div>
+          <div class="item"><div class="ic"></div>Favoritos</div>
         </div>
       </div>
-      <div class="caption-below">Usuário escolhe duas localidades (ex: cidade atual x cidade de familiares) e vê lado a lado temperatura, umidade, risco e histórico recente.</div>
+      <div class="caption-below">Tela de entrada do app. Nenhum cadastro é necessário: o usuário escolhe as duas localidades e o período e toca em "Comparar clima".</div>
     </div>
 
-    <!-- 5 REPORTAR -->
+    <!-- 2 RESULTADO -->
     <div class="screen-block">
-      <div class="screen-label">5. Reportar</div>
+      <div class="screen-label">2. Resultado da comparação</div>
       <div class="phone">
-        <div class="topbar">NOVO REPORT</div>
-        <div class="ph-line w40" style="font-size:9px;">TIPO DE EVENTO</div>
-        <div class="ph-button" style="text-align:left;padding-left:8px;">Selecionar ▾</div>
-        <div class="ph-line w40" style="font-size:9px;margin-top:6px;">FOTO</div>
-        <div class="ph-box" style="height:60px;">IMG</div>
-        <div class="ph-line w60" style="font-size:9px;margin-top:6px;">📍 Localização automática</div>
-        <div class="ph-line w40" style="font-size:9px;margin-top:6px;">DESCRIÇÃO</div>
-        <div class="ph-box" style="height:40px;"></div>
-        <div class="ph-button" style="margin-top:8px;background:var(--ink);color:#fff;">ENVIAR</div>
+        <div class="topbar">RESULTADO</div>
+        <div class="compare-cols">
+          <div class="compare-col">
+            <div class="name">SÃO PAULO</div>
+            <div>🌡️ <span class="val">24°C</span></div>
+            <div>💧 Umidade: 78%</div>
+            <div>🌧️ Chuva: 12mm</div>
+            <div>💨 Vento: 18km/h</div>
+            <div class="badge" style="margin-top:4px;">🟡 ATENÇÃO</div>
+          </div>
+          <div class="compare-col">
+            <div class="name">RIO DE JANEIRO</div>
+            <div>🌡️ <span class="val">29°C</span></div>
+            <div>💧 Umidade: 72%</div>
+            <div>🌧️ Chuva: 3mm</div>
+            <div>💨 Vento: 21km/h</div>
+            <div class="badge" style="margin-top:4px;">🟢 NORMAL</div>
+          </div>
+        </div>
+        <div class="ph-line w60" style="font-size:9px;margin-top:8px;">ÍNDICE CLIMÁTICO (0–100)</div>
+        <div class="ph-box" style="height:34px;">SP: 58 &nbsp;|&nbsp; RJ: 32</div>
+        <div class="ph-button" style="margin-top:8px;">VER ANÁLISE E ORIENTAÇÃO ▸</div>
         <div class="bottomnav">
-          <div class="item"><div class="ic"></div>Início</div>
+          <div class="item on"><div class="ic"></div>Comparar</div>
+          <div class="item"><div class="ic"></div>Indicador</div>
           <div class="item"><div class="ic"></div>Mapa</div>
-          <div class="item"><div class="ic"></div>Comparar</div>
-          <div class="item on"><div class="ic"></div>Reportar</div>
-          <div class="item"><div class="ic"></div>Perfil</div>
+          <div class="item"><div class="ic"></div>Favoritos</div>
         </div>
       </div>
-      <div class="caption-below">Localização preenchida automaticamente por GPS (edição opcional).</div>
+      <div class="caption-below">Valores exibidos são a média normalizada de múltiplas APIs meteorológicas. O índice climático é uma classificação própria da aplicação (não oficial).</div>
     </div>
 
-    <!-- 6 PERFIL -->
+    <!-- 3 ANÁLISE E ORIENTAÇÃO -->
     <div class="screen-block">
-      <div class="screen-label">6. Perfil</div>
+      <div class="screen-label">3. Análise e orientação</div>
       <div class="phone">
-        <div class="topbar">MEU PERFIL</div>
-        <div class="ph-box" style="width:50px;height:50px;border-radius:50%;margin:0 auto 8px;"></div>
-        <div class="ph-line w40" style="margin:0 auto;"></div>
-        <div class="ph-line w60" style="margin:4px auto 16px;"></div>
-        <div class="ph-line w40" style="font-size:9px;font-weight:bold;">ÁREA MONITORADA</div>
-        <div class="ph-line w80"></div>
-        <div class="ph-line w40" style="font-size:9px;font-weight:bold;margin-top:10px;">NOTIFICAÇÕES</div>
-        <div class="ph-line w60"></div>
-        <div class="ph-line w60"></div>
-        <div class="ph-button" style="margin-top:14px;">SAIR</div>
+        <div class="topbar">‹ VOLTAR &nbsp; ANÁLISE</div>
+        <div class="card">
+          <div class="ph-line w40" style="font-weight:bold;">LEITURA DA COMPARAÇÃO</div>
+          <div class="ph-line w100"></div>
+          <div class="ph-line w80"></div>
+          <div class="ph-line w60"></div>
+        </div>
+        <div class="card" style="border-style:dashed;">
+          <div class="ph-line w40" style="font-weight:bold;">🌧️ ORIENTAÇÃO</div>
+          <div class="ph-line w100"></div>
+          <div class="ph-line w100"></div>
+          <div class="ph-line w60"></div>
+        </div>
+        <div class="ph-button">COMPARTILHAR RESULTADO</div>
         <div class="bottomnav">
-          <div class="item"><div class="ic"></div>Início</div>
+          <div class="item on"><div class="ic"></div>Comparar</div>
+          <div class="item"><div class="ic"></div>Indicador</div>
           <div class="item"><div class="ic"></div>Mapa</div>
-          <div class="item"><div class="ic"></div>Comparar</div>
-          <div class="item"><div class="ic"></div>Reportar</div>
-          <div class="item on"><div class="ic"></div>Perfil</div>
+          <div class="item"><div class="ic"></div>Favoritos</div>
         </div>
       </div>
-      <div class="caption-below">Dados da conta, área monitorada e preferências de notificação.</div>
+      <div class="caption-below">Texto interpretativo explicando qual localidade tem maior nível de atenção e por quê, seguido de uma recomendação prática — sem substituir órgãos oficiais.</div>
+    </div>
+
+    <!-- 4 COMPARAR POR INDICADOR -->
+    <div class="screen-block">
+      <div class="screen-label">4. Comparar por indicador</div>
+      <div class="phone">
+        <div class="topbar">COMPARAR POR INDICADOR</div>
+        <div>
+          <span class="ph-chip on">Geral</span><span class="ph-chip">Temp.</span><span class="ph-chip">Chuva</span><span class="ph-chip">Umid.</span><span class="ph-chip">Vento</span>
+        </div>
+        <div class="ph-line w60" style="font-size:9px;margin-top:10px;">CHUVA (mm)</div>
+        <div class="bar-row">
+          <div class="bar-label">São Paulo — 12mm</div>
+          <div class="bar" style="width:90%;"></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Rio de Janeiro — 3mm</div>
+          <div class="bar" style="width:25%;"></div>
+        </div>
+        <div class="ph-line w100" style="font-size:9px;margin-top:6px;">São Paulo apresentou 9mm a mais de chuva.</div>
+        <div class="bottomnav">
+          <div class="item"><div class="ic"></div>Comparar</div>
+          <div class="item on"><div class="ic"></div>Indicador</div>
+          <div class="item"><div class="ic"></div>Mapa</div>
+          <div class="item"><div class="ic"></div>Favoritos</div>
+        </div>
+      </div>
+      <div class="caption-below">Usuário escolhe um único indicador para aprofundar a comparação, com barras proporcionais e uma leitura direta da diferença.</div>
+    </div>
+
+    <!-- 5 MAPA -->
+    <div class="screen-block">
+      <div class="screen-label">5. Mapa das localidades</div>
+      <div class="phone">
+        <div class="topbar">MAPA</div>
+        <div class="map-box" style="height:280px;">
+          <div class="pin" style="top:40px;left:40px;">A</div>
+          <div class="pin" style="top:150px;left:140px;">B</div>
+        </div>
+        <div class="ph-line w100" style="font-size:9px;margin-top:6px;">A: São Paulo, SP &nbsp;·&nbsp; B: Rio de Janeiro, RJ</div>
+        <div class="bottomnav">
+          <div class="item"><div class="ic"></div>Comparar</div>
+          <div class="item"><div class="ic"></div>Indicador</div>
+          <div class="item on"><div class="ic"></div>Mapa</div>
+          <div class="item"><div class="ic"></div>Favoritos</div>
+        </div>
+      </div>
+      <div class="caption-below">Visualização espacial simples das duas localidades comparadas, reforçando a leitura do impacto urbano (ODS 11).</div>
+    </div>
+
+    <!-- 6 FAVORITOS -->
+    <div class="screen-block">
+      <div class="screen-label">6. Favoritos</div>
+      <div class="phone">
+        <div class="topbar">MINHAS COMPARAÇÕES</div>
+        <div class="list-item"><div class="ic-sq">⇄</div><div style="flex:1;"><div class="ph-line w100"></div><div class="ph-line w60"></div></div></div>
+        <div class="list-item"><div class="ic-sq">⇄</div><div style="flex:1;"><div class="ph-line w80"></div><div class="ph-line w40"></div></div></div>
+        <div class="list-item"><div class="ic-sq">⇄</div><div style="flex:1;"><div class="ph-line w100"></div><div class="ph-line w60"></div></div></div>
+        <div class="ph-button" style="margin-top:10px;">+ NOVA COMPARAÇÃO</div>
+        <div class="bottomnav">
+          <div class="item"><div class="ic"></div>Comparar</div>
+          <div class="item"><div class="ic"></div>Indicador</div>
+          <div class="item"><div class="ic"></div>Mapa</div>
+          <div class="item on"><div class="ic"></div>Favoritos</div>
+        </div>
+      </div>
+      <div class="caption-below">Pares de localidades salvos localmente no dispositivo (sem necessidade de conta) para comparação rápida e recorrente.</div>
     </div>
 
   </div>
-  <p class="caption">Fluxo principal: Entrar → Início → Mapa / Comparar / Reportar → Perfil. A navegação inferior fixa dá acesso direto às 5 áreas do app, incluindo a nova comparação de clima entre localidades.</p>
+  <p class="caption">Fluxo principal: Comparar → Resultado → Análise/Orientação → (opcional) Comparar por indicador / Mapa → Favoritos. Toda a experiência gira em torno da comparação — não há papel de gestor público nesta versão.</p>
 </section>
 
 <!-- ================= WEB ================= -->
 <section class="panel" id="web">
-  <div class="legend">Caixa cinza = texto · caixa "IMG/GRÁFICO" = imagem ou gráfico</div>
+  <div class="legend">Mesma funcionalidade do app, em layout maior — mesmo usuário (cidadão), sem papel de gestor.</div>
 
-  <!-- WEB 1: DASHBOARD -->
-  <div class="screen-label">1. Dashboard geral</div>
+  <!-- WEB 1: COMPARAR -->
+  <div class="screen-label">1. Comparar clima (tela inicial)</div>
   <div class="browser">
     <div class="browser-top"><div class="dot"></div><div class="dot"></div><div class="dot"></div>
-      <div class="url">climamonitor.gov.br/painel/dashboard</div></div>
+      <div class="url">climamonitor.app/comparar</div></div>
     <div class="browser-body">
-      <div class="web-grid">
-        <div class="sidebar">
-          <div class="ph-line w80" style="font-weight:bold;">CLIMAMONITOR</div>
-          <div class="ph-line w60"></div><div class="ph-line w60"></div><div class="ph-line w60"></div><div class="ph-line w60"></div>
+      <div class="ph-line w60" style="text-align:center;margin:0 auto 14px;">Compare o clima de duas localidades</div>
+      <div class="web-grid" style="min-height:auto;">
+        <div>
+          <div class="ph-line w40" style="font-size:9px;">LOCALIDADE A</div>
+          <div class="ph-button" style="text-align:left;padding-left:8px;">São Paulo, SP</div>
         </div>
         <div>
-          <div class="kpi-row">
-            <div class="kpi"><div class="big">7</div><div class="cap">ALERTAS ATIVOS</div></div>
-            <div class="kpi"><div class="big">23</div><div class="cap">REPORTS PENDENTES</div></div>
-            <div class="kpi"><div class="big">14.2k</div><div class="cap">PESSOAS EM RISCO</div></div>
-          </div>
-          <div class="two-col">
-            <div>
-              <div class="ph-line w40" style="font-weight:bold;">MAPA DE OCORRÊNCIAS</div>
-              <div class="map-box" style="height:200px;">
-                <div class="pin" style="top:20px;left:40px;">E</div>
-                <div class="pin" style="top:70px;left:120px;">D</div>
-              </div>
-            </div>
-            <div>
-              <div class="ph-line w60" style="font-weight:bold;">EVENTOS POR MÊS</div>
-              <div class="ph-box" style="height:200px;">GRÁFICO</div>
-            </div>
-          </div>
+          <div class="ph-line w40" style="font-size:9px;">LOCALIDADE B</div>
+          <div class="ph-button" style="text-align:left;padding-left:8px;">Rio de Janeiro, RJ</div>
+        </div>
+      </div>
+      <div class="ph-line w40" style="font-size:9px;margin-top:6px;">PERÍODO</div>
+      <span class="ph-chip on">Agora</span><span class="ph-chip">24h</span><span class="ph-chip">7 dias</span><span class="ph-chip">30 dias</span>
+      <div class="ph-button" style="width:220px;margin-top:12px;background:var(--ink);color:#fff;">COMPARAR CLIMA</div>
+    </div>
+  </div>
+
+  <!-- WEB 2: RESULTADO + GRÁFICO -->
+  <div class="screen-label">2. Resultado e evolução histórica</div>
+  <div class="browser">
+    <div class="browser-top"><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      <div class="url">climamonitor.app/comparar/resultado</div></div>
+    <div class="browser-body">
+      <div class="kpi-row">
+        <div class="kpi"><div class="big">24°C</div><div class="cap">SÃO PAULO · TEMPERATURA</div></div>
+        <div class="kpi"><div class="big">29°C</div><div class="cap">RIO DE JANEIRO · TEMPERATURA</div></div>
+        <div class="kpi"><div class="big">58 / 32</div><div class="cap">ÍNDICE CLIMÁTICO (SP / RJ)</div></div>
+      </div>
+      <div class="web-grid">
+        <div>
+          <div class="ph-line w60" style="font-weight:bold;">EVOLUÇÃO — TEMPERATURA (7 DIAS)</div>
+          <div class="ph-box" style="height:180px;">GRÁFICO · duas séries: São Paulo / Rio de Janeiro</div>
+        </div>
+        <div>
+          <div class="ph-line w40" style="font-weight:bold;">ANÁLISE</div>
+          <div class="ph-line w100"></div><div class="ph-line w100"></div><div class="ph-line w80"></div>
+          <div class="ph-line w40" style="font-weight:bold;margin-top:10px;">🌧️ ORIENTAÇÃO</div>
+          <div class="ph-line w100"></div><div class="ph-line w60"></div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- WEB 2: COMPARAR (NOVA) -->
-  <div class="screen-label">2. Comparar localidades ★ novo</div>
+  <!-- WEB 3: POR INDICADOR -->
+  <div class="screen-label">3. Comparação por indicador</div>
   <div class="browser">
     <div class="browser-top"><div class="dot"></div><div class="dot"></div><div class="dot"></div>
-      <div class="url">climamonitor.gov.br/painel/comparar</div></div>
+      <div class="url">climamonitor.app/comparar/indicador</div></div>
     <div class="browser-body">
-      <div class="web-grid">
-        <div class="sidebar">
-          <div class="ph-line w80" style="font-weight:bold;">CLIMAMONITOR</div>
-          <div class="ph-line w60"></div><div class="ph-line w60"></div><div class="ph-line w60"></div>
-        </div>
-        <div>
-          <div class="ph-line w60" style="font-weight:bold;">COMPARAÇÃO ENTRE REGIÕES</div>
-          <div class="two-col" style="margin-bottom:10px;">
-            <div class="ph-button" style="text-align:left;padding-left:8px;">Região A: Selecionar ▾</div>
-            <div class="ph-button" style="text-align:left;padding-left:8px;">Região B: Selecionar ▾</div>
-          </div>
-          <table class="wire">
-            <tr><th>Indicador</th><th>Região A</th><th>Região B</th></tr>
-            <tr><td>Temperatura</td><td>28°C</td><td>19°C</td></tr>
-            <tr><td>Umidade</td><td>55%</td><td>80%</td></tr>
-            <tr><td>Nível de risco</td><td>Moderado</td><td>Alto</td></tr>
-            <tr><td>Ocorrências (30 dias)</td><td>4</td><td>11</td></tr>
-          </table>
-          <div class="ph-box" style="height:140px;margin-top:10px;">GRÁFICO COMPARATIVO (SÉRIE HISTÓRICA)</div>
-        </div>
-      </div>
+      <span class="ph-chip on">Geral</span><span class="ph-chip">Temperatura</span><span class="ph-chip">Chuva</span><span class="ph-chip">Umidade</span><span class="ph-chip">Vento</span>
+      <table class="wire" style="margin-top:10px;">
+        <tr><th>Indicador</th><th>São Paulo</th><th>Rio de Janeiro</th><th>Diferença</th></tr>
+        <tr><td>Temperatura</td><td>24°C</td><td>29°C</td><td>5°C</td></tr>
+        <tr><td>Umidade</td><td>78%</td><td>72%</td><td>6%</td></tr>
+        <tr><td>Chuva</td><td>12mm</td><td>3mm</td><td>9mm</td></tr>
+        <tr><td>Vento</td><td>18km/h</td><td>21km/h</td><td>3km/h</td></tr>
+      </table>
     </div>
   </div>
 
-  <!-- WEB 3: EMITIR ALERTA -->
-  <div class="screen-label">3. Emitir alerta oficial</div>
+  <!-- WEB 4: MAPA -->
+  <div class="screen-label">4. Mapa das localidades comparadas</div>
   <div class="browser">
     <div class="browser-top"><div class="dot"></div><div class="dot"></div><div class="dot"></div>
-      <div class="url">climamonitor.gov.br/painel/emitir-alerta</div></div>
+      <div class="url">climamonitor.app/comparar/mapa</div></div>
     <div class="browser-body">
-      <div class="web-grid">
-        <div class="sidebar">
-          <div class="ph-line w80" style="font-weight:bold;">CLIMAMONITOR</div>
-          <div class="ph-line w60"></div><div class="ph-line w60"></div><div class="ph-line w60"></div>
-        </div>
-        <div>
-          <div class="ph-line w40" style="font-weight:bold;">NOVO ALERTA</div>
-          <div class="two-col">
-            <div>
-              <div class="ph-line w40" style="font-size:9px;">TIPO DE EVENTO</div>
-              <div class="ph-button" style="text-align:left;padding-left:8px;">Selecionar ▾</div>
-              <div class="ph-line w40" style="font-size:9px;margin-top:6px;">SEVERIDADE</div>
-              <span class="ph-chip">Baixa</span><span class="ph-chip">Moderada</span><span class="ph-chip">Alta</span>
-            </div>
-            <div>
-              <div class="ph-line w40" style="font-size:9px;">MENSAGEM</div>
-              <div class="ph-box" style="height:80px;"></div>
-              <div class="ph-button" style="margin-top:8px;background:var(--ink);color:#fff;">PUBLICAR ALERTA</div>
-            </div>
-          </div>
-        </div>
+      <div class="map-box" style="height:220px;">
+        <div class="pin" style="top:40px;left:80px;">A</div>
+        <div class="pin" style="top:120px;left:280px;">B</div>
       </div>
+      <div class="ph-line w60" style="font-size:10px;margin-top:6px;">A: São Paulo, SP &nbsp;·&nbsp; B: Rio de Janeiro, RJ</div>
     </div>
   </div>
 
-  <!-- WEB 4: VALIDAÇÃO -->
-  <div class="screen-label">4. Validação de reports</div>
-  <div class="browser">
-    <div class="browser-top"><div class="dot"></div><div class="dot"></div><div class="dot"></div>
-      <div class="url">climamonitor.gov.br/painel/reports</div></div>
-    <div class="browser-body">
-      <div class="web-grid">
-        <div class="sidebar">
-          <div class="ph-line w80" style="font-weight:bold;">CLIMAMONITOR</div>
-          <div class="ph-line w60"></div><div class="ph-line w60"></div><div class="ph-line w60"></div>
-        </div>
-        <div>
-          <div class="ph-line w40" style="font-weight:bold;">REPORTS RECEBIDOS</div>
-          <table class="wire">
-            <tr><th>Foto</th><th>Tipo</th><th>Local</th><th>Status</th><th>Ação</th></tr>
-            <tr><td>▢</td><td>Enchente</td><td>Bairro A</td><td>Pendente</td><td>Validar / Descartar</td></tr>
-            <tr><td>▢</td><td>Deslizamento</td><td>Bairro B</td><td>Validado</td><td>Ver detalhe</td></tr>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <p class="caption">Fluxo do gestor: Dashboard → Comparar regiões (apoio à decisão) → Validação de reports → Emissão de alerta oficial.</p>
+  <p class="caption">Mesmo usuário do app mobile, em uma versão para telas maiores — sem papel de gestor público nesta versão do projeto.</p>
 </section>
 
 <script>

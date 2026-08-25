@@ -93,15 +93,6 @@ O protótipo visual (`wireframe-climamonitor.html`) está dividido em duas frent
 
 A navegação inferior fixa (bottom navigation) garante que as 5 áreas centrais — Início, Mapa, Reportar, Alertas, Perfil — estejam sempre a um toque de distância, reduzindo a fricção em situações de emergência.
 
-### 5.2 Painel Web (Gestor / Defesa Civil)
-
-| # | Tela | Função no fluxo |
-|---|---|---|
-| 1 | Dashboard geral | KPIs (alertas ativos, reports pendentes, população em risco, tempo médio de resposta), mapa de calor e gráfico de eventos por mês |
-| 2 | Emitir alerta | Formulário para criação de alerta oficial: tipo, severidade, área (desenhada no mapa) e canais de envio |
-| 3 | Validação de reports | Tabela de reports enviados por cidadãos com ações de validar/descartar |
-| 4 | Indicadores ODS | Relatório de impacto trimestral, separado por ODS 11 e ODS 13, exportável em PDF para prestação de contas do projeto de extensão |
-
 ---
 
 ## 6. Fluxo de uso resumido

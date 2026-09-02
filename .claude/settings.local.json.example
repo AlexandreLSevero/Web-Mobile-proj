@@ -1,0 +1,26 @@
+{
+  "//": [
+    "MODELO - copie para .claude/settings.local.json (esse sim fica fora do git).",
+    "Define qual navegador o Playwright MCP usa NA SUA MAQUINA.",
+    "Mantenha apenas UM bloco 'env'. Reinicie o Claude Code (ou /mcp) apos alterar.",
+    "Instale os navegadores uma vez:  npx playwright install firefox chrome msedge",
+    "",
+    "Google Chrome:",
+    "  \"env\": {",
+    "    \"PLAYWRIGHT_BROWSER\": \"chrome\"",
+    "  }",
+    "",
+    "Mozilla Firefox:",
+    "  \"env\": {",
+    "    \"PLAYWRIGHT_BROWSER\": \"firefox\"",
+    "  }",
+    "",
+    "Microsoft Edge:",
+    "  \"env\": {",
+    "    \"PLAYWRIGHT_BROWSER\": \"msedge\"",
+    "  }"
+  ],
+  "env": {
+    "PLAYWRIGHT_BROWSER": "firefox"
+  }
+}

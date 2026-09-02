@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Resultado da comparação — ClimaMonitor</title>
+  </head>
+  <body>
+    <header>
+      <p><a href="index.html" rel="prev">Voltar</a></p>
+      <h1>Resultado da comparação</h1>
+      <p>São Paulo, SP × Rio de Janeiro, RJ · Período: agora</p>
+    </header>
+
+    <nav aria-label="Seções do aplicativo">
+      <a href="index.html">Comparar</a>
+      <a href="mapa.html">Mapa</a>
+      <a href="favoritos.html">Favoritos</a>
+    </nav>
+
+    <main>
+      <h2>Comparar por indicador</h2>
+
+      <details name="indicador" open>
+        <summary>Geral</summary>
+
+        <section aria-labelledby="loc-a">
+          <h3 id="loc-a">São Paulo</h3>
+          <dl>
+            <dt>Temperatura</dt>
+            <dd><data value="24.3">24,3 °C</data></dd>
+            <dt>Umidade</dt>
+            <dd><data value="78">78%</data></dd>
+            <dt>Chuva</dt>
+            <dd><data value="12.5">12,5 mm</data></dd>
+            <dt>Vento</dt>
+            <dd><data value="18.2">18,2 km/h</data></dd>
+            <dt>Classificação</dt>
+            <dd>Atenção</dd>
+          </dl>
+        </section>
+
+        <section aria-labelledby="loc-b">
+          <h3 id="loc-b">Rio de Janeiro</h3>
+          <dl>
+            <dt>Temperatura</dt>
+            <dd><data value="29.1">29,1 °C</data></dd>
+            <dt>Umidade</dt>
+            <dd><data value="72">72%</data></dd>
+            <dt>Chuva</dt>
+            <dd><data value="3.2">3,2 mm</data></dd>
+            <dt>Vento</dt>
+            <dd><data value="21.0">21,0 km/h</data></dd>
+            <dt>Classificação</dt>
+            <dd>Normal</dd>
+          </dl>
+        </section>
+
+        <section aria-labelledby="indice">
+          <h3 id="indice">Índice climático (0 a 100)</h3>
+          <p>
+            São Paulo:
+            <meter min="0" max="100" low="30" high="60" optimum="0" value="58">58 de 100</meter>
+            <data value="58">58 — Atenção</data>
+          </p>
+          <p>
+            Rio de Janeiro:
+            <meter min="0" max="100" low="30" high="60" optimum="0" value="25">25 de 100</meter>
+            <data value="25">25 — Normal</data>
+          </p>
+          <p><small>Classificação própria da aplicação; não é um índice meteorológico oficial.</small></p>
+        </section>
+
+        <section aria-labelledby="tabela-geral">
+          <h3 id="tabela-geral">Todos os indicadores</h3>
+          <table>
+            <caption>Comparação geral dos indicadores (dados ilustrativos)</caption>
+            <thead>
+              <tr>
+                <th scope="col">Indicador</th>
+                <th scope="col">São Paulo</th>
+                <th scope="col">Rio de Janeiro</th>
+                <th scope="col">Diferença</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Temperatura</th>
+                <td>24,3 °C</td>
+                <td>29,1 °C</td>
+                <td>4,8 °C</td>
+              </tr>
+              <tr>
+                <th scope="row">Umidade</th>
+                <td>78%</td>
+                <td>72%</td>
+                <td>6 pontos percentuais</td>
+              </tr>
+              <tr>
+                <th scope="row">Chuva</th>
+                <td>12,5 mm</td>
+                <td>3,2 mm</td>
+                <td>9,3 mm</td>
+              </tr>
+              <tr>
+                <th scope="row">Vento</th>
+                <td>18,2 km/h</td>
+                <td>21,0 km/h</td>
+                <td>2,8 km/h</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </details>
+
+      <details name="indicador">
+        <summary>Temperatura</summary>
+        <h3>Temperatura (°C)</h3>
+        <p>
+          São Paulo:
+          <meter min="0" max="40" value="24.3">24,3 °C de 40</meter>
+          <data value="24.3">24,3 °C</data>
+        </p>
+        <p>
+          Rio de Janeiro:
+          <meter min="0" max="40" value="29.1">29,1 °C de 40</meter>
+          <data value="29.1">29,1 °C</data>
+        </p>
+        <p>Rio de Janeiro está <data value="4.8">4,8 °C</data> mais quente.</p>
+      </details>
+
+      <details name="indicador">
+        <summary>Chuva</summary>
+        <h3>Chuva (mm)</h3>
+        <p>
+          São Paulo:
+          <meter min="0" max="12.5" value="12.5">12,5 mm de 12,5</meter>
+          <data value="12.5">12,5 mm</data>
+        </p>
+        <p>
+          Rio de Janeiro:
+          <meter min="0" max="12.5" value="3.2">3,2 mm de 12,5</meter>
+          <data value="3.2">3,2 mm</data>
+        </p>
+        <p>
+          São Paulo registrou <data value="9.3">9,3 mm</data> a mais de chuva — a maior
+          diferença entre os indicadores.
+        </p>
+      </details>
+
+      <details name="indicador">
+        <summary>Umidade</summary>
+        <h3>Umidade (%)</h3>
+        <p>
+          São Paulo:
+          <meter min="0" max="100" value="78">78% de 100</meter>
+          <data value="78">78%</data>
+        </p>
+        <p>
+          Rio de Janeiro:
+          <meter min="0" max="100" value="72">72% de 100</meter>
+          <data value="72">72%</data>
+        </p>
+        <p>São Paulo está <data value="6">6 pontos percentuais</data> mais úmido.</p>
+      </details>
+
+      <details name="indicador">
+        <summary>Vento</summary>
+        <h3>Vento (km/h)</h3>
+        <p>
+          São Paulo:
+          <meter min="0" max="30" value="18.2">18,2 km/h de 30</meter>
+          <data value="18.2">18,2 km/h</data>
+        </p>
+        <p>
+          Rio de Janeiro:
+          <meter min="0" max="30" value="21.0">21,0 km/h de 30</meter>
+          <data value="21.0">21,0 km/h</data>
+        </p>
+        <p>Rio de Janeiro teve vento <data value="2.8">2,8 km/h</data> mais forte.</p>
+      </details>
+
+      <details>
+        <summary>Ver análise e orientação</summary>
+
+        <h3>Leitura da comparação</h3>
+        <p>
+          São Paulo apresenta maior nível de atenção no momento. A classificação está
+          relacionada principalmente ao maior volume de chuva combinado com a umidade elevada.
+        </p>
+
+        <h3>Orientação</h3>
+        <p>
+          Atenção para chuva: o volume de precipitação está elevado em comparação à outra
+          localidade. Recomenda-se atenção em áreas sujeitas a alagamentos e acompanhamento
+          dos canais oficiais.
+        </p>
+        <p><small>Esta orientação não substitui os órgãos oficiais de defesa civil.</small></p>
+
+        <p><button type="button">Compartilhar resultado</button></p>
+      </details>
+    </main>
+
+    <footer>
+      <p><small>Valores: média normalizada de várias APIs meteorológicas. Dados ilustrativos.</small></p>
+    </footer>
+  </body>
+</html>

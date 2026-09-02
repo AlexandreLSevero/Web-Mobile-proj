@@ -1,0 +1,18 @@
+# Configuracao local por pessoa (Claude Code) — inclui a escolha do navegador
+.claude/settings.local.json
+
+# Chaves das APIs meteorologicas e afins — nunca versionar (ver CLAUDE.md)
+.env
+.env.local
+*.key
+*.pem
+
+# Dependencias / artefatos que possam surgir de ferramentas (Playwright, etc.)
+node_modules/
+test-results/
+playwright-report/
+
+# Sistema operacional / editores
+.DS_Store
+Thumbs.db
+*.swp

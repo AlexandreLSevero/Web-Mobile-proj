@@ -1,0 +1,26 @@
+{
+  "//": [
+    "Servidor Playwright MCP usado pelo Claude Code para dirigir o navegador.",
+    "O navegador e definido pela variavel de ambiente PLAYWRIGHT_BROWSER (default: chrome).",
+    "",
+    "Como configurar o SEU navegador (nao versionado, um por pessoa):",
+    "  1. Crie .claude/settings.local.json a partir de .claude/settings.local.json.example",
+    "  2. Ajuste PLAYWRIGHT_BROWSER  ->  chrome | firefox | webkit | msedge",
+    "  3. Instale os navegadores uma vez:  npx playwright install firefox chrome",
+    "  4. Reinicie o Claude Code (ou rode /mcp) para recarregar o servidor",
+    "",
+    "Observacao: o Playwright MCP roda UM navegador por sessao. Para alternar entre",
+    "Firefox e Chrome, troque a variavel e reinicie o Claude Code."
+  ],
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@playwright/mcp@latest",
+        "--browser",
+        "${PLAYWRIGHT_BROWSER:-chrome}"
+      ]
+    }
+  }
+}

@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Comparar clima — ClimaMonitor</title>
+  </head>
+  <body>
+    <header>
+      <p><strong>ClimaMonitor</strong></p>
+      <h1>Compare o clima de duas localidades</h1>
+      <p>Não é necessário criar conta.</p>
+    </header>
+
+    <nav aria-label="Seções do aplicativo">
+      <a href="index.html" aria-current="page">Comparar</a>
+      <a href="mapa.html">Mapa</a>
+      <a href="favoritos.html">Favoritos</a>
+    </nav>
+
+    <main>
+      <form method="get" action="resultado.html">
+        <p>
+          <label for="localidade-a">Localidade A</label>
+          <select id="localidade-a" name="localidadeA">
+            <option value="São Paulo, SP" selected>São Paulo, SP</option>
+            <option value="Rio de Janeiro, RJ">Rio de Janeiro, RJ</option>
+            <option value="Belo Horizonte, MG">Belo Horizonte, MG</option>
+            <option value="Curitiba, PR">Curitiba, PR</option>
+            <option value="Porto Alegre, RS">Porto Alegre, RS</option>
+            <option value="Recife, PE">Recife, PE</option>
+            <option value="Salvador, BA">Salvador, BA</option>
+            <option value="Manaus, AM">Manaus, AM</option>
+          </select>
+        </p>
+
+        <p>
+          <label for="localidade-b">Localidade B</label>
+          <select id="localidade-b" name="localidadeB">
+            <option value="São Paulo, SP">São Paulo, SP</option>
+            <option value="Rio de Janeiro, RJ" selected>Rio de Janeiro, RJ</option>
+            <option value="Belo Horizonte, MG">Belo Horizonte, MG</option>
+            <option value="Curitiba, PR">Curitiba, PR</option>
+            <option value="Porto Alegre, RS">Porto Alegre, RS</option>
+            <option value="Recife, PE">Recife, PE</option>
+            <option value="Salvador, BA">Salvador, BA</option>
+            <option value="Manaus, AM">Manaus, AM</option>
+          </select>
+        </p>
+
+        <p>
+          <label for="periodo">Período</label>
+          <!-- Nesta versão só "Agora"; 24h / 7 dias / 30 dias são Nível 3 (ideacao.md §6). -->
+          <select id="periodo" name="periodo">
+            <option value="agora" selected>Agora</option>
+          </select>
+        </p>
+
+        <p>
+          <button type="submit">Comparar clima</button>
+        </p>
+      </form>
+    </main>
+
+    <footer>
+      <p>
+        <small>
+          Protótipo estático: a tela de resultado mostra sempre o par de exemplo
+          São Paulo × Rio de Janeiro, com dados ilustrativos. Projeto de extensão · ODS 11 e 13.
+        </small>
+      </p>
+    </footer>
+  </body>
+</html>

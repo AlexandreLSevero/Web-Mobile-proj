@@ -40,7 +40,7 @@ O projeto **ClimaMonitor** propõe **uma única aplicação web responsiva**, de
 - Classificar a condição de cada localidade por meio de um índice climático próprio da aplicação;
 - Interpretar automaticamente a comparação, explicando qual localidade apresenta maior nível de atenção e por quê;
 - Gerar orientações simples e práticas para a população a partir dessa interpretação;
-- Manter a implementação enxuta o suficiente para ser construída **apenas com HTML, CSS e JavaScript**, sem depender de frameworks ou de um backend dedicado;
+- Manter a implementação enxuta: front-end **apenas com HTML, CSS e JavaScript**, sem framework, apoiado por um **backend mínimo em JavaScript (Node.js)**, também sem framework e sem banco de dados;
 - Evoluir, em versões futuras, para comparação por indicador específico e por período histórico.
 
 ---
@@ -67,9 +67,9 @@ O planejamento seguiu estas etapas:
 1. **Levantamento do problema** — dificuldade de comparar condições climáticas entre localidades de forma acessível, e mapeamento das metas dos ODS 11 e 13 relacionadas.
 2. **Definição da persona e dos cenários de uso** — construção do perfil do cidadão e das situações em que ele buscaria comparar duas localidades.
 3. **Detalhamento da funcionalidade central** — a comparação de localidades deixou de ser "mais um recurso" e passou a ser o **principal mecanismo de interação do sistema**, estruturando fluxo, cálculo de índice e orientação.
-4. **Definição do escopo técnico** — decisão de construir uma única aplicação responsiva, usando apenas HTML, CSS e JavaScript, sem framework de front-end e sem backend dedicado.
-5. **Wireframe de baixa fidelidade** — tradução do fluxo em telas esquemáticas.
-6. **Implementação funcional simples** (`climamonitor-app.html`) — versão navegável já funcional, com dados simulados, servindo de base para a próxima etapa (conexão com APIs reais).
+4. **Definição do escopo técnico** — decisão de construir uma única aplicação responsiva, com front-end apenas em HTML, CSS e JavaScript (sem framework) e um backend mínimo em JavaScript (Node.js) responsável por consumir as APIs meteorológicas e guardar as chaves.
+5. **Wireframe de baixa fidelidade** (`wireframe.html`) — tradução do fluxo em telas esquemáticas; artefato histórico da fase de ideação, hoje superado em alguns pontos (ver §7).
+6. **Protótipo estático navegável** (pasta `HTML/`) — 4 páginas HTML5 semânticas, ainda **sem CSS e sem JS**, com dados mock (São Paulo × Rio de Janeiro). É a base sobre a qual entram a responsividade (CSS), o comportamento (JS) e a conexão com o backend.
 
 ### Funcionalidades priorizadas
 
@@ -85,6 +85,8 @@ O planejamento seguiu estas etapas:
 
 *A coluna "Plataforma" foi removida da tabela original: como agora existe apenas uma aplicação responsiva, todas as funcionalidades acima valem igualmente em qualquer tamanho de tela.*
 
+*No protótipo estático atual, as telas de Mapa, Favoritos e a comparação por indicador já aparecem como **telas navegáveis com dados mock**. O comportamento real de cada uma (mapa interativo, favoritos que persistem, filtro dinâmico por indicador) continua adiado — ver §6.*
+
 ---
 
 ## 5. Funcionalidade central: Comparar Localidades
@@ -93,36 +95,45 @@ O planejamento seguiu estas etapas:
 
 Em vez de o usuário apenas consultar o clima de uma cidade isoladamente, ele seleciona **duas localidades** e recebe uma comparação direta entre elas — por exemplo, **São Paulo × Rio de Janeiro**. O objetivo é transformar dados de múltiplas APIs em informação compreensível, destacando diferenças, situações extremas e possíveis impactos.
 
-### 5.2 Fluxo principal (tudo executado no navegador)
+### 5.2 Fluxo principal
 
-Como o projeto usa apenas HTML, CSS e JavaScript, **não há um servidor de backend dedicado**: a própria página, rodando no navegador do usuário, faz as chamadas às APIs meteorológicas e processa os dados com JavaScript puro.
+O front-end (página HTML/CSS/JS, no navegador do usuário) só coleta a seleção e
+apresenta o resultado. Um **backend mínimo em JavaScript (Node.js)** faz o trabalho
+pesado: consome as APIs meteorológicas, normaliza, calcula médias, aplica o índice e
+monta a orientação — e guarda as chaves das APIs, que nunca chegam ao navegador.
+A comunicação entre os dois é um único endpoint: `POST /comparar`.
 
 ```
 Usuário (no navegador, celular ou computador)
    │
    │ Escolhe duas localidades (+ período)
    ▼
-Página HTML/CSS/JS
+Front-end HTML/CSS/JS
    │
-   │ fetch() para cada API, diretamente do navegador
+   │ POST /comparar  { localidadeA, localidadeB, periodo }
+   ▼
+Backend mínimo (JavaScript / Node.js)
+   │
+   │ fetch() para cada API (chaves ficam no backend)
    ▼
    ┌──────────────┬──────────────┬──────────────┐
    ▼              ▼              ▼              ▼
 API 1          API 2          API 3          API 4
    └──────────────┴──────────────┴──────────────┘
                    │
-             Normalização (JavaScript)
+             Normalização (backend)
                    │
-          Cálculo das médias (JavaScript)
+          Cálculo das médias (backend)
                    │
-              Comparação (JavaScript)
+              Comparação (backend)
                    │
-             Classificação (JavaScript)
+             Classificação — índice (backend)
                    │
-              Orientação (JavaScript)
+              Orientação (backend)
                    │
+                   │ resposta JSON (contrato §5.6)
                    ▼
-     Atualização da tela (mesmo HTML/CSS)
+     Front-end renderiza o resultado (HTML/CSS)
 ```
 
 ### 5.3 Interface inicial (referência para o wireframe)
@@ -143,19 +154,35 @@ Este layout único se adapta por CSS (media queries / flexbox) tanto para telas 
 
 Recomenda-se implementar inicialmente apenas o período **"Agora"**; as demais opções (24h, 7 dias, 30 dias) entram em versões seguintes.
 
-### 5.4 Chamada às APIs (direto do JavaScript da página)
+### 5.4 Chamada ao backend
+
+O front-end faz **uma única chamada**, ao próprio backend do projeto:
 
 ```js
-// Exemplo ilustrativo — chamada feita pelo próprio front-end, sem backend
-const resposta = await fetch(`https://api-meteorologica.exemplo/clima?cidade=São Paulo`);
-const dados = await resposta.json();
+// Exemplo ilustrativo — o front-end fala apenas com o backend do ClimaMonitor
+const resposta = await fetch('/comparar', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    localidadeA: 'São Paulo, SP',
+    localidadeB: 'Rio de Janeiro, RJ',
+    periodo: 'agora'
+  })
+});
+const dados = await resposta.json(); // objeto no formato da §5.6
 ```
 
-> **Nota técnica:** como as chamadas partem diretamente do navegador, é preciso escolher APIs meteorológicas que permitam esse tipo de acesso (com suporte a CORS) ou usar suas chaves de acesso de forma pública/gratuita compatível com uso no front-end. Isso deve ser validado na escolha final das APIs, mantendo o projeto sem a necessidade de um servidor próprio.
+O backend é quem chama as APIs meteorológicas. As chamadas às fontes externas ficam
+todas do lado do servidor.
 
-### 5.5 Processamento no próprio front-end
+> **Nota técnica:** com o backend intermediando as chamadas, **CORS deixa de ser um
+> requisito** para a escolha das APIs e as chaves de acesso ficam no servidor, fora do
+> versionamento. A escolha final das fontes passa a considerar apenas cobertura,
+> limites de uso e custo.
 
-O JavaScript da página consulta as APIs configuradas para cada localidade, normaliza as unidades (ex.: Fahrenheit → Celsius) e calcula a média entre as fontes antes de comparar os indicadores (temperatura, umidade, chuva, vento).
+### 5.5 Processamento no backend
+
+O backend consulta as APIs configuradas para cada localidade, normaliza as unidades (ex.: Fahrenheit → Celsius) e calcula a média entre as fontes antes de comparar os indicadores (temperatura, umidade, chuva, vento).
 
 ```
 API 1: 24°C        ┐
@@ -168,7 +195,7 @@ O mesmo processo é repetido para a segunda localidade e para os demais indicado
 
 ### 5.6 Estrutura de dados interna (calculada em JavaScript)
 
-Mesmo sem um backend, é útil manter os dados organizados em um objeto interno, exatamente como se fosse a resposta de uma API própria — isso deixa o código mais organizado e facilita eventuais evoluções futuras:
+Este é o **contrato de resposta do `POST /comparar`** — o formato que o backend devolve e que o front-end sabe renderizar:
 
 ```json
 {
@@ -187,7 +214,7 @@ Mesmo sem um backend, é útil manter os dados organizados em um objeto interno,
     "umidade": 72,
     "chuva": 3.2,
     "vento": 21.0,
-    "indice": 32,
+    "indice": 25,
     "classificacao": "NORMAL"
   },
   "comparacao": {
@@ -203,11 +230,11 @@ Mesmo sem um backend, é útil manter os dados organizados em um objeto interno,
   }
 }
 ```
-*Valores meramente ilustrativos; os dados reais virão das APIs integradas. Na implementação funcional atual (`climamonitor-app.html`), esse mesmo formato já é usado internamente, só que com dados simulados no lugar das chamadas às APIs.*
+*Valores meramente ilustrativos; os dados reais virão das APIs integradas pelo backend. O protótipo estático em `HTML/` já exibe esse mesmo conjunto de campos (mock São Paulo × Rio de Janeiro), ainda sem a chamada real ao backend.*
 
 ### 5.7 Índice Climático (classificação própria da aplicação)
 
-Um **Índice de Condição Climática** próprio — não um índice meteorológico oficial — resume os indicadores (temperatura, umidade, chuva, vento, cada um com peso definido pela equipe) em uma escala única, calculada em JavaScript:
+Um **Índice de Condição Climática** próprio — não um índice meteorológico oficial — resume os indicadores (temperatura, umidade, chuva, vento, cada um com peso definido pela equipe) em uma escala única, calculada **no backend**. Os pesos e os textos de orientação (§5.8) são regra de negócio do backend e não devem ser reimplementados no front-end. Os pesos ainda não estão fechados (ver §14).
 
 | Faixa | Classificação |
 |---|---|
@@ -242,6 +269,8 @@ Rio de Janeiro    ██████ 3 mm
 São Paulo apresentou 9 mm a mais de chuva.
 ```
 
+No protótipo atual, essa seleção é um acordeão de `<details>` dentro de `resultado.html` (ver §7), não uma tela separada.
+
 ### 5.10 Evolução temporal (versão futura)
 
 Com a seleção de período (24h / 7 dias / 30 dias), o sistema passa a apresentar a evolução dos indicadores em um gráfico com duas séries — uma por localidade — respondendo perguntas como "qual cidade teve maior variação" ou "onde ocorreram condições mais extremas no período". Isso pode ser feito ainda em JavaScript puro (desenhando barras/linhas com HTML e CSS), sem necessidade de bibliotecas externas.
@@ -257,24 +286,51 @@ Com a seleção de período (24h / 7 dias / 30 dias), o sistema passa a apresent
 | **3 — Comparar por período** | 24h, 7 dias, 30 dias, com gráfico de evolução |
 | **4 — Condições extremas** | Sistema sinaliza quando um valor ultrapassa limites definidos pela metodologia |
 
-### O que evitar na primeira versão
+### Fora do Nível 1 (adiado)
 
-Para manter o escopo enxuto e viável para um projeto de extensão construído apenas com HTML, CSS e JavaScript, recomenda-se **não** implementar de início: login/cadastro de usuários, sistema de permissões, mapas avançados (bibliotecas de mapa como Leaflet/Mapbox), notificações push, previsões de longo prazo, inteligência artificial, banco de dados ou backend dedicado, muitos filtros ou dashboards com muitos gráficos. Esses itens ficam como evoluções futuras (Seção 11).
+Para manter o escopo enxuto, ficam de fora da primeira entrega: login/cadastro de
+usuários, sistema de permissões, persistência real dos Favoritos (localStorage), mapa
+interativo / bibliotecas de mapa (Leaflet, Mapbox), gráficos e histórico, notificações
+push, previsões de longo prazo, inteligência artificial, banco de dados e dashboards
+com muitos gráficos. Esses itens ficam como evoluções futuras (Seção 11).
+
+O backend do projeto **existe** já no Nível 1, mas é **mínimo**: um único endpoint
+(`POST /comparar`), sem banco e sem framework. Já as telas de Mapa, Favoritos e a
+comparação por indicador entram no Nível 1 apenas como **telas estáticas** (dados mock),
+sem o comportamento real descrito acima.
 
 ---
 
-## 7. Arquitetura de telas (o que está no wireframe e na implementação)
+## 7. Arquitetura de telas
 
-O protótipo (`wireframe-climamonitor.html`) e a implementação funcional (`climamonitor-app.html`) representam **uma única aplicação responsiva**, com um único conjunto de telas — não há uma versão separada para mobile e outra para web. A diferença entre usar em um celular ou em um computador é apenas visual (o CSS reorganiza os elementos conforme o espaço disponível), nunca uma tela ou fluxo diferente.
+A aplicação é **uma única aplicação responsiva**, com um único conjunto de telas — não
+há versão separada para mobile e para web. A diferença entre usar no celular ou no
+computador é só visual (o CSS reorganiza os elementos), nunca uma tela ou fluxo diferente.
 
-| # | Tela / seção | Função no fluxo |
+**Referência atual:** o protótipo estático na pasta `HTML/` — **4 arquivos**. O
+`wireframe.html` é artefato histórico da ideação: ainda mostra "App Mobile" × "Versão
+Web" separados, um 4º item de navegação e gráficos de histórico; nesses pontos ele já
+**não** representa a direção do projeto.
+
+| # | Arquivo | Função no fluxo |
 |---|---|---|
-| 1 | Comparar (início) | Seleção de Localidade A, Localidade B e período; sem necessidade de login |
-| 2 | Resultado da comparação | Temperatura, umidade, chuva e vento lado a lado, com badge de classificação e índice climático |
-| 3 | Análise e orientação | Texto interpretativo automático + recomendação prática para a população |
-| 4 | Comparar por indicador | Seleção de um indicador específico com barras comparativas |
-| 5 | Mapa das localidades | Visualização espacial simples das duas localidades comparadas |
-| 6 | Favoritos | Pares de localidades salvos localmente, sem conta de usuário |
+| 1 | `HTML/index.html` — Comparar | Seleção de Localidade A, Localidade B e período; sem necessidade de login |
+| 2 | `HTML/resultado.html` — Resultado | Indicadores lado a lado, índice climático, comparação por indicador e análise/orientação (ver abaixo) |
+| 3 | `HTML/mapa.html` — Mapa | Visualização espacial simples das duas localidades (estática nesta versão) |
+| 4 | `HTML/favoritos.html` — Favoritos | Pares de localidades salvos localmente, sem conta de usuário (mock nesta versão) |
+
+Navegação: 3 itens — **Comparar · Mapa · Favoritos**.
+
+`resultado.html` concentra o que antes eram telas próprias:
+
+- **Comparar por indicador** — acordeão exclusivo de `<details name="indicador">` com 5
+  painéis: "Geral" (aberto por padrão — os 2 cartões de localidade, o índice climático e
+  a tabela geral) e um painel por indicador (Temperatura / Chuva / Umidade / Vento), cada
+  um com barras `<meter>` e a leitura da diferença. Abrir um painel fecha os outros.
+- **Análise e orientação** — um `<details>` separado ("Ver análise e orientação"),
+  fechado por padrão, com a leitura interpretativa e a recomendação prática.
+
+As telas `analise-orientacao.html` e `comparar-por-indicador.html` **não existem mais**.
 
 ---
 
@@ -286,83 +342,101 @@ CIDADÃO (celular ou computador, mesma aplicação)
    ├─ Abre a página (sem login)
    ├─ Escolhe Localidade A e Localidade B
    ├─ Escolhe o período (inicialmente apenas "Agora")
-   ├─ Toca/clica em "Comparar clima"
-   ├─ Vê o resultado lado a lado + índice climático
-   ├─ Lê a análise automática e a orientação
-   ├─ (Opcional) Aprofunda por indicador específico
-   ├─ (Opcional) Visualiza as localidades no mapa
-   └─ (Opcional) Salva a comparação em Favoritos
+   ├─ Toca/clica em "Comparar clima"  → front-end chama POST /comparar
+   ├─ Vê o resultado lado a lado + índice climático (resultado.html)
+   ├─ (Opcional) Aprofunda por indicador específico  — mesmo resultado.html
+   ├─ (Opcional) Abre a análise automática e a orientação  — mesmo resultado.html
+   ├─ (Opcional) Visualiza as localidades no mapa (mapa.html)
+   └─ (Opcional) Salva a comparação em Favoritos (favoritos.html)
 ```
 
 ---
 
 ## 9. Arquitetura técnica (visão geral)
 
-Sem backend dedicado: toda a lógica roda no navegador, na mesma página que exibe a interface.
+Duas partes: um front-end estático (HTML/CSS/JS) e um backend mínimo em JavaScript
+(Node.js). O front-end nunca fala com as APIs meteorológicas — só com o backend.
 
 ```
-┌────────────────────────────────────────┐
-│         PÁGINA (HTML + CSS + JS)        │
-│                                          │
-│  HTML  → estrutura das telas/telas      │
-│  CSS   → layout responsivo (mobile      │
-│          e desktop na mesma página)     │
-│  JS    → escolha das localidades        │
-│          fetch() nas APIs               │
-│          normalização                   │
-│          cálculo das médias             │
-│          comparação                     │
-│          classificação (índice)         │
-│          geração da orientação          │
-│          atualização da tela            │
-└──────────────┬───────────────────────────┘
-               │
-               ├──── API 1
-               ├──── API 2
-               ├──── API 3
-               └──── API 4
+┌─────────────────────────────────┐                ┌─────────────────────────────────┐
+│   FRONT-END (HTML + CSS + JS)    │                │   BACKEND (JavaScript / Node)   │
+│   site estático                 │  POST /comparar │   sem framework, sem banco      │
+│                                 │ ──────────────► │                                 │
+│  HTML  estrutura das 4 telas    │                 │  fetch() nas APIs (chaves aqui) │
+│  CSS   layout responsivo        │                 │  normalização de unidades      │
+│  JS    coleta da seleção        │ ◄────────────── │  cálculo das médias            │
+│        POST /comparar           │   resposta JSON │  comparação                    │
+│        render do resultado      │   (contrato §5.6)  classificação (índice)        │
+│        carregando / erro        │                 │  geração da orientação         │
+└─────────────────────────────────┘                └───────────────┬─────────────────┘
+                                                                   │
+                                                     ┌──────┬──────┼──────┬──────┐
+                                                   API 1  API 2  API 3  API 4
 ```
 
 ---
 
 ## 10. Tecnologias (definição de escopo técnico)
 
-> Decisão de escopo: o projeto será construído **apenas com HTML5, CSS3 e JavaScript puro (vanilla)** — sem frameworks de front-end (React, Vue, Flutter, React Native etc.) e sem backend dedicado (Node/Django/FastAPI).
+> Decisão de escopo: **front-end apenas com HTML5, CSS3 e JavaScript puro (vanilla)** —
+> sem frameworks (React, Vue, Flutter, React Native etc.) — e um **backend mínimo em
+> JavaScript (Node.js)**, sem framework (Express/Nest) e sem banco de dados.
 
-- **HTML5** — estrutura semântica de uma única página (formulário de comparação, resultado, indicador, mapa, favoritos), organizada em seções que são mostradas/ocultadas por JavaScript.
+- **HTML5** — estrutura semântica das 4 telas (`HTML/`), com seções mostradas/ocultadas por `<details>` nativo e, mais adiante, por JavaScript.
 - **CSS3** — responsividade via flexbox e media queries, garantindo que a mesma página funcione bem em celular, tablet e computador.
-- **JavaScript (vanilla)** — toda a lógica de negócio: chamada às APIs (`fetch`), normalização de unidades, cálculo de médias, cálculo do índice climático, geração de análise/orientação e atualização da interface (manipulação do DOM).
-- **APIs meteorológicas** — integrar 2 a 4 fontes públicas com suporte a chamadas diretas do navegador (CORS habilitado), reduzindo a dependência de uma única fonte.
-- **Hospedagem** — por não haver backend, a aplicação pode ser publicada como site estático (ex.: GitHub Pages, Netlify, Vercel) ou simplesmente aberta localmente no navegador, o que é adequado ao orçamento de um projeto de extensão.
+- **JavaScript (vanilla) no front-end** — coleta da seleção, chamada `POST /comparar`, renderização do resultado, estados de carregando/erro (`aria-live`) e foco.
+- **Backend mínimo (Node.js, JavaScript)** — expõe apenas `POST /comparar`; consulta as APIs meteorológicas, normaliza unidades, calcula médias, aplica o índice climático, gera a análise/orientação e guarda as chaves das APIs (fora do versionamento).
+- **APIs meteorológicas** — integrar 2 a 4 fontes públicas (consumidas pelo backend), reduzindo a dependência de uma única fonte. Sem exigência de CORS.
+- **Hospedagem** — front-end como site estático (GitHub Pages, Netlify, Vercel); backend como pequeno serviço Node. Ambos compatíveis com o orçamento de um projeto de extensão.
 
 ---
 
 ## 11. Próximos passos sugeridos
 
-1. **Validação do wireframe e da implementação funcional** com um pequeno grupo de usuários reais, coletando feedback sobre a clareza do resultado, do índice climático e da orientação, em celular e em computador.
-2. **Escolha das APIs meteorológicas** que suportem chamadas diretas do navegador (CORS), substituindo os dados simulados da implementação atual por dados reais.
-3. **Definição dos pesos do índice climático** junto à equipe, com base em referências de órgãos meteorológicos, deixando claro que é uma metodologia própria da aplicação.
-4. **Testes de usabilidade** com tarefas guiadas (ex.: "compare o clima da sua cidade com o de um familiar e diga qual está em situação de maior atenção"), testando explicitamente em diferentes tamanhos de tela.
-5. **Evolução gradual, sempre em HTML/CSS/JS**: comparação por indicador → comparação por período com gráficos simples → identificação de condições extremas → (possíveis versões futuras, já fora do escopo enxuto) favoritos persistentes, mapas mais elaborados e monitoramento contínuo.
+1. **Adicionar CSS e JS ao protótipo estático** em `HTML/` — responsividade e comportamento, mantendo a separação de camadas.
+2. **Implementar o backend `POST /comparar`** em Node.js, começando com dados mock no mesmo formato da §5.6 e depois plugando as APIs reais.
+3. **Escolha das APIs meteorológicas** (consumidas pelo backend), avaliando cobertura, limites de uso e custo — CORS deixa de ser critério.
+4. **Definição dos pesos do índice climático** junto à equipe, com base em referências de órgãos meteorológicos, deixando claro que é uma metodologia própria da aplicação.
+5. **Validação e testes de usabilidade** com um pequeno grupo de usuários reais, com tarefas guiadas (ex.: "compare o clima da sua cidade com o de um familiar e diga qual está em situação de maior atenção"), em celular e em computador.
+6. **Evolução gradual**: comparação por período com gráficos simples → identificação de condições extremas → (fora do escopo enxuto) favoritos persistentes, mapa interativo e monitoramento contínuo.
 
 ---
 
 ## 12. Ideia central do projeto
 
-> "Não apenas mostrar o clima, mas transformar diferentes fontes de dados climáticos em uma comparação simples, compreensível e útil para a população — em uma única aplicação leve, responsiva e construída apenas com HTML, CSS e JavaScript."
+> "Não apenas mostrar o clima, mas transformar diferentes fontes de dados climáticos em uma comparação simples, compreensível e útil para a população — em uma única aplicação leve e responsiva, com front-end em HTML, CSS e JavaScript e um backend mínimo, também em JavaScript."
 
 ```
-APIs meteorológicas → Dados climáticos → Normalização e média (JS)
+APIs meteorológicas → Dados climáticos → Normalização e média (backend)
    → Comparação entre localidades → Classificação → Orientação
    → Conscientização da população
 ```
 
-A funcionalidade **Comparar Localidades** é o principal mecanismo de interação do sistema, conectando a parte técnica do projeto à proposta extensionista e aos ODS 11 e 13 — tudo isso sem exigir múltiplas plataformas, frameworks ou um backend dedicado.
+A funcionalidade **Comparar Localidades** é o principal mecanismo de interação do sistema, conectando a parte técnica do projeto à proposta extensionista e aos ODS 11 e 13 — tudo isso sem exigir múltiplas plataformas, frameworks ou infraestrutura pesada.
 
 ---
 
 ## 13. Como usar este material
 
-- **`wireframe-climamonitor.html`** — protótipo de baixa fidelidade usado na fase de ideação, ilustrando as telas da aplicação.
-- **`climamonitor-app.html`** — implementação funcional simples, em HTML, CSS e JavaScript puro, já navegável, com dados simulados (mock) no lugar das chamadas reais às APIs. É a base a partir da qual se conecta as APIs meteorológicas reais.
-- **Este documento** — serve como registro escrito do processo de ideação, podendo ser anexado ao relatório do projeto de extensão ou usado como roteiro de apresentação para a banca/orientador.
+- **`wireframe.html`** — wireframe de baixa fidelidade da fase de ideação. Artefato histórico: alguns pontos (mobile/web separados, 4º item de nav, gráficos) já não refletem a direção atual.
+- **Pasta `HTML/`** — protótipo estático atual: 4 páginas HTML5 semânticas, ainda sem CSS e sem JS, com dados mock (São Paulo × Rio de Janeiro). É a base sobre a qual entram CSS, JS e a chamada ao backend.
+- **Este documento** — registro escrito do processo de ideação, podendo ser anexado ao relatório do projeto de extensão ou usado como roteiro de apresentação para a banca/orientador.
+
+---
+
+## 14. Pendências e decisões em aberto
+
+Itens ainda **não definidos** ou que **podem não ser feitos nesta fase** — registrados
+aqui para não serem improvisados:
+
+| Item | Situação |
+|---|---|
+| Pesos exatos do índice climático | Não definidos. As faixas (§5.7) estão fixadas; os pesos por indicador, não. |
+| Quais APIs meteorológicas | Não escolhidas. Critérios: cobertura no Brasil, limites de uso, custo. |
+| Textos finais das orientações (§5.8) | Apenas rascunho ilustrativo. Precisam de revisão da equipe. |
+| Stack exata do backend | "Backend mínimo em Node.js/JavaScript, sem framework" — falta decidir se `http` puro ou um utilitário mínimo. |
+| Persistência real de Favoritos | Fora do Nível 1. Se entrar, será via `localStorage` (sem conta). Sem data definida. |
+| Mapa interativo | Fora do Nível 1. Como fazer sem biblioteca de mapa ainda é questão aberta; hoje `mapa.html` é estático. |
+| Botão "Compartilhar resultado" | Existe no protótipo (`resultado.html`), mas o comportamento (Web Share API? copiar link?) não está definido. |
+| Seleção de período 24h / 7 dias / 30 dias | Só "Agora" no Nível 1. As demais opções dependem de APIs com histórico (Nível 3). |
+| `check-in-2/m.md` | Arquivo vazio — placeholder de entrega/checkpoint, sem conteúdo ainda. |

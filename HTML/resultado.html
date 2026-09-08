@@ -4,76 +4,113 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Resultado da comparação — ClimaMonitor</title>
+    <link rel="stylesheet" href="../CSS/tokens.css">
+    <link rel="stylesheet" href="../CSS/reset.css">
+    <link rel="stylesheet" href="../CSS/layout.css">
+    <link rel="stylesheet" href="../CSS/resultado.css">
   </head>
   <body>
-    <header>
-      <p><a href="index.html" rel="prev">Voltar</a></p>
-      <h1>Resultado da comparação</h1>
-      <p>São Paulo, SP × Rio de Janeiro, RJ · Período: agora</p>
+    <header class="cabecalho">
+      <p class="cabecalho__voltar"><a href="index.html" rel="prev">Voltar</a></p>
+      <h1 class="cabecalho__titulo">Resultado da comparação</h1>
+      <p class="cabecalho__descricao">São Paulo, SP × Rio de Janeiro, RJ · Período: agora</p>
     </header>
 
-    <nav aria-label="Seções do aplicativo">
+    <nav class="nav-principal" aria-label="Seções do aplicativo">
       <a href="index.html">Comparar</a>
       <a href="mapa.html">Mapa</a>
       <a href="favoritos.html">Favoritos</a>
     </nav>
 
-    <main>
+    <main class="conteudo">
       <h2>Comparar por indicador</h2>
 
-      <details name="indicador" open>
-        <summary>Geral</summary>
+      <!--
+        FILTRO POR INDICADOR — pré-estruturado para a etapa de JavaScript.
 
-        <section aria-labelledby="loc-a">
-          <h3 id="loc-a">São Paulo</h3>
-          <dl>
-            <dt>Temperatura</dt>
-            <dd><data value="24.3">24,3 °C</data></dd>
-            <dt>Umidade</dt>
-            <dd><data value="78">78%</data></dd>
-            <dt>Chuva</dt>
-            <dd><data value="12.5">12,5 mm</data></dd>
-            <dt>Vento</dt>
-            <dd><data value="18.2">18,2 km/h</data></dd>
-            <dt>Classificação</dt>
-            <dd>Atenção</dd>
-          </dl>
-        </section>
+        Nesta etapa o projeto já tem CSS, mas ainda sem JS (ver HTML/CLAUDE.md).
+        Por isso o filtro abaixo é apenas a interface: marcar um radio NÃO esconde
+        nada e TODAS as <section data-indicador="..."> continuam visíveis na página.
+        O destaque visual do radio marcado (classe .filtro-indicador__opcao:has(input:checked)
+        em resultado.css) é só estético, não filtra o conteúdo.
 
-        <section aria-labelledby="loc-b">
-          <h3 id="loc-b">Rio de Janeiro</h3>
-          <dl>
-            <dt>Temperatura</dt>
-            <dd><data value="29.1">29,1 °C</data></dd>
-            <dt>Umidade</dt>
-            <dd><data value="72">72%</data></dd>
-            <dt>Chuva</dt>
-            <dd><data value="3.2">3,2 mm</data></dd>
-            <dt>Vento</dt>
-            <dd><data value="21.0">21,0 km/h</data></dd>
-            <dt>Classificação</dt>
-            <dd>Normal</dd>
-          </dl>
-        </section>
+        Quando o JS entrar (ideacao.md §10, §5.9 e §332):
+          - ouvir o evento "change" dos radios name="indicador";
+          - deixar visível somente a <section data-indicador="X"> cujo X for igual
+            ao value do radio marcado; nas demais, setar o atributo "hidden";
+          - estado inicial = "geral" (radio já marcado com checked);
+          - o <button type="submit"> é o fallback sem script: recarrega
+            resultado.html?indicador=X, que o JS (ou, no futuro, um backend) pode ler.
+        O gancho é o atributo data-indicador (não usar classe de estilo para isso).
+      -->
+      <form method="get" action="resultado.html">
+        <fieldset class="filtro-indicador">
+          <legend class="filtro-indicador__legenda">Comparar por</legend>
+          <div class="filtro-indicador__lista">
+            <p class="filtro-indicador__opcao"><label><input type="radio" name="indicador" value="geral" checked> Geral</label></p>
+            <p class="filtro-indicador__opcao"><label><input type="radio" name="indicador" value="temperatura"> Temperatura</label></p>
+            <p class="filtro-indicador__opcao"><label><input type="radio" name="indicador" value="chuva"> Chuva</label></p>
+            <p class="filtro-indicador__opcao"><label><input type="radio" name="indicador" value="umidade"> Umidade</label></p>
+            <p class="filtro-indicador__opcao"><label><input type="radio" name="indicador" value="vento"> Vento</label></p>
+          </div>
+        </fieldset>
+        <p class="filtro-indicador__acao"><button class="botao botao--primario" type="submit">Aplicar filtro</button></p>
+      </form>
 
-        <section aria-labelledby="indice">
-          <h3 id="indice">Índice climático (0 a 100)</h3>
-          <p>
+      <!-- Detalhe "Geral": mantém o padrão da antiga tela de resultado. -->
+      <section class="painel-indicador" data-indicador="geral" aria-label="Comparação geral">
+        <div class="painel-indicador__grade">
+          <div class="comparacao-local">
+            <h3 class="comparacao-local__titulo">São Paulo</h3>
+            <dl class="comparacao-local__lista">
+              <dt>Temperatura</dt>
+              <dd><data value="24.3">24,3 °C</data></dd>
+              <dt>Umidade</dt>
+              <dd><data value="78">78%</data></dd>
+              <dt>Chuva</dt>
+              <dd><data value="12.5">12,5 mm</data></dd>
+              <dt>Vento</dt>
+              <dd><data value="18.2">18,2 km/h</data></dd>
+              <dt>Classificação</dt>
+              <dd><span class="selo selo--atencao">Atenção</span></dd>
+            </dl>
+          </div>
+
+          <div class="comparacao-local">
+            <h3 class="comparacao-local__titulo">Rio de Janeiro</h3>
+            <dl class="comparacao-local__lista">
+              <dt>Temperatura</dt>
+              <dd><data value="29.1">29,1 °C</data></dd>
+              <dt>Umidade</dt>
+              <dd><data value="72">72%</data></dd>
+              <dt>Chuva</dt>
+              <dd><data value="3.2">3,2 mm</data></dd>
+              <dt>Vento</dt>
+              <dd><data value="21.0">21,0 km/h</data></dd>
+              <dt>Classificação</dt>
+              <dd><span class="selo selo--normal">Normal</span></dd>
+            </dl>
+          </div>
+        </div>
+
+        <div class="indice-climatico">
+          <h3>Índice climático (0 a 100)</h3>
+          <p class="indice-climatico__linha">
             São Paulo:
             <meter min="0" max="100" low="30" high="60" optimum="0" value="58">58 de 100</meter>
             <data value="58">58 — Atenção</data>
           </p>
-          <p>
+          <p class="indice-climatico__linha">
             Rio de Janeiro:
             <meter min="0" max="100" low="30" high="60" optimum="0" value="25">25 de 100</meter>
             <data value="25">25 — Normal</data>
           </p>
-          <p><small>Classificação própria da aplicação; não é um índice meteorológico oficial.</small></p>
-        </section>
+          <p class="indice-climatico__nota"><small>Classificação própria da aplicação; não é um índice meteorológico oficial.</small></p>
+        </div>
 
-        <section aria-labelledby="tabela-geral">
-          <h3 id="tabela-geral">Todos os indicadores</h3>
-          <table>
+        <h3>Todos os indicadores</h3>
+        <div class="tabela-comparativa__wrapper">
+          <table class="tabela-comparativa">
             <caption>Comparação geral dos indicadores (dados ilustrativos)</caption>
             <thead>
               <tr>
@@ -110,34 +147,33 @@
               </tr>
             </tbody>
           </table>
-        </section>
-      </details>
+        </div>
+      </section>
 
-      <details name="indicador">
-        <summary>Temperatura</summary>
-        <h3>Temperatura (°C)</h3>
-        <p>
+      <!-- Detalhes por indicador: cada um aparece quando o radio correspondente estiver marcado (etapa de JS). -->
+      <section class="painel-indicador" data-indicador="temperatura" aria-labelledby="d-temp">
+        <h3 id="d-temp">Temperatura (°C)</h3>
+        <p class="indice-climatico__linha">
           São Paulo:
           <meter min="0" max="40" value="24.3">24,3 °C de 40</meter>
           <data value="24.3">24,3 °C</data>
         </p>
-        <p>
+        <p class="indice-climatico__linha">
           Rio de Janeiro:
           <meter min="0" max="40" value="29.1">29,1 °C de 40</meter>
           <data value="29.1">29,1 °C</data>
         </p>
         <p>Rio de Janeiro está <data value="4.8">4,8 °C</data> mais quente.</p>
-      </details>
+      </section>
 
-      <details name="indicador">
-        <summary>Chuva</summary>
-        <h3>Chuva (mm)</h3>
-        <p>
+      <section class="painel-indicador" data-indicador="chuva" aria-labelledby="d-chuva">
+        <h3 id="d-chuva">Chuva (mm)</h3>
+        <p class="indice-climatico__linha">
           São Paulo:
           <meter min="0" max="12.5" value="12.5">12,5 mm de 12,5</meter>
           <data value="12.5">12,5 mm</data>
         </p>
-        <p>
+        <p class="indice-climatico__linha">
           Rio de Janeiro:
           <meter min="0" max="12.5" value="3.2">3,2 mm de 12,5</meter>
           <data value="3.2">3,2 mm</data>
@@ -146,62 +182,64 @@
           São Paulo registrou <data value="9.3">9,3 mm</data> a mais de chuva — a maior
           diferença entre os indicadores.
         </p>
-      </details>
+      </section>
 
-      <details name="indicador">
-        <summary>Umidade</summary>
-        <h3>Umidade (%)</h3>
-        <p>
+      <section class="painel-indicador" data-indicador="umidade" aria-labelledby="d-umidade">
+        <h3 id="d-umidade">Umidade (%)</h3>
+        <p class="indice-climatico__linha">
           São Paulo:
           <meter min="0" max="100" value="78">78% de 100</meter>
           <data value="78">78%</data>
         </p>
-        <p>
+        <p class="indice-climatico__linha">
           Rio de Janeiro:
           <meter min="0" max="100" value="72">72% de 100</meter>
           <data value="72">72%</data>
         </p>
         <p>São Paulo está <data value="6">6 pontos percentuais</data> mais úmido.</p>
-      </details>
+      </section>
 
-      <details name="indicador">
-        <summary>Vento</summary>
-        <h3>Vento (km/h)</h3>
-        <p>
+      <section class="painel-indicador" data-indicador="vento" aria-labelledby="d-vento">
+        <h3 id="d-vento">Vento (km/h)</h3>
+        <p class="indice-climatico__linha">
           São Paulo:
           <meter min="0" max="30" value="18.2">18,2 km/h de 30</meter>
           <data value="18.2">18,2 km/h</data>
         </p>
-        <p>
+        <p class="indice-climatico__linha">
           Rio de Janeiro:
           <meter min="0" max="30" value="21.0">21,0 km/h de 30</meter>
           <data value="21.0">21,0 km/h</data>
         </p>
         <p>Rio de Janeiro teve vento <data value="2.8">2,8 km/h</data> mais forte.</p>
-      </details>
+      </section>
 
-      <details>
-        <summary>Ver análise e orientação</summary>
+      <details class="analise">
+        <summary class="analise__resumo">Ver análise e orientação</summary>
 
-        <h3>Leitura da comparação</h3>
-        <p>
-          São Paulo apresenta maior nível de atenção no momento. A classificação está
-          relacionada principalmente ao maior volume de chuva combinado com a umidade elevada.
-        </p>
+        <div class="analise__secao">
+          <h3>Leitura da comparação</h3>
+          <p>
+            São Paulo apresenta maior nível de atenção no momento. A classificação está
+            relacionada principalmente ao maior volume de chuva combinado com a umidade elevada.
+          </p>
+        </div>
 
-        <h3>Orientação</h3>
-        <p>
-          Atenção para chuva: o volume de precipitação está elevado em comparação à outra
-          localidade. Recomenda-se atenção em áreas sujeitas a alagamentos e acompanhamento
-          dos canais oficiais.
-        </p>
-        <p><small>Esta orientação não substitui os órgãos oficiais de defesa civil.</small></p>
+        <div class="analise__secao">
+          <h3>Orientação</h3>
+          <p>
+            Atenção para chuva: o volume de precipitação está elevado em comparação à outra
+            localidade. Recomenda-se atenção em áreas sujeitas a alagamentos e acompanhamento
+            dos canais oficiais.
+          </p>
+          <p><small>Esta orientação não substitui os órgãos oficiais de defesa civil.</small></p>
+        </div>
 
-        <p><button type="button">Compartilhar resultado</button></p>
+        <p class="analise__acao"><button class="botao" type="button">Compartilhar resultado</button></p>
       </details>
     </main>
 
-    <footer>
+    <footer class="rodape">
       <p><small>Valores: média normalizada de várias APIs meteorológicas. Dados ilustrativos.</small></p>
     </footer>
   </body>

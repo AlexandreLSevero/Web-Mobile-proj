@@ -1,0 +1,126 @@
+/* Casca comum às 4 páginas: cabeçalho, navegação, conteúdo, rodapé e botões. */
+
+.cabecalho {
+  background-color: var(--cor-superficie);
+  border-bottom: 1px solid var(--cor-borda);
+  padding: var(--espaco-4) var(--espaco-4) var(--espaco-3);
+}
+
+.cabecalho__voltar {
+  display: inline-block;
+  margin-bottom: var(--espaco-2);
+  font-size: var(--texto-sm);
+  font-weight: var(--peso-negrito);
+  text-decoration: none;
+}
+
+.cabecalho__voltar:hover {
+  text-decoration: underline;
+}
+
+.cabecalho__marca {
+  display: block;
+  font-size: var(--texto-sm);
+  font-weight: var(--peso-negrito);
+  color: var(--cor-primaria);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: var(--espaco-1);
+}
+
+.cabecalho__titulo {
+  font-size: var(--texto-xl);
+  line-height: 1.2;
+}
+
+.cabecalho__descricao {
+  margin-top: var(--espaco-2);
+  color: var(--cor-texto-suave);
+  font-size: var(--texto-sm);
+}
+
+.nav-principal {
+  display: flex;
+  gap: var(--espaco-2);
+  background-color: var(--cor-superficie);
+  border-bottom: 1px solid var(--cor-borda);
+  padding: 0 var(--espaco-4);
+  overflow-x: auto;
+}
+
+.nav-principal a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: var(--espaco-2) var(--espaco-3);
+  font-size: var(--texto-sm);
+  font-weight: var(--peso-negrito);
+  color: var(--cor-texto-suave);
+  text-decoration: none;
+  border-bottom: 3px solid transparent;
+  white-space: nowrap;
+}
+
+.nav-principal a[aria-current="page"] {
+  color: var(--cor-primaria);
+  border-bottom-color: var(--cor-primaria);
+}
+
+.conteudo {
+  max-width: var(--largura-conteudo);
+  margin: 0 auto;
+  padding: var(--espaco-5) var(--espaco-4) var(--espaco-7);
+}
+
+.rodape {
+  border-top: 1px solid var(--cor-borda);
+  padding: var(--espaco-5) var(--espaco-4);
+  color: var(--cor-texto-suave);
+  font-size: var(--texto-sm);
+}
+
+.botao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: var(--espaco-2) var(--espaco-5);
+  border-radius: var(--raio-md);
+  border: 1px solid var(--cor-borda);
+  background-color: var(--cor-superficie);
+  color: var(--cor-texto);
+  font-size: var(--texto-md);
+  font-weight: var(--peso-negrito);
+  cursor: pointer;
+}
+
+.botao--primario {
+  background-color: var(--cor-primaria);
+  border-color: var(--cor-primaria);
+  color: var(--cor-primaria-contraste);
+}
+
+.botao--primario:hover {
+  background-color: var(--cor-primaria-hover);
+  border-color: var(--cor-primaria-hover);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .botao,
+  .nav-principal a {
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  }
+}
+
+@media (min-width: 48rem) {
+  .cabecalho,
+  .nav-principal {
+    padding-left: var(--espaco-6);
+    padding-right: var(--espaco-6);
+  }
+
+  .conteudo {
+    padding-left: var(--espaco-6);
+    padding-right: var(--espaco-6);
+  }
+}

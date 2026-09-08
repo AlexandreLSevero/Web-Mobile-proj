@@ -45,16 +45,24 @@ Regras para os arquivos HTML deste projeto (ClimaMonitor). Complementa o `CLAUDE
 - Um único conjunto de telas em `HTML/`, sem versão separada de mobile e web (ideacao.md §7).
   **4 telas**: `index.html` (entry point, "Comparar"), `resultado.html`, `mapa.html`,
   `favoritos.html`. Nav com 3 itens: Comparar · Mapa · Favoritos.
-- `resultado.html` concentra tudo: o filtro "Comparar por indicador" é um **acordeão exclusivo**
-  de `<details name="indicador">` com 5 painéis — "Geral" (aberto por padrão: 2 cartões +
-  índice climático + tabela) e um por indicador (Temperatura / Chuva / Umidade / Vento, cada um
-  com barras `<meter>` + a diferença). Abrir um painel fecha os outros. Além disso há um
-  `<details>` separado (sem `name`) "Ver análise e orientação". Não existem mais
-  `analise-orientacao.html` nem `comparar-por-indicador.html`.
-- **Etapa atual: HTML5 semântico puro — sem CSS e sem JS.** Nada de `<link rel="stylesheet">`,
-  nada de `class` de estilo, nada de `<script>`. Hide/show e o filtro são feitos com `<details>`
-  nativo (grupo exclusivo via atributo `name`). A responsividade via CSS (flexbox / media
-  queries) e a lógica em JS entram em etapas seguintes (ideacao.md §10).
+- `resultado.html` concentra tudo:
+  - **Filtro "Comparar por indicador"** = `<fieldset>` de radios (`name="indicador"`:
+    geral / temperatura / chuva / umidade / vento), como o wireframe (ideacao.md §5.9).
+  - Um `<section data-indicador="...">` por opção. `data-indicador` é **gancho de JS**
+    (não estilo). **Nesta etapa o filtro não filtra nada** — sem JS, todas as seções ficam
+    visíveis. Esconder/mostrar por indicador entra na etapa de JS; há um comentário no HTML
+    de `resultado.html` descrevendo exatamente o que ligar (evento `change`, `hidden` nas
+    demais, estado inicial `geral`, fallback pelo `<button type="submit">`).
+  - `<details><summary>Ver análise e orientação</summary></details>` — disclosure nativo,
+    fica fora do filtro (não é um indicador).
+  - Não existem mais `analise-orientacao.html` nem `comparar-por-indicador.html`.
+- **Etapa atual: HTML5 semântico + CSS aplicado (`CSS/`) — ainda sem JS.**
+  `<link rel="stylesheet">` e `class` de estilo (BEM, ver `CSS/CLAUDE.md`) são permitidos; nada
+  de `<script>`, `style=` inline ou `onclick=`. Hide/show do bloco de análise continua sendo o
+  `<details>` nativo. O filtro "Comparar por indicador" só ganha destaque visual do radio
+  marcado via CSS (`:has()`) — esconder/mostrar as `<section data-indicador="...">` continua
+  dependendo do JS, etapa seguinte (ideacao.md §10). `data-*` é gancho de JS, nunca usado como
+  seletor de estilo.
 - Protótipo estático, sem backend: navegação por links `<a href>` e por `<form method="get">`
   apontando para o próprio arquivo `.html` de destino. Os dados exibidos são mock (São Paulo ×
-  Rio de Janeiro) e não refletem a seleção feita nos `<select>`.
+  Rio de Janeiro) e não refletem a seleção feita nos `<select>` / radios.

@@ -4,24 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Comparar clima — ClimaMonitor</title>
+    <link rel="stylesheet" href="../CSS/tokens.css">
+    <link rel="stylesheet" href="../CSS/reset.css">
+    <link rel="stylesheet" href="../CSS/layout.css">
+    <link rel="stylesheet" href="../CSS/comparar.css">
   </head>
   <body>
-    <header>
-      <p><strong>ClimaMonitor</strong></p>
-      <h1>Compare o clima de duas localidades</h1>
+    <header class="cabecalho">
+      <p class="cabecalho__marca">ClimaMonitor</p>
+      <h1 class="cabecalho__titulo">Compare o clima de duas localidades</h1>
     </header>
 
-    <nav aria-label="Seções do aplicativo">
+    <nav class="nav-principal" aria-label="Seções do aplicativo">
       <a href="index.html" aria-current="page">Comparar</a>
       <a href="mapa.html">Mapa</a>
       <a href="favoritos.html">Favoritos</a>
     </nav>
 
-    <main>
-      <form method="get" action="resultado.html">
-        <p>
-          <label for="localidade-a">Localidade A</label>
-          <select id="localidade-a" name="localidadeA">
+    <main class="conteudo">
+      <form class="form-comparar" method="get" action="resultado.html">
+        <p class="form-comparar__campo">
+          <label class="form-comparar__rotulo" for="localidade-a">Localidade A</label>
+          <select class="form-comparar__select" id="localidade-a" name="localidadeA">
             <option value="São Paulo, SP" selected>São Paulo, SP</option>
             <option value="Rio de Janeiro, RJ">Rio de Janeiro, RJ</option>
             <option value="Belo Horizonte, MG">Belo Horizonte, MG</option>
@@ -33,9 +37,9 @@
           </select>
         </p>
 
-        <p>
-          <label for="localidade-b">Localidade B</label>
-          <select id="localidade-b" name="localidadeB">
+        <p class="form-comparar__campo">
+          <label class="form-comparar__rotulo" for="localidade-b">Localidade B</label>
+          <select class="form-comparar__select" id="localidade-b" name="localidadeB">
             <option value="São Paulo, SP">São Paulo, SP</option>
             <option value="Rio de Janeiro, RJ" selected>Rio de Janeiro, RJ</option>
             <option value="Belo Horizonte, MG">Belo Horizonte, MG</option>
@@ -47,21 +51,21 @@
           </select>
         </p>
 
-        <p>
-          <label for="periodo">Período</label>
+        <p class="form-comparar__campo form-comparar__campo--periodo">
+          <label class="form-comparar__rotulo" for="periodo">Período</label>
           <!-- Nesta versão só "Agora"; 24h / 7 dias / 30 dias são Nível 3 (ideacao.md §6). -->
-          <select id="periodo" name="periodo">
+          <select class="form-comparar__select" id="periodo" name="periodo">
             <option value="agora" selected>Agora</option>
           </select>
         </p>
 
-        <p>
-          <button type="submit">Comparar clima</button>
+        <p class="form-comparar__acao">
+          <button class="botao botao--primario" type="submit">Comparar clima</button>
         </p>
       </form>
     </main>
 
-    <footer>
+    <footer class="rodape">
       <p>
         <small>
           Protótipo estático: a tela de resultado mostra sempre o par de exemplo
@@ -71,3 +75,4 @@
     </footer>
   </body>
 </html>
+

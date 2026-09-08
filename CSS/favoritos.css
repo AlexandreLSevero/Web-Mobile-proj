@@ -1,0 +1,37 @@
+/* Tela "Favoritos" (favoritos.html): lista de pares salvos. */
+
+.lista-favoritos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-3);
+  margin-bottom: var(--espaco-5);
+}
+
+.favorito {
+  background-color: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-md);
+  padding: var(--espaco-4);
+}
+
+.favorito__titulo {
+  font-size: var(--texto-md);
+  margin-bottom: var(--espaco-1);
+}
+
+.favorito__titulo a {
+  text-decoration: none;
+}
+
+.favorito__titulo a:hover {
+  text-decoration: underline;
+}
+
+.favorito__data {
+  color: var(--cor-texto-suave);
+  font-size: var(--texto-sm);
+}
+
+.favoritos__nova {
+  display: inline-block;
+}

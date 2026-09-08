@@ -1,0 +1,48 @@
+:root {
+  /* cores base */
+  --cor-fundo: #f4f7f9;
+  --cor-superficie: #ffffff;
+  --cor-texto: #1f2933;
+  --cor-texto-suave: #52606d;
+  --cor-borda: #d9e2ec;
+  --cor-primaria: #0f6e84;
+  --cor-primaria-hover: #0b5666;
+  --cor-primaria-contraste: #ffffff;
+  --cor-foco: #1c7ed6;
+
+  /* faixas do índice climático (ideacao.md §5.7) */
+  --cor-normal-fundo: #e3f5e9;
+  --cor-normal-texto: #1e6b3a;
+  --cor-atencao-fundo: #fdf1cf;
+  --cor-atencao-texto: #7a5b00;
+  --cor-alerta-fundo: #fbe0c8;
+  --cor-alerta-texto: #94400c;
+  --cor-critico-fundo: #fbdada;
+  --cor-critico-texto: #a01818;
+
+  /* espaçamento */
+  --espaco-1: 0.25rem;
+  --espaco-2: 0.5rem;
+  --espaco-3: 0.75rem;
+  --espaco-4: 1rem;
+  --espaco-5: 1.5rem;
+  --espaco-6: 2rem;
+  --espaco-7: 3rem;
+
+  /* tipografia */
+  --fonte-base: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --texto-sm: 0.875rem;
+  --texto-md: 1rem;
+  --texto-lg: 1.25rem;
+  --texto-xl: clamp(1.5rem, 1.3rem + 1vw, 2rem);
+  --peso-normal: 400;
+  --peso-negrito: 700;
+
+  /* raios */
+  --raio-sm: 4px;
+  --raio-md: 8px;
+  --raio-lg: 16px;
+
+  /* layout */
+  --largura-conteudo: 72rem;
+}

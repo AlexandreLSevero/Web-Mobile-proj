@@ -1,0 +1,46 @@
+/* Tela "Comparar" (index.html): formulário de seleção das duas localidades. */
+
+.form-comparar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-4);
+  max-width: 28rem;
+}
+
+.form-comparar__campo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-1);
+}
+
+.form-comparar__rotulo {
+  font-size: var(--texto-sm);
+  font-weight: var(--peso-negrito);
+  color: var(--cor-texto-suave);
+}
+
+.form-comparar__select {
+  min-height: 44px;
+  padding: var(--espaco-2) var(--espaco-3);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-md);
+  background-color: var(--cor-superficie);
+}
+
+.form-comparar__acao {
+  margin-top: var(--espaco-2);
+}
+
+@media (min-width: 40rem) {
+  .form-comparar {
+    max-width: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: var(--espaco-5);
+  }
+
+  .form-comparar__campo--periodo,
+  .form-comparar__acao {
+    grid-column: 1 / -1;
+  }
+}

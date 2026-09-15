@@ -30,24 +30,20 @@
 
         Com JS ativo, marcar um radio ("change") esconde as demais
         <section data-indicador="..."> na hora, sem recarregar a página; o estado
-        inicial é "geral" (ou o valor de ?indicador=X na URL, se vier de um recarregamento).
-        Sem JS, o <button type="submit"> continua sendo o fallback: recarrega
-        resultado.html?indicador=X, que JS/filtro-indicador.js lê ao carregar a página.
-        O gancho é o atributo data-indicador (não usar classe de estilo para isso).
+        inicial é "geral" (ou o valor de ?indicador=X na URL, para quem chega via link direto).
+        Sem JS, o filtro não tem efeito na tela: todas as <section data-indicador="...">
+        ficam visíveis. O gancho é o atributo data-indicador (não usar classe de estilo).
       -->
-      <form method="get" action="resultado.html">
-        <fieldset class="filtro-indicador">
-          <legend class="filtro-indicador__legenda">Comparar por</legend>
-          <div class="filtro-indicador__lista">
-            <p class="filtro-indicador__opcao"><label><input type="radio" name="indicador" value="geral" checked> Geral</label></p>
-            <p class="filtro-indicador__opcao"><label><input type="radio" name="indicador" value="temperatura"> Temperatura</label></p>
-            <p class="filtro-indicador__opcao"><label><input type="radio" name="indicador" value="chuva"> Chuva</label></p>
-            <p class="filtro-indicador__opcao"><label><input type="radio" name="indicador" value="umidade"> Umidade</label></p>
-            <p class="filtro-indicador__opcao"><label><input type="radio" name="indicador" value="vento"> Vento</label></p>
-          </div>
-        </fieldset>
-        <p class="filtro-indicador__acao"><button class="botao botao--primario" type="submit">Aplicar filtro</button></p>
-      </form>
+      <fieldset class="filtro-indicador">
+        <legend class="filtro-indicador__legenda">Comparar por</legend>
+        <div class="filtro-indicador__lista">
+          <p class="filtro-indicador__opcao"><label><input type="radio" name="indicador" value="geral" checked> Geral</label></p>
+          <p class="filtro-indicador__opcao"><label><input type="radio" name="indicador" value="temperatura"> Temperatura</label></p>
+          <p class="filtro-indicador__opcao"><label><input type="radio" name="indicador" value="chuva"> Chuva</label></p>
+          <p class="filtro-indicador__opcao"><label><input type="radio" name="indicador" value="umidade"> Umidade</label></p>
+          <p class="filtro-indicador__opcao"><label><input type="radio" name="indicador" value="vento"> Vento</label></p>
+        </div>
+      </fieldset>
 
       <!-- Detalhe "Geral": mantém o padrão da antiga tela de resultado. -->
       <section class="painel-indicador" data-indicador="geral" aria-label="Comparação geral">

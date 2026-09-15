@@ -1,10 +1,10 @@
 /**
  * Filtro "Comparar por indicador" de `HTML/resultado.html` (ideacao.md §5.9).
  *
- * Sem JS, o `<form>` é só um fallback: recarrega `resultado.html?indicador=X`. Este
- * módulo lê esse mesmo parâmetro ao carregar a página (para o fallback continuar
- * funcionando) e, com JS ativo, responde ao evento `change` dos radios sem precisar
- * recarregar nada — como já estava descrito no comentário de `resultado.html`.
+ * Responde ao evento `change` dos radios e troca a `<section data-indicador="...">`
+ * visível sem recarregar a página — como já estava descrito no comentário de
+ * `resultado.html`. Também lê `?indicador=X` da URL ao carregar, para quem chega
+ * via link direto já com um indicador selecionado.
  */
 
 const NOME_RADIO = 'indicador';

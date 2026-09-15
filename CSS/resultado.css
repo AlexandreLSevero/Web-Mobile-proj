@@ -44,10 +44,6 @@
   margin: 0 var(--espaco-2) 0 0;
 }
 
-.filtro-indicador__acao {
-  margin-top: var(--espaco-3);
-}
-
 .painel-indicador {
   background-color: var(--cor-superficie);
   border: 1px solid var(--cor-borda);
@@ -198,4 +194,13 @@
 
 .analise__acao {
   margin-top: var(--espaco-4);
+}
+
+.analise__status {
+  margin-top: var(--espaco-2);
+  color: var(--cor-texto-suave);
+}
+
+.analise__status:empty {
+  display: none;
 }

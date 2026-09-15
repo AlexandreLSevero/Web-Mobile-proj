@@ -11,7 +11,7 @@
   </head>
   <body>
     <header class="cabecalho">
-      <p class="cabecalho__voltar"><a href="resultado.html" rel="prev">Voltar</a></p>
+      <p class="cabecalho__voltar"><a href="index.html" rel="prev">Voltar</a></p>
       <h1 class="cabecalho__titulo">Mapa das localidades</h1>
     </header>
 
@@ -22,19 +22,69 @@
     </nav>
 
     <main class="conteudo">
-      <figure class="mapa-marcador">
-        <p class="mapa-marcador__ponto">Ponto A — São Paulo, SP</p>
-        <p class="mapa-marcador__ponto">Ponto B — Rio de Janeiro, RJ</p>
-        <figcaption class="mapa-marcador__legenda">
-          Localização aproximada das duas localidades comparadas. Protótipo sem mapa
-          interativo nesta versão (Nível 1).
-        </figcaption>
-      </figure>
+      <fieldset class="selecao-mapa">
+        <legend class="selecao-mapa__legenda">Escolher localidades</legend>
+        <p class="selecao-mapa__campo">
+          <label class="selecao-mapa__rotulo" for="mapa-localidade-a">Ponto A</label>
+          <select class="selecao-mapa__select" id="mapa-localidade-a" data-campo="mapa-select-a">
+            <option value="São Paulo, SP" selected>São Paulo, SP</option>
+            <option value="Rio de Janeiro, RJ">Rio de Janeiro, RJ</option>
+            <option value="Belo Horizonte, MG">Belo Horizonte, MG</option>
+            <option value="Curitiba, PR">Curitiba, PR</option>
+            <option value="Porto Alegre, RS">Porto Alegre, RS</option>
+            <option value="Recife, PE">Recife, PE</option>
+            <option value="Salvador, BA">Salvador, BA</option>
+            <option value="Manaus, AM">Manaus, AM</option>
+          </select>
+        </p>
+        <p class="selecao-mapa__campo">
+          <label class="selecao-mapa__rotulo" for="mapa-localidade-b">Ponto B</label>
+          <select class="selecao-mapa__select" id="mapa-localidade-b" data-campo="mapa-select-b">
+            <option value="São Paulo, SP">São Paulo, SP</option>
+            <option value="Rio de Janeiro, RJ" selected>Rio de Janeiro, RJ</option>
+            <option value="Belo Horizonte, MG">Belo Horizonte, MG</option>
+            <option value="Curitiba, PR">Curitiba, PR</option>
+            <option value="Porto Alegre, RS">Porto Alegre, RS</option>
+            <option value="Recife, PE">Recife, PE</option>
+            <option value="Salvador, BA">Salvador, BA</option>
+            <option value="Manaus, AM">Manaus, AM</option>
+          </select>
+        </p>
+      </fieldset>
+
+      <div class="mapa-marcador">
+        <div class="mapa-marcador__grade">
+          <figure class="mapa-marcador__cartao">
+            <img
+              class="mapa-marcador__imagem"
+              data-campo="mapa-imagem-a"
+              src="../IMG/mapa-sao-paulo.svg"
+              alt="Mapa meteorológico ilustrativo de São Paulo: nublado, com chuva leve (dados fictícios)."
+              width="320" height="200">
+            <figcaption class="mapa-marcador__nome" data-campo="mapa-nome-a">Ponto A — São Paulo, SP</figcaption>
+          </figure>
+          <figure class="mapa-marcador__cartao">
+            <img
+              class="mapa-marcador__imagem"
+              data-campo="mapa-imagem-b"
+              src="../IMG/mapa-rio-de-janeiro.svg"
+              alt="Mapa meteorológico ilustrativo do Rio de Janeiro: predominantemente ensolarado (dados fictícios)."
+              width="320" height="200">
+            <figcaption class="mapa-marcador__nome" data-campo="mapa-nome-b">Ponto B — Rio de Janeiro, RJ</figcaption>
+          </figure>
+        </div>
+        <p class="mapa-marcador__legenda">
+          Ilustrações mock (sem dados meteorológicos reais nem mapa interativo — Nível 1,
+          ideacao.md §14). Localização aproximada das duas localidades selecionadas.
+        </p>
+      </div>
       <p>A visualização espacial reforça a leitura do impacto no ambiente urbano (ODS 11).</p>
     </main>
 
     <footer class="rodape">
       <p><small>Projeto de extensão · ODS 11 e 13 · dados ilustrativos.</small></p>
     </footer>
+
+    <script type="module" src="../JS/inicializar-mapa.js"></script>
   </body>
 </html>

@@ -22,7 +22,7 @@
     </nav>
 
     <main class="conteudo">
-      <form class="form-comparar" method="get" action="resultado.html">
+      <form class="form-comparar" method="get" action="resultado.html" data-acao="comparar">
         <p class="form-comparar__campo">
           <label class="form-comparar__rotulo" for="localidade-a">Localidade A</label>
           <select class="form-comparar__select" id="localidade-a" name="localidadeA">
@@ -68,11 +68,13 @@
     <footer class="rodape">
       <p>
         <small>
-          Protótipo estático: a tela de resultado mostra sempre o par de exemplo
-          São Paulo × Rio de Janeiro, com dados ilustrativos. Projeto de extensão · ODS 11 e 13.
+          Protótipo estático: os dados exibidos no resultado são mock, sorteados entre
+          algumas leituras ilustrativas por localidade. Projeto de extensão · ODS 11 e 13.
         </small>
       </p>
     </footer>
+
+    <script type="module" src="../JS/inicializar-comparar.js"></script>
   </body>
 </html>
 

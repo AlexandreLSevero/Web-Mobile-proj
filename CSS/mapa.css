@@ -1,5 +1,50 @@
 /* Tela "Mapa" (mapa.html): placeholder sem mapa interativo (Nível 1). */
 
+.selecao-mapa {
+  border: 0;
+  padding: 0;
+  margin: 0 0 var(--espaco-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-4);
+}
+
+.selecao-mapa__legenda {
+  font-size: var(--texto-sm);
+  font-weight: var(--peso-negrito);
+  color: var(--cor-texto-suave);
+  padding: 0;
+  margin-bottom: var(--espaco-2);
+}
+
+.selecao-mapa__campo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-1);
+}
+
+.selecao-mapa__rotulo {
+  font-size: var(--texto-sm);
+  font-weight: var(--peso-negrito);
+  color: var(--cor-texto-suave);
+}
+
+.selecao-mapa__select {
+  min-height: 44px;
+  padding: var(--espaco-2) var(--espaco-3);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-md);
+  background-color: var(--cor-superficie);
+}
+
+@media (min-width: 40rem) {
+  .selecao-mapa {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: var(--espaco-5);
+  }
+}
+
 .mapa-marcador {
   background-color: var(--cor-superficie);
   border: 1px dashed var(--cor-borda);

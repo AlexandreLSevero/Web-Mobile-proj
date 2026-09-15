@@ -13,7 +13,7 @@
     <header class="cabecalho">
       <p class="cabecalho__voltar"><a href="index.html" rel="prev">Voltar</a></p>
       <h1 class="cabecalho__titulo">Resultado da comparação</h1>
-      <p class="cabecalho__descricao">São Paulo, SP × Rio de Janeiro, RJ · Período: agora</p>
+      <p class="cabecalho__descricao" data-campo="descricao-comparacao">São Paulo, SP × Rio de Janeiro, RJ · Período: agora</p>
     </header>
 
     <nav class="nav-principal" aria-label="Seções do aplicativo">
@@ -61,34 +61,34 @@
       <section class="painel-indicador" data-indicador="geral" aria-label="Comparação geral">
         <div class="painel-indicador__grade">
           <div class="comparacao-local">
-            <h3 class="comparacao-local__titulo">São Paulo</h3>
+            <h3 class="comparacao-local__titulo" data-campo="nome-a">São Paulo</h3>
             <dl class="comparacao-local__lista">
               <dt>Temperatura</dt>
-              <dd><data value="24.3">24,3 °C</data></dd>
+              <dd><data value="24.3" data-campo="temperatura-a">24,3 °C</data></dd>
               <dt>Umidade</dt>
-              <dd><data value="78">78%</data></dd>
+              <dd><data value="78" data-campo="umidade-a">78%</data></dd>
               <dt>Chuva</dt>
-              <dd><data value="12.5">12,5 mm</data></dd>
+              <dd><data value="12.5" data-campo="chuva-a">12,5 mm</data></dd>
               <dt>Vento</dt>
-              <dd><data value="18.2">18,2 km/h</data></dd>
+              <dd><data value="18.2" data-campo="vento-a">18,2 km/h</data></dd>
               <dt>Classificação</dt>
-              <dd><span class="selo selo--atencao">Atenção</span></dd>
+              <dd><span class="selo selo--atencao" data-campo="classificacao-a">Atenção</span></dd>
             </dl>
           </div>
 
           <div class="comparacao-local">
-            <h3 class="comparacao-local__titulo">Rio de Janeiro</h3>
+            <h3 class="comparacao-local__titulo" data-campo="nome-b">Rio de Janeiro</h3>
             <dl class="comparacao-local__lista">
               <dt>Temperatura</dt>
-              <dd><data value="29.1">29,1 °C</data></dd>
+              <dd><data value="29.1" data-campo="temperatura-b">29,1 °C</data></dd>
               <dt>Umidade</dt>
-              <dd><data value="72">72%</data></dd>
+              <dd><data value="72" data-campo="umidade-b">72%</data></dd>
               <dt>Chuva</dt>
-              <dd><data value="3.2">3,2 mm</data></dd>
+              <dd><data value="3.2" data-campo="chuva-b">3,2 mm</data></dd>
               <dt>Vento</dt>
-              <dd><data value="21.0">21,0 km/h</data></dd>
+              <dd><data value="21.0" data-campo="vento-b">21,0 km/h</data></dd>
               <dt>Classificação</dt>
-              <dd><span class="selo selo--normal">Normal</span></dd>
+              <dd><span class="selo selo--normal" data-campo="classificacao-b">Normal</span></dd>
             </dl>
           </div>
         </div>
@@ -96,14 +96,14 @@
         <div class="indice-climatico">
           <h3>Índice climático (0 a 100)</h3>
           <p class="indice-climatico__linha">
-            São Paulo:
-            <meter min="0" max="100" low="30" high="60" optimum="0" value="58">58 de 100</meter>
-            <data value="58">58 — Atenção</data>
+            <span data-campo="indice-nome-a">São Paulo</span>:
+            <meter min="0" max="100" low="30" high="60" optimum="0" value="58" data-campo="indice-meter-a">58 de 100</meter>
+            <data value="58" data-campo="indice-data-a">58 — Atenção</data>
           </p>
           <p class="indice-climatico__linha">
-            Rio de Janeiro:
-            <meter min="0" max="100" low="30" high="60" optimum="0" value="25">25 de 100</meter>
-            <data value="25">25 — Normal</data>
+            <span data-campo="indice-nome-b">Rio de Janeiro</span>:
+            <meter min="0" max="100" low="30" high="60" optimum="0" value="25" data-campo="indice-meter-b">25 de 100</meter>
+            <data value="25" data-campo="indice-data-b">25 — Normal</data>
           </p>
           <p class="indice-climatico__nota"><small>Classificação própria da aplicação; não é um índice meteorológico oficial.</small></p>
         </div>
@@ -123,27 +123,27 @@
             <tbody>
               <tr>
                 <th scope="row">Temperatura</th>
-                <td>24,3 °C</td>
-                <td>29,1 °C</td>
-                <td>4,8 °C</td>
+                <td data-campo="tabela-temperatura-a">24,3 °C</td>
+                <td data-campo="tabela-temperatura-b">29,1 °C</td>
+                <td data-campo="tabela-temperatura-diferenca">4,8 °C</td>
               </tr>
               <tr>
                 <th scope="row">Umidade</th>
-                <td>78%</td>
-                <td>72%</td>
-                <td>6 pontos percentuais</td>
+                <td data-campo="tabela-umidade-a">78%</td>
+                <td data-campo="tabela-umidade-b">72%</td>
+                <td data-campo="tabela-umidade-diferenca">6 pontos percentuais</td>
               </tr>
               <tr>
                 <th scope="row">Chuva</th>
-                <td>12,5 mm</td>
-                <td>3,2 mm</td>
-                <td>9,3 mm</td>
+                <td data-campo="tabela-chuva-a">12,5 mm</td>
+                <td data-campo="tabela-chuva-b">3,2 mm</td>
+                <td data-campo="tabela-chuva-diferenca">9,3 mm</td>
               </tr>
               <tr>
                 <th scope="row">Vento</th>
-                <td>18,2 km/h</td>
-                <td>21,0 km/h</td>
-                <td>2,8 km/h</td>
+                <td data-campo="tabela-vento-a">18,2 km/h</td>
+                <td data-campo="tabela-vento-b">21,0 km/h</td>
+                <td data-campo="tabela-vento-diferenca">2,8 km/h</td>
               </tr>
             </tbody>
           </table>
@@ -154,64 +154,63 @@
       <section class="painel-indicador" data-indicador="temperatura" aria-labelledby="d-temp">
         <h3 id="d-temp">Temperatura (°C)</h3>
         <p class="indice-climatico__linha">
-          São Paulo:
-          <meter min="0" max="40" value="24.3">24,3 °C de 40</meter>
-          <data value="24.3">24,3 °C</data>
+          <span data-campo="detalhe-temperatura-nome-a">São Paulo</span>:
+          <meter min="0" max="40" value="24.3" data-campo="detalhe-temperatura-meter-a">24,3 °C de 40</meter>
+          <data value="24.3" data-campo="detalhe-temperatura-dado-a">24,3 °C</data>
         </p>
         <p class="indice-climatico__linha">
-          Rio de Janeiro:
-          <meter min="0" max="40" value="29.1">29,1 °C de 40</meter>
-          <data value="29.1">29,1 °C</data>
+          <span data-campo="detalhe-temperatura-nome-b">Rio de Janeiro</span>:
+          <meter min="0" max="40" value="29.1" data-campo="detalhe-temperatura-meter-b">29,1 °C de 40</meter>
+          <data value="29.1" data-campo="detalhe-temperatura-dado-b">29,1 °C</data>
         </p>
-        <p>Rio de Janeiro está <data value="4.8">4,8 °C</data> mais quente.</p>
+        <p data-campo="detalhe-temperatura-frase">Rio de Janeiro está <data value="4.8">4,8 °C</data> mais quente.</p>
       </section>
 
       <section class="painel-indicador" data-indicador="chuva" aria-labelledby="d-chuva">
         <h3 id="d-chuva">Chuva (mm)</h3>
         <p class="indice-climatico__linha">
-          São Paulo:
-          <meter min="0" max="12.5" value="12.5">12,5 mm de 12,5</meter>
-          <data value="12.5">12,5 mm</data>
+          <span data-campo="detalhe-chuva-nome-a">São Paulo</span>:
+          <meter min="0" max="12.5" value="12.5" data-campo="detalhe-chuva-meter-a">12,5 mm de 12,5</meter>
+          <data value="12.5" data-campo="detalhe-chuva-dado-a">12,5 mm</data>
         </p>
         <p class="indice-climatico__linha">
-          Rio de Janeiro:
-          <meter min="0" max="12.5" value="3.2">3,2 mm de 12,5</meter>
-          <data value="3.2">3,2 mm</data>
+          <span data-campo="detalhe-chuva-nome-b">Rio de Janeiro</span>:
+          <meter min="0" max="12.5" value="3.2" data-campo="detalhe-chuva-meter-b">3,2 mm de 12,5</meter>
+          <data value="3.2" data-campo="detalhe-chuva-dado-b">3,2 mm</data>
         </p>
-        <p>
-          São Paulo registrou <data value="9.3">9,3 mm</data> a mais de chuva — a maior
-          diferença entre os indicadores.
+        <p data-campo="detalhe-chuva-frase">
+          São Paulo registrou <data value="9.3">9,3 mm</data> a mais de chuva.
         </p>
       </section>
 
       <section class="painel-indicador" data-indicador="umidade" aria-labelledby="d-umidade">
         <h3 id="d-umidade">Umidade (%)</h3>
         <p class="indice-climatico__linha">
-          São Paulo:
-          <meter min="0" max="100" value="78">78% de 100</meter>
-          <data value="78">78%</data>
+          <span data-campo="detalhe-umidade-nome-a">São Paulo</span>:
+          <meter min="0" max="100" value="78" data-campo="detalhe-umidade-meter-a">78% de 100</meter>
+          <data value="78" data-campo="detalhe-umidade-dado-a">78%</data>
         </p>
         <p class="indice-climatico__linha">
-          Rio de Janeiro:
-          <meter min="0" max="100" value="72">72% de 100</meter>
-          <data value="72">72%</data>
+          <span data-campo="detalhe-umidade-nome-b">Rio de Janeiro</span>:
+          <meter min="0" max="100" value="72" data-campo="detalhe-umidade-meter-b">72% de 100</meter>
+          <data value="72" data-campo="detalhe-umidade-dado-b">72%</data>
         </p>
-        <p>São Paulo está <data value="6">6 pontos percentuais</data> mais úmido.</p>
+        <p data-campo="detalhe-umidade-frase">São Paulo está <data value="6">6 pontos percentuais</data> mais úmido.</p>
       </section>
 
       <section class="painel-indicador" data-indicador="vento" aria-labelledby="d-vento">
         <h3 id="d-vento">Vento (km/h)</h3>
         <p class="indice-climatico__linha">
-          São Paulo:
-          <meter min="0" max="30" value="18.2">18,2 km/h de 30</meter>
-          <data value="18.2">18,2 km/h</data>
+          <span data-campo="detalhe-vento-nome-a">São Paulo</span>:
+          <meter min="0" max="30" value="18.2" data-campo="detalhe-vento-meter-a">18,2 km/h de 30</meter>
+          <data value="18.2" data-campo="detalhe-vento-dado-a">18,2 km/h</data>
         </p>
         <p class="indice-climatico__linha">
-          Rio de Janeiro:
-          <meter min="0" max="30" value="21.0">21,0 km/h de 30</meter>
-          <data value="21.0">21,0 km/h</data>
+          <span data-campo="detalhe-vento-nome-b">Rio de Janeiro</span>:
+          <meter min="0" max="30" value="21.0" data-campo="detalhe-vento-meter-b">21,0 km/h de 30</meter>
+          <data value="21.0" data-campo="detalhe-vento-dado-b">21,0 km/h</data>
         </p>
-        <p>Rio de Janeiro teve vento <data value="2.8">2,8 km/h</data> mais forte.</p>
+        <p data-campo="detalhe-vento-frase">Rio de Janeiro teve vento <data value="2.8">2,8 km/h</data> mais forte.</p>
       </section>
 
       <details class="analise">
@@ -219,7 +218,7 @@
 
         <div class="analise__secao">
           <h3>Leitura da comparação</h3>
-          <p>
+          <p data-campo="leitura-comparacao">
             São Paulo apresenta maior nível de atenção no momento. A classificação está
             relacionada principalmente ao maior volume de chuva combinado com a umidade elevada.
           </p>
@@ -227,7 +226,7 @@
 
         <div class="analise__secao">
           <h3>Orientação</h3>
-          <p>
+          <p data-campo="orientacao-mensagem">
             Atenção para chuva: o volume de precipitação está elevado em comparação à outra
             localidade. Recomenda-se atenção em áreas sujeitas a alagamentos e acompanhamento
             dos canais oficiais.
@@ -242,5 +241,7 @@
     <footer class="rodape">
       <p><small>Valores: média normalizada de várias APIs meteorológicas. Dados ilustrativos.</small></p>
     </footer>
+
+    <script type="module" src="../JS/inicializar-resultado.js"></script>
   </body>
 </html>

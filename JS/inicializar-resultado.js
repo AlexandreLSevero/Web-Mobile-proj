@@ -1,8 +1,13 @@
 import { obterResultadoComparacao } from './armazenamento-comparacao.js';
 import { formatarNumero, formatarIndicador, calcularDiferenca, descreverDiferenca } from './comparar-clima.js';
 
-const MAX_INDICADOR = { temperatura: 40, umidade: 100, vento: 30 };
-const CASAS_MAX_INDICADOR = { temperatura: 0, umidade: 0, chuva: 1, vento: 0 };
+// Temperatura e umidade têm um teto natural e fixo (°C de referência / 100%).
+// Chuva e vento não têm teto natural — o mock inclui cenários de Alerta/Crítico com
+// valores altos (ex.: vento > 30 km/h), então o teto do <meter> é dinâmico: o maior
+// valor sorteado entre as duas localidades (nunca menor que o já exibido).
+const INDICADORES_SEM_TETO_FIXO = new Set(['chuva', 'vento']);
+const MAX_INDICADOR = { temperatura: 40, umidade: 100 };
+const CASAS_MAX_INDICADOR = { temperatura: 0, umidade: 0, chuva: 1, vento: 1 };
 const CLASSES_SELO = { Normal: 'normal', 'Atenção': 'atencao', Alerta: 'alerta', 'Crítico': 'critico' };
 
 /**
@@ -74,10 +79,8 @@ function renderizarTabelaComparativa(localidadeA, localidadeB) {
 
 function renderizarDetalhesIndicadores(localidadeA, localidadeB) {
   ['temperatura', 'umidade', 'chuva', 'vento'].forEach((indicador) => {
-    // Chuva não tem um teto fixo natural: usa o maior valor sorteado entre as duas
-    // localidades como referência da barra (mesmo padrão do protótipo estático original).
-    const max = indicador === 'chuva'
-      ? Math.max(localidadeA.chuva, localidadeB.chuva, 0.1)
+    const max = INDICADORES_SEM_TETO_FIXO.has(indicador)
+      ? Math.max(localidadeA[indicador], localidadeB[indicador], 0.1)
       : MAX_INDICADOR[indicador];
     const maxFormatado = formatarNumero(max, CASAS_MAX_INDICADOR[indicador]);
 

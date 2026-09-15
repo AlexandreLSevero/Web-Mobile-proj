@@ -199,3 +199,12 @@
 .analise__acao {
   margin-top: var(--espaco-4);
 }
+
+.analise__status {
+  margin-top: var(--espaco-2);
+  color: var(--cor-texto-suave);
+}
+
+.analise__status:empty {
+  display: none;
+}

@@ -49,20 +49,19 @@ Regras para os arquivos HTML deste projeto (ClimaMonitor). Complementa o `CLAUDE
   - **Filtro "Comparar por indicador"** = `<fieldset>` de radios (`name="indicador"`:
     geral / temperatura / chuva / umidade / vento), como o wireframe (ideacao.md §5.9).
   - Um `<section data-indicador="...">` por opção. `data-indicador` é **gancho de JS**
-    (não estilo). **Nesta etapa o filtro não filtra nada** — sem JS, todas as seções ficam
-    visíveis. Esconder/mostrar por indicador entra na etapa de JS; há um comentário no HTML
-    de `resultado.html` descrevendo exatamente o que ligar (evento `change`, `hidden` nas
-    demais, estado inicial `geral`, fallback pelo `<button type="submit">`).
+    (não estilo) — esconder/mostrar por indicador é feito por `JS/filtro-indicador.js`
+    (evento `change`, `hidden` nas demais, estado inicial `geral` ou `?indicador=X` da URL).
   - `<details><summary>Ver análise e orientação</summary></details>` — disclosure nativo,
     fica fora do filtro (não é um indicador).
   - Não existem mais `analise-orientacao.html` nem `comparar-por-indicador.html`.
-- **Etapa atual: HTML5 semântico + CSS aplicado (`CSS/`) — ainda sem JS.**
-  `<link rel="stylesheet">` e `class` de estilo (BEM, ver `CSS/CLAUDE.md`) são permitidos; nada
-  de `<script>`, `style=` inline ou `onclick=`. Hide/show do bloco de análise continua sendo o
-  `<details>` nativo. O filtro "Comparar por indicador" só ganha destaque visual do radio
-  marcado via CSS (`:has()`) — esconder/mostrar as `<section data-indicador="...">` continua
-  dependendo do JS, etapa seguinte (ideacao.md §10). `data-*` é gancho de JS, nunca usado como
-  seletor de estilo.
-- Protótipo estático, sem backend: navegação por links `<a href>` e por `<form method="get">`
-  apontando para o próprio arquivo `.html` de destino. Os dados exibidos são mock (São Paulo ×
-  Rio de Janeiro) e não refletem a seleção feita nos `<select>` / radios.
+- **Etapa atual: HTML5 semântico + CSS (`CSS/`) + JS (`JS/`, ver `JS/CLAUDE.md`).**
+  `<link rel="stylesheet">` no `<head>` e `<script type="module" src="…"></script>` antes de
+  `</body>`; nada de `style=` inline ou `onclick=` no HTML. Hide/show do bloco de análise
+  continua sendo o `<details>` nativo. O filtro "Comparar por indicador" tem destaque visual
+  do radio marcado via CSS (`:has()`) **e** filtra de fato via JS. `data-*` é gancho de JS,
+  nunca usado como seletor de estilo.
+- Sem backend ainda: navegação por links `<a href>` e por `<form method="get">` apontando
+  para o próprio arquivo `.html` de destino continua funcionando sem JS. Com JS, os dados
+  exibidos em `resultado.html` são mock sorteados conforme a seleção feita em `index.html`
+  (ver `JS/CLAUDE.md`); sem JS, ficam os valores estáticos de exemplo (São Paulo × Rio de
+  Janeiro) como fallback.

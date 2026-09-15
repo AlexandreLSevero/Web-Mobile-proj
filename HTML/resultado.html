@@ -26,21 +26,13 @@
       <h2>Comparar por indicador</h2>
 
       <!--
-        FILTRO POR INDICADOR — pré-estruturado para a etapa de JavaScript.
+        FILTRO POR INDICADOR — comportamento em JS/filtro-indicador.js.
 
-        Nesta etapa o projeto já tem CSS, mas ainda sem JS (ver HTML/CLAUDE.md).
-        Por isso o filtro abaixo é apenas a interface: marcar um radio NÃO esconde
-        nada e TODAS as <section data-indicador="..."> continuam visíveis na página.
-        O destaque visual do radio marcado (classe .filtro-indicador__opcao:has(input:checked)
-        em resultado.css) é só estético, não filtra o conteúdo.
-
-        Quando o JS entrar (ideacao.md §10, §5.9 e §332):
-          - ouvir o evento "change" dos radios name="indicador";
-          - deixar visível somente a <section data-indicador="X"> cujo X for igual
-            ao value do radio marcado; nas demais, setar o atributo "hidden";
-          - estado inicial = "geral" (radio já marcado com checked);
-          - o <button type="submit"> é o fallback sem script: recarrega
-            resultado.html?indicador=X, que o JS (ou, no futuro, um backend) pode ler.
+        Com JS ativo, marcar um radio ("change") esconde as demais
+        <section data-indicador="..."> na hora, sem recarregar a página; o estado
+        inicial é "geral" (ou o valor de ?indicador=X na URL, se vier de um recarregamento).
+        Sem JS, o <button type="submit"> continua sendo o fallback: recarrega
+        resultado.html?indicador=X, que JS/filtro-indicador.js lê ao carregar a página.
         O gancho é o atributo data-indicador (não usar classe de estilo para isso).
       -->
       <form method="get" action="resultado.html">
@@ -234,7 +226,10 @@
           <p><small>Esta orientação não substitui os órgãos oficiais de defesa civil.</small></p>
         </div>
 
-        <p class="analise__acao"><button class="botao" type="button">Compartilhar resultado</button></p>
+        <p class="analise__acao">
+          <button class="botao" type="button" data-acao="compartilhar">Compartilhar resultado</button>
+        </p>
+        <p class="analise__status" data-campo="compartilhar-status" aria-live="polite"></p>
       </details>
     </main>
 
@@ -243,5 +238,7 @@
     </footer>
 
     <script type="module" src="../JS/inicializar-resultado.js"></script>
+    <script type="module" src="../JS/filtro-indicador.js"></script>
+    <script type="module" src="../JS/compartilhar-resultado.js"></script>
   </body>
 </html>

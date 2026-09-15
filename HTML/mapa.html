@@ -22,14 +22,30 @@
     </nav>
 
     <main class="conteudo">
-      <figure class="mapa-marcador">
-        <p class="mapa-marcador__ponto">Ponto A — São Paulo, SP</p>
-        <p class="mapa-marcador__ponto">Ponto B — Rio de Janeiro, RJ</p>
-        <figcaption class="mapa-marcador__legenda">
-          Localização aproximada das duas localidades comparadas. Protótipo sem mapa
-          interativo nesta versão (Nível 1).
-        </figcaption>
-      </figure>
+      <div class="mapa-marcador">
+        <div class="mapa-marcador__grade">
+          <figure class="mapa-marcador__cartao">
+            <img
+              class="mapa-marcador__imagem"
+              src="../IMG/mapa-sao-paulo.svg"
+              alt="Mapa meteorológico ilustrativo de São Paulo: nublado, com chuva leve (dados fictícios)."
+              width="320" height="200">
+            <figcaption class="mapa-marcador__nome">Ponto A — São Paulo, SP</figcaption>
+          </figure>
+          <figure class="mapa-marcador__cartao">
+            <img
+              class="mapa-marcador__imagem"
+              src="../IMG/mapa-rio-de-janeiro.svg"
+              alt="Mapa meteorológico ilustrativo do Rio de Janeiro: predominantemente ensolarado (dados fictícios)."
+              width="320" height="200">
+            <figcaption class="mapa-marcador__nome">Ponto B — Rio de Janeiro, RJ</figcaption>
+          </figure>
+        </div>
+        <p class="mapa-marcador__legenda">
+          Ilustrações mock (sem dados meteorológicos reais nem mapa interativo — Nível 1,
+          ideacao.md §14). Localização aproximada das duas localidades comparadas.
+        </p>
+      </div>
       <p>A visualização espacial reforça a leitura do impacto no ambiente urbano (ODS 11).</p>
     </main>
 

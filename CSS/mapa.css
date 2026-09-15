@@ -5,16 +5,40 @@
   border: 1px dashed var(--cor-borda);
   border-radius: var(--raio-lg);
   padding: var(--espaco-6) var(--espaco-4);
-  min-height: 16rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: var(--espaco-2);
+  gap: var(--espaco-4);
   text-align: center;
 }
 
-.mapa-marcador__ponto {
+.mapa-marcador__grade {
+  display: grid;
+  gap: var(--espaco-4);
+  width: 100%;
+}
+
+@media (min-width: 32rem) {
+  .mapa-marcador__grade {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.mapa-marcador__cartao {
+  margin: 0;
+}
+
+.mapa-marcador__imagem {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 20rem;
+  margin: 0 auto;
+  border-radius: var(--raio-md);
+}
+
+.mapa-marcador__nome {
+  margin-top: var(--espaco-2);
   font-weight: var(--peso-negrito);
 }
 

@@ -15,6 +15,8 @@ build, gerenciador de pacotes nem testes.
 - [wireframe.html](wireframe.html) — wireframe de baixa fidelidade, autocontido (CSS/JS inline).
 - `HTML/`, `CSS/`, `JS/` — código-fonte por linguagem; cada pasta tem seu próprio `CLAUDE.md`
   com as regras específicas.
+- `IMG/` — ilustrações estáticas (SVG) usadas pelas telas, ex.: os mocks de "mapa
+  meteorológico" por localidade em `mapa.html`. Sem fotos/dados geográficos reais.
 
 ## Regras gerais
 

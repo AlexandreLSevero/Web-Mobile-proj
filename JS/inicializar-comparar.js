@@ -1,29 +1,67 @@
-import { sortearLeitura } from './dados-mock.js';
-import { compararLocalidades } from './comparar-clima.js';
 import { salvarResultadoComparacao } from './armazenamento-comparacao.js';
 
+const TIMEOUT_MS = 8000;
+
 /**
- * Sorteia uma leitura mock para cada localidade escolhida e salva o resultado para a
- * tela de resultado renderizar. Não usa `preventDefault()`: o
- * `<form method="get" action="resultado.html">` continua navegando normalmente, o que
- * funciona como fallback caso o JavaScript não rode.
+ * Mostra uma mensagem na região de status (`aria-live="polite"`) do formulário.
+ *
+ * @param {HTMLFormElement} formulario
+ * @param {string} mensagem
+ */
+function definirStatus(formulario, mensagem) {
+  const status = formulario.querySelector('[data-papel="status"]');
+  if (status) status.textContent = mensagem;
+}
+
+/**
+ * Chama o backend do ClimaMonitor (`POST /comparar`, ideacao.md §5.4/§5.6) para a seleção
+ * feita pelo usuário.
  *
  * @param {SubmitEvent} evento
  */
-function tratarEnvioFormulario(evento) {
+async function tratarEnvioFormulario(evento) {
+  evento.preventDefault();
+
   const formulario = evento.currentTarget;
+  const botao = formulario.querySelector('button[type="submit"]');
   const localidadeA = formulario.elements.localidadeA.value;
   const localidadeB = formulario.elements.localidadeB.value;
   const periodo = formulario.elements.periodo.value;
 
+  botao.disabled = true;
+  definirStatus(formulario, 'Comparando...');
+
+  const controlador = new AbortController();
+  const temporizador = setTimeout(() => controlador.abort(), TIMEOUT_MS);
+
   try {
-    const leituraA = sortearLeitura(localidadeA);
-    const leituraB = sortearLeitura(localidadeB);
-    const comparacao = compararLocalidades(leituraA, leituraB);
-    salvarResultadoComparacao({ periodo, localidadeA: leituraA, localidadeB: leituraB, comparacao });
+    const resposta = await fetch('/comparar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ localidadeA, localidadeB, periodo }),
+      signal: controlador.signal,
+    });
+
+    const dados = await resposta.json();
+    if (!resposta.ok) {
+      throw new Error(dados.erro || 'Não foi possível comparar as localidades.');
+    }
+
+    salvarResultadoComparacao({
+      periodo,
+      localidadeA: { ...dados.localidadeA, selecionada: localidadeA },
+      localidadeB: { ...dados.localidadeB, selecionada: localidadeB },
+      comparacao: dados.comparacao,
+    });
+    window.location.href = 'resultado.html';
   } catch (erro) {
-    // Sem dados mock para a seleção: resultado.html mantém o conteúdo estático de exemplo.
-    console.error(erro);
+    const mensagem = erro.name === 'AbortError'
+      ? 'O servidor demorou para responder. Tente novamente.'
+      : erro.message || 'Não foi possível comparar as localidades. Tente novamente.';
+    definirStatus(formulario, mensagem);
+    botao.disabled = false;
+  } finally {
+    clearTimeout(temporizador);
   }
 }
 

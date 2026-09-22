@@ -6,6 +6,7 @@
 .env.local
 *.key
 *.pem
+JS/configuracao-api.js
 
 # Dependencias / artefatos que possam surgir de ferramentas (Playwright, etc.)
 node_modules/

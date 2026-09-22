@@ -1,5 +1,24 @@
 /* Tela "Resultado" (resultado.html). */
 
+.acoes-resultado {
+  margin-bottom: var(--espaco-2);
+}
+
+.acoes-resultado__status {
+  margin-bottom: var(--espaco-5);
+  color: var(--cor-texto-suave);
+}
+
+.acoes-resultado__status:empty {
+  display: none;
+}
+
+[data-acao="favoritar"][aria-pressed="true"] {
+  background-color: var(--cor-primaria);
+  border-color: var(--cor-primaria);
+  color: var(--cor-primaria-contraste);
+}
+
 .filtro-indicador {
   border: 0;
   padding: 0;

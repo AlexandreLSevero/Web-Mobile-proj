@@ -28,6 +28,11 @@
   margin-bottom: var(--espaco-1);
 }
 
+.cabecalho__marca a {
+  color: inherit;
+  text-decoration: none;
+}
+
 .cabecalho__titulo {
   font-size: var(--texto-xl);
   line-height: 1.2;

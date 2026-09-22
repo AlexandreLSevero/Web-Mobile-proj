@@ -11,7 +11,7 @@
   </head>
   <body>
     <header class="cabecalho">
-      <p class="cabecalho__marca">ClimaMonitor</p>
+      <p class="cabecalho__marca"><a href="index.html" rel="prev">ClimaMonitor</a></p>
       <h1 class="cabecalho__titulo">Minhas comparações</h1>
       <p class="cabecalho__descricao">Pares de localidades salvos neste dispositivo. Não é necessário ter conta.</p>
     </header>
@@ -23,20 +23,31 @@
     </nav>
 
     <main class="conteudo">
-      <div class="lista-favoritos">
+      <p class="favoritos__status" data-campo="favoritos-status" aria-live="polite" tabindex="-1"></p>
+
+      <div class="lista-favoritos" data-lista-favoritos>
         <article class="favorito">
-          <h2 class="favorito__titulo"><a href="resultado.html">São Paulo, SP × Rio de Janeiro, RJ</a></h2>
-          <p class="favorito__data"><small>Última consulta: <time datetime="2026-09-01">1 de setembro de 2026</time></small></p>
+          <div class="favorito__corpo">
+            <h2 class="favorito__titulo"><a href="resultado.html">São Paulo, SP × Rio de Janeiro, RJ</a></h2>
+            <p class="favorito__data"><small>Última consulta: <time datetime="2026-09-01">1 de setembro de 2026</time></small></p>
+          </div>
+          <button class="favorito__remover" type="button" aria-label="Remover São Paulo, SP × Rio de Janeiro, RJ dos favoritos">★</button>
         </article>
 
         <article class="favorito">
-          <h2 class="favorito__titulo"><a href="resultado.html">Curitiba, PR × Porto Alegre, RS</a></h2>
-          <p class="favorito__data"><small>Última consulta: <time datetime="2026-08-30">30 de agosto de 2026</time></small></p>
+          <div class="favorito__corpo">
+            <h2 class="favorito__titulo"><a href="resultado.html">Curitiba, PR × Porto Alegre, RS</a></h2>
+            <p class="favorito__data"><small>Última consulta: <time datetime="2026-08-30">30 de agosto de 2026</time></small></p>
+          </div>
+          <button class="favorito__remover" type="button" aria-label="Remover Curitiba, PR × Porto Alegre, RS dos favoritos">★</button>
         </article>
 
         <article class="favorito">
-          <h2 class="favorito__titulo"><a href="resultado.html">Recife, PE × Salvador, BA</a></h2>
-          <p class="favorito__data"><small>Última consulta: <time datetime="2026-08-27">27 de agosto de 2026</time></small></p>
+          <div class="favorito__corpo">
+            <h2 class="favorito__titulo"><a href="resultado.html">Recife, PE × Salvador, BA</a></h2>
+            <p class="favorito__data"><small>Última consulta: <time datetime="2026-08-27">27 de agosto de 2026</time></small></p>
+          </div>
+          <button class="favorito__remover" type="button" aria-label="Remover Recife, PE × Salvador, BA dos favoritos">★</button>
         </article>
       </div>
 
@@ -46,5 +57,7 @@
     <footer class="rodape">
       <p><small>Projeto de extensão · ODS 11 e 13 · dados ilustrativos.</small></p>
     </footer>
+
+    <script type="module" src="../JS/favoritos.js"></script>
   </body>
 </html>

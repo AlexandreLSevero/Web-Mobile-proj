@@ -60,8 +60,7 @@ Regras para os arquivos HTML deste projeto (ClimaMonitor). Complementa o `CLAUDE
   continua sendo o `<details>` nativo. O filtro "Comparar por indicador" tem destaque visual
   do radio marcado via CSS (`:has()`) **e** filtra de fato via JS. `data-*` é gancho de JS,
   nunca usado como seletor de estilo.
-- Sem backend ainda: navegação por links `<a href>` e por `<form method="get">` apontando
-  para o próprio arquivo `.html` de destino continua funcionando sem JS. Com JS, os dados
-  exibidos em `resultado.html` são mock sorteados conforme a seleção feita em `index.html`
-  (ver `JS/CLAUDE.md`); sem JS, ficam os valores estáticos de exemplo (São Paulo × Rio de
-  Janeiro) como fallback.
+- Backend mínimo em `backend/` (ver `backend/CLAUDE.md`): `index.html` chama
+  `POST /comparar` de verdade (dados reais da OpenWeather) em vez de sortear mock. Sem JS,
+  o `<form method="get">` ainda navega para o próprio `resultado.html`, mas sem dados —
+  ficam os valores estáticos de exemplo (São Paulo × Rio de Janeiro) como fallback.

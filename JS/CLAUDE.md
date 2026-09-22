@@ -28,13 +28,18 @@ Regras para os arquivos JS deste projeto (ClimaMonitor). Complementa o `CLAUDE.m
 
 ## Rede e dados
 
-- Toda chamada externa passa pelo backend (`POST /comparar`) — o front **não** chama as APIs
-  meteorológicas nem guarda chaves.
+- **Sem backend**: o projeto não pode usar Node.js (restrição do professor da disciplina),
+  então não há servidor para guardar chaves. O front chama a OpenWeather **direto do
+  navegador** (`JS/cliente-openweather.js`). A chave fica em `JS/configuracao-api.js`,
+  **local e no `.gitignore`** (o GitHub bloqueia push com segredo detectado): cada pessoa
+  copia `JS/configuracao-api.example.js` e cola a própria chave. Decisão registrada em
+  `ideacao.md §14`.
 - `fetch` com `async/await`, sempre com `try/catch`, checando `response.ok`, com timeout
   (`AbortController`) e mensagem de erro amigável em pt-BR.
-- Respeite o contrato de `ideacao.md` §5.4/§5.6; valide o shape da resposta antes de renderizar.
-- Não implemente pesos do índice climático nem textos de orientação no front sem alinhamento —
-  são regra de negócio do backend.
+- Pesos do índice climático (`JS/indice-climatico.js`) e textos de orientação
+  (`JS/orientacao.js`) são regra de negócio: não duplicar a lógica em outro módulo, e
+  qualquer mudança de peso/faixa/texto é decisão de negócio — não improvisar, alinhar
+  antes (`ideacao.md §5.7/§5.8/§14`).
 
 ## Escopo
 

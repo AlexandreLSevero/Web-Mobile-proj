@@ -426,15 +426,25 @@ A funcionalidade **Comparar Localidades** é o principal mecanismo de interaçã
 
 ## 14. Pendências e decisões em aberto
 
+> **Aviso (atualizado):** o professor da disciplina informou que **o código não pode usar
+> Node.js**. Isso reverte a decisão de "backend mínimo em Node.js" descrita em §2, §5.2,
+> §5.4 e §9/§10 deste documento — não é um erro de implementação, é uma restrição externa
+> ao projeto. A arquitetura atual **não tem backend**: o front-end (`JS/`) chama a
+> OpenWeather diretamente do navegador. Cada pessoa mantém sua própria chave em
+> `JS/configuracao-api.js` (local, no `.gitignore` — o GitHub bloqueia push com segredo
+> detectado), a partir do modelo `JS/configuracao-api.example.js`, já que não há
+> build/bundler para injetar a chave em tempo de compilação. As seções citadas ficam como
+> registro histórico da decisão original.
+
 Itens ainda **não definidos** ou que **podem não ser feitos nesta fase** — registrados
 aqui para não serem improvisados:
 
 | Item | Situação |
 |---|---|
-| Pesos exatos do índice climático | Não definidos. As faixas (§5.7) estão fixadas; os pesos por indicador, não. |
-| Quais APIs meteorológicas | Não escolhidas. Critérios: cobertura no Brasil, limites de uso, custo. |
-| Textos finais das orientações (§5.8) | Apenas rascunho ilustrativo. Precisam de revisão da equipe. |
-| Stack exata do backend | "Backend mínimo em Node.js/JavaScript, sem framework" — falta decidir se `http` puro ou um utilitário mínimo. |
+| Pesos exatos do índice climático | Definidos: chuva 35% + vento 30% + temperatura 20% + umidade 15% (`JS/indice-climatico.js`). As faixas de classificação (§5.7) continuam as mesmas. |
+| Quais APIs meteorológicas | Definida: OpenWeather, Current Weather API 2.5 (gratuita, sem cartão). Fonte única por ora — as demais "2 a 4" citadas em §10 ficam para depois. |
+| Textos finais das orientações (§5.8) | Reaproveitam o rascunho ilustrativo de `JS/dados-mock.js`; ainda sem revisão formal da equipe. |
+| Stack exata do backend | Não se aplica mais — não há backend (ver aviso acima). |
 | Persistência real de Favoritos | Fora do Nível 1. Se entrar, será via `localStorage` (sem conta). Sem data definida. |
 | Mapa interativo | Fora do Nível 1. Como fazer sem biblioteca de mapa ainda é questão aberta; hoje `mapa.html` é estático. |
 | Botão "Compartilhar resultado" | Existe no protótipo (`resultado.html`), mas o comportamento (Web Share API? copiar link?) não está definido. |

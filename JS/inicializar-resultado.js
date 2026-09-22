@@ -48,6 +48,8 @@ function preencherClassificacao(campo, classificacao) {
 
 function renderizarCabecalho(localidadeA, localidadeB, periodo) {
   preencherTexto('descricao-comparacao', `${localidadeA.selecionada} × ${localidadeB.selecionada} · Período: ${periodo}`);
+  preencherTexto('selecionada-a', localidadeA.selecionada);
+  preencherTexto('selecionada-b', localidadeB.selecionada);
 }
 
 function renderizarPainelGeral(localidadeA, localidadeB) {

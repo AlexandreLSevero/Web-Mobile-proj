@@ -11,9 +11,11 @@
   </head>
   <body>
     <header class="cabecalho">
-      <p class="cabecalho__voltar"><a href="index.html" rel="prev">Voltar</a></p>
+      <p class="cabecalho__marca"><a href="index.html" rel="prev">ClimaMonitor</a></p>
       <h1 class="cabecalho__titulo">Resultado da comparação</h1>
       <p class="cabecalho__descricao" data-campo="descricao-comparacao">São Paulo, SP × Rio de Janeiro, RJ · Período: agora</p>
+      <span hidden data-campo="selecionada-a">São Paulo, SP</span>
+      <span hidden data-campo="selecionada-b">Rio de Janeiro, RJ</span>
     </header>
 
     <nav class="nav-principal" aria-label="Seções do aplicativo">
@@ -23,6 +25,11 @@
     </nav>
 
     <main class="conteudo">
+      <p class="acoes-resultado">
+        <button class="botao" type="button" data-acao="favoritar" aria-pressed="false">☆ Favoritar</button>
+      </p>
+      <p class="acoes-resultado__status" data-campo="favoritar-status" aria-live="polite"></p>
+
       <h2>Comparar por indicador</h2>
 
       <!--
@@ -37,11 +44,11 @@
       <fieldset class="filtro-indicador">
         <legend class="filtro-indicador__legenda">Comparar por</legend>
         <div class="filtro-indicador__lista">
-          <p class="filtro-indicador__opcao"><label><input type="radio" name="indicador" value="geral" checked> Geral</label></p>
-          <p class="filtro-indicador__opcao"><label><input type="radio" name="indicador" value="temperatura"> Temperatura</label></p>
-          <p class="filtro-indicador__opcao"><label><input type="radio" name="indicador" value="chuva"> Chuva</label></p>
-          <p class="filtro-indicador__opcao"><label><input type="radio" name="indicador" value="umidade"> Umidade</label></p>
-          <p class="filtro-indicador__opcao"><label><input type="radio" name="indicador" value="vento"> Vento</label></p>
+          <label class="filtro-indicador__opcao"><input type="radio" name="indicador" value="geral" checked> Geral</label>
+          <label class="filtro-indicador__opcao"><input type="radio" name="indicador" value="temperatura"> Temperatura</label>
+          <label class="filtro-indicador__opcao"><input type="radio" name="indicador" value="chuva"> Chuva</label>
+          <label class="filtro-indicador__opcao"><input type="radio" name="indicador" value="umidade"> Umidade</label>
+          <label class="filtro-indicador__opcao"><input type="radio" name="indicador" value="vento"> Vento</label>
         </div>
       </fieldset>
 
@@ -236,5 +243,6 @@
     <script type="module" src="../JS/inicializar-resultado.js"></script>
     <script type="module" src="../JS/filtro-indicador.js"></script>
     <script type="module" src="../JS/compartilhar-resultado.js"></script>
+    <script type="module" src="../JS/favoritar-resultado.js"></script>
   </body>
 </html>

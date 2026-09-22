@@ -16,3 +16,5 @@ playwright-report/
 .DS_Store
 Thumbs.db
 *.swp
+
+#OPENWEATHER APi

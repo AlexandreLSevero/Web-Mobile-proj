@@ -1,5 +1,5 @@
 # Configuracao local por pessoa (Claude Code) — inclui a escolha do navegador
-.claude/settings.local.json
+.claude/
 
 # Chaves das APIs meteorologicas e afins — nunca versionar (ver CLAUDE.md)
 .env

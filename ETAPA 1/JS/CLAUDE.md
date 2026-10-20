@@ -30,9 +30,10 @@ Regras para os arquivos JS deste projeto (ClimaMonitor). Complementa o `CLAUDE.m
 
 - **Sem backend**: o projeto não pode usar Node.js (restrição do professor da disciplina),
   então não há servidor para guardar chaves. O front chama a OpenWeather **direto do
-  navegador** (`JS/cliente-openweather.js`). A chave fica em `JS/configuracao-api.js`,
-  **local e no `.gitignore`** (o GitHub bloqueia push com segredo detectado): cada pessoa
-  copia `JS/configuracao-api.example.js` e cola a própria chave. Decisão registrada em
+  navegador** (`JS/cliente-openweather.js`). A chave fica em `JS/configuracao-api.js` e é
+  **versionada de propósito**: é do plano gratuito e o app precisa funcionar nas entregas
+  sem configuração. Não remova o arquivo do Git nem sugira revogar a chave.
+  `JS/configuracao-api.example.js` continua como modelo. Decisão registrada em
   `ideacao.md §14`.
 - `fetch` com `async/await`, sempre com `try/catch`, checando `response.ok`, com timeout
   (`AbortController`) e mensagem de erro amigável em pt-BR.

@@ -1,0 +1,182 @@
+/* Botão Favoritar (botao-favoritar.js) */
+
+.acoes-resultado {
+  margin-bottom: var(--espaco-2);
+}
+
+.acoes-resultado__status {
+  margin-bottom: var(--espaco-5);
+  color: var(--cor-texto-suave);
+}
+
+.acoes-resultado__status:empty {
+  display: none;
+}
+
+.botao-favoritar[aria-pressed="true"] {
+  background-color: var(--cor-primaria);
+  border-color: var(--cor-primaria);
+  color: var(--cor-primaria-contraste);
+}
+
+.painel-indicador {
+  background-color: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-lg);
+  padding: var(--espaco-5);
+  margin-bottom: var(--espaco-5);
+}
+
+.painel-indicador__grade {
+  display: grid;
+  gap: var(--espaco-5);
+}
+
+@media (min-width: 40rem) {
+  .painel-indicador__grade {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.comparacao-local {
+  margin-bottom: var(--espaco-5);
+}
+
+.comparacao-local:last-child {
+  margin-bottom: 0;
+}
+
+.comparacao-local__titulo {
+  font-size: var(--texto-lg);
+  margin-bottom: var(--espaco-2);
+}
+
+.comparacao-local__lista {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--espaco-1) var(--espaco-3);
+}
+
+.comparacao-local__lista dt {
+  color: var(--cor-texto-suave);
+  font-size: var(--texto-sm);
+}
+
+.comparacao-local__lista dd {
+  font-weight: var(--peso-negrito);
+}
+
+.selo {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--espaco-1) var(--espaco-3);
+  border-radius: 999px;
+  font-size: var(--texto-sm);
+  font-weight: var(--peso-negrito);
+}
+
+.selo--normal {
+  background-color: var(--cor-normal-fundo);
+  color: var(--cor-normal-texto);
+}
+
+.selo--atencao {
+  background-color: var(--cor-atencao-fundo);
+  color: var(--cor-atencao-texto);
+}
+
+.selo--alerta {
+  background-color: var(--cor-alerta-fundo);
+  color: var(--cor-alerta-texto);
+}
+
+.selo--critico {
+  background-color: var(--cor-critico-fundo);
+  color: var(--cor-critico-texto);
+}
+
+.indice-climatico {
+  margin: var(--espaco-5) 0;
+}
+
+.indice-climatico__linha {
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-3);
+  margin-bottom: var(--espaco-2);
+}
+
+.indice-climatico__linha meter {
+  flex: 1;
+  min-width: 8rem;
+  height: 12px;
+}
+
+.indice-climatico__nota {
+  font-size: var(--texto-sm);
+  color: var(--cor-texto-suave);
+  margin-top: var(--espaco-2);
+}
+
+.tabela-comparativa__wrapper {
+  overflow-x: auto;
+}
+
+.tabela-comparativa {
+  width: 100%;
+  min-width: 32rem;
+}
+
+.tabela-comparativa caption {
+  text-align: left;
+  font-size: var(--texto-sm);
+  color: var(--cor-texto-suave);
+  margin-bottom: var(--espaco-2);
+}
+
+.tabela-comparativa th,
+.tabela-comparativa td {
+  padding: var(--espaco-2) var(--espaco-3);
+  border-bottom: 1px solid var(--cor-borda);
+  text-align: left;
+}
+
+.tabela-comparativa thead th {
+  color: var(--cor-texto-suave);
+  font-size: var(--texto-sm);
+  font-weight: var(--peso-negrito);
+}
+
+.analise {
+  background-color: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-lg);
+  padding: var(--espaco-4) var(--espaco-5);
+}
+
+.analise__resumo {
+  cursor: pointer;
+  font-weight: var(--peso-negrito);
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+
+.analise__secao {
+  margin-top: var(--espaco-4);
+}
+
+/* Botão Compartilhar (botao-compartilhar.js) */
+
+.analise__acao {
+  margin-top: var(--espaco-4);
+}
+
+.analise__status {
+  margin-top: var(--espaco-2);
+  color: var(--cor-texto-suave);
+}
+
+.analise__status:empty {
+  display: none;
+}

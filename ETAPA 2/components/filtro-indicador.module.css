@@ -1,0 +1,40 @@
+.filtro-indicador {
+  border: 0;
+  padding: 0;
+  margin: 0 0 var(--espaco-5);
+}
+
+.filtro-indicador__legenda {
+  font-size: var(--texto-sm);
+  font-weight: var(--peso-negrito);
+  color: var(--cor-texto-suave);
+  margin-bottom: var(--espaco-2);
+  padding: 0;
+}
+
+.filtro-indicador__lista {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espaco-2);
+}
+
+.filtro-indicador__opcao {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: var(--espaco-2) var(--espaco-4);
+  border: 1px solid var(--cor-borda);
+  border-radius: 999px;
+  background-color: var(--cor-superficie);
+  cursor: pointer;
+}
+
+.filtro-indicador__opcao:has(input:checked) {
+  background-color: var(--cor-primaria);
+  border-color: var(--cor-primaria);
+  color: var(--cor-primaria-contraste);
+}
+
+.filtro-indicador__opcao input {
+  margin: 0 var(--espaco-2) 0 0;
+}

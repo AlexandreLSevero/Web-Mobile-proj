@@ -1,0 +1,54 @@
+.cabecalho {
+  background-color: var(--cor-superficie);
+  border-bottom: 1px solid var(--cor-borda);
+  padding: var(--espaco-4) var(--espaco-4) var(--espaco-3);
+}
+
+.cabecalho__marca {
+  font-size: var(--texto-sm);
+  font-weight: var(--peso-negrito);
+  color: var(--cor-primaria);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: var(--espaco-2);
+}
+
+/* A marca é um link em forma de botão: a box inteira é a área clicável. */
+.cabecalho__marca a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: var(--espaco-2) var(--espaco-4);
+  border-radius: var(--raio-md);
+  background-color: var(--cor-primaria);
+  color: var(--cor-primaria-contraste);
+  text-decoration: none;
+}
+
+.cabecalho__marca a:hover {
+  background-color: var(--cor-primaria-hover);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cabecalho__marca a {
+    transition: background-color 0.15s ease;
+  }
+}
+
+.cabecalho__titulo {
+  font-size: var(--texto-xl);
+  line-height: 1.2;
+}
+
+.cabecalho__descricao {
+  margin-top: var(--espaco-2);
+  color: var(--cor-texto-suave);
+  font-size: var(--texto-sm);
+}
+
+@media (min-width: 48rem) {
+  .cabecalho {
+    padding-left: var(--espaco-6);
+    padding-right: var(--espaco-6);
+  }
+}

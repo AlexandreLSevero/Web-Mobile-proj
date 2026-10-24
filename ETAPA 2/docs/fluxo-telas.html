@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fluxo de telas — Next</title>
+    <style>
+      :root {
+        --fundo: #f6f7f9;
+        --superficie: #ffffff;
+        --texto: #1b1f24;
+        --texto-suave: #5b6470;
+        --borda: #d5dae1;
+        --destaque: #1d6fd8;
+        --destaque-suave: #e5efff;
+        --dado: #8a6d1f;
+        --dado-suave: #fbf4e0;
+        --servidor: #2f7d4f;
+        --servidor-suave: #e3f3e9;
+        --externo: #7a4bc2;
+        --externo-suave: #f0e9fb;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --fundo: #111418;
+          --superficie: #1a1f25;
+          --texto: #e6e9ed;
+          --texto-suave: #9aa4b0;
+          --borda: #333b45;
+          --destaque: #6aa8ff;
+          --destaque-suave: #1a2a42;
+          --dado: #e0bf63;
+          --dado-suave: #2e2716;
+          --servidor: #6fcf97;
+          --servidor-suave: #16291e;
+          --externo: #b693f0;
+          --externo-suave: #261d36;
+        }
+      }
+
+      :root[data-theme="dark"] {
+        --fundo: #111418;
+        --superficie: #1a1f25;
+        --texto: #e6e9ed;
+        --texto-suave: #9aa4b0;
+        --borda: #333b45;
+        --destaque: #6aa8ff;
+        --destaque-suave: #1a2a42;
+        --dado: #e0bf63;
+        --dado-suave: #2e2716;
+        --servidor: #6fcf97;
+        --servidor-suave: #16291e;
+        --externo: #b693f0;
+        --externo-suave: #261d36;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--fundo);
+        color: var(--texto);
+        font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      }
+
+      main {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 32px 16px 48px;
+      }
+
+      h1 {
+        margin: 0 0 4px;
+        font-size: 1.6rem;
+      }
+
+      h2 {
+        margin: 40px 0 12px;
+        font-size: 1.2rem;
+      }
+
+      .subtitulo {
+        margin: 0 0 24px;
+        color: var(--texto-suave);
+      }
+
+      code {
+        font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+        font-size: 0.9em;
+      }
+
+      /* ---------- Diagrama ---------- */
+
+      .diagrama {
+        margin: 0;
+        padding: 16px;
+        background: var(--superficie);
+        border: 1px solid var(--borda);
+        border-radius: 12px;
+        overflow-x: auto;
+      }
+
+      .diagrama svg {
+        display: block;
+        width: 100%;
+        min-width: 760px;
+        height: auto;
+      }
+
+      .diagrama figcaption {
+        margin-top: 8px;
+        font-size: 0.875rem;
+        color: var(--texto-suave);
+      }
+
+      .no rect {
+        stroke-width: 1.5;
+      }
+
+      .no--rota rect {
+        fill: var(--destaque-suave);
+        stroke: var(--destaque);
+      }
+
+      .no--layout rect {
+        fill: var(--servidor-suave);
+        stroke: var(--servidor);
+      }
+
+      .no--dado rect {
+        fill: var(--dado-suave);
+        stroke: var(--dado);
+      }
+
+      .no--externo rect {
+        fill: var(--externo-suave);
+        stroke: var(--externo);
+      }
+
+      .no text {
+        fill: var(--texto);
+        font-size: 13px;
+      }
+
+      .no .titulo {
+        font-size: 16px;
+        font-weight: 700;
+        font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+      }
+
+      .no .suave {
+        fill: var(--texto-suave);
+        font-size: 12px;
+      }
+
+      .aresta {
+        fill: none;
+        stroke-width: 2;
+      }
+
+      .aresta--nav {
+        stroke: var(--destaque);
+      }
+
+      .aresta--dado {
+        stroke: var(--dado);
+        stroke-dasharray: 6 4;
+      }
+
+      .aresta--externo {
+        stroke: var(--externo);
+        stroke-dasharray: 2 4;
+      }
+
+      .rotulo {
+        font-size: 12px;
+        fill: var(--texto-suave);
+      }
+
+      .rotulo--nav {
+        fill: var(--destaque);
+        font-weight: 600;
+      }
+
+      .ponta--nav {
+        fill: var(--destaque);
+      }
+
+      .ponta--dado {
+        fill: var(--dado);
+      }
+
+      .ponta--externo {
+        fill: var(--externo);
+      }
+
+      /* ---------- Legenda ---------- */
+
+      .legenda {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 20px;
+        margin: 12px 0 0;
+        padding: 0;
+        list-style: none;
+        font-size: 0.875rem;
+        color: var(--texto-suave);
+      }
+
+      .legenda li {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .amostra {
+        display: inline-block;
+        width: 28px;
+        height: 0;
+        border-top: 2px solid var(--destaque);
+      }
+
+      .amostra--dado {
+        border-top: 2px dashed var(--dado);
+      }
+
+      .amostra--externo {
+        border-top: 2px dotted var(--externo);
+      }
+
+      .amostra--caixa {
+        width: 16px;
+        height: 12px;
+        border: 1.5px solid var(--destaque);
+        background: var(--destaque-suave);
+        border-radius: 3px;
+      }
+
+      .amostra--caixa-dado {
+        border-color: var(--dado);
+        background: var(--dado-suave);
+      }
+
+      .amostra--caixa-layout {
+        border-color: var(--servidor);
+        background: var(--servidor-suave);
+      }
+
+      /* ---------- Caminho do critério de aceite ---------- */
+
+      .caminho {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        counter-reset: passo;
+      }
+
+      .caminho li {
+        counter-increment: passo;
+        padding: 8px 12px;
+        background: var(--superficie);
+        border: 1px solid var(--borda);
+        border-radius: 8px;
+        font-size: 0.9rem;
+      }
+
+      .caminho li::before {
+        content: counter(passo) ". ";
+        font-weight: 700;
+        color: var(--destaque);
+      }
+
+      .caminho small {
+        display: block;
+        color: var(--texto-suave);
+      }
+
+      /* ---------- Cartões das rotas ---------- */
+
+      .rotas {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 16px;
+      }
+
+      .rota {
+        padding: 16px;
+        background: var(--superficie);
+        border: 1px solid var(--borda);
+        border-top: 4px solid var(--destaque);
+        border-radius: 10px;
+      }
+
+      .rota h3 {
+        margin: 0 0 4px;
+        font-size: 1.05rem;
+      }
+
+      .rota p {
+        margin: 0 0 8px;
+        color: var(--texto-suave);
+        font-size: 0.875rem;
+      }
+
+      .rota dl {
+        margin: 0;
+        font-size: 0.875rem;
+      }
+
+      .rota dt {
+        margin-top: 8px;
+        font-weight: 600;
+      }
+
+      .rota dd {
+        margin: 0;
+      }
+
+      .etiqueta {
+        display: inline-block;
+        padding: 0 6px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        background: var(--destaque-suave);
+        color: var(--destaque);
+      }
+
+      .etiqueta--servidor {
+        background: var(--servidor-suave);
+        color: var(--servidor);
+      }
+
+      /* ---------- Fluxo de componentes ---------- */
+
+      .no--lib rect {
+        fill: var(--superficie);
+        stroke: var(--texto-suave);
+      }
+
+      .no .etiqueta-svg {
+        font-size: 11px;
+        font-weight: 600;
+        fill: var(--texto-suave);
+      }
+
+      .aresta--render {
+        stroke: var(--servidor);
+      }
+
+      .aresta--chamada {
+        stroke: var(--texto-suave);
+        stroke-width: 1.5;
+      }
+
+      .ponta--render {
+        fill: var(--servidor);
+      }
+
+      .ponta--chamada {
+        fill: var(--texto-suave);
+      }
+
+      .grafo .no {
+        cursor: default;
+        outline: none;
+      }
+
+      .grafo .no:focus-visible rect {
+        stroke-width: 3;
+      }
+
+      .grafo .aresta,
+      .grafo .no {
+        transition: opacity 0.15s;
+      }
+
+      .grafo.focado .aresta:not(.realce),
+      .grafo.focado .no:not(.realce) {
+        opacity: 0.15;
+      }
+
+      .grafo.focado .aresta.realce {
+        stroke-width: 2.5;
+      }
+
+      .no .titulo-p {
+        font-size: 13px;
+        font-weight: 700;
+        font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+      }
+
+      .cabeca-coluna {
+        font-size: 12px;
+        font-weight: 600;
+        fill: var(--texto-suave);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+
+      .amostra--render {
+        border-top-color: var(--servidor);
+      }
+
+      .amostra--chamada {
+        border-top: 1.5px solid var(--texto-suave);
+      }
+
+      .amostra--caixa-lib {
+        border-color: var(--texto-suave);
+        background: var(--superficie);
+      }
+
+      .amostra--caixa-externo {
+        border-color: var(--externo);
+        background: var(--externo-suave);
+      }
+
+      .tabela-chamadas {
+        overflow-x: auto;
+        background: var(--superficie);
+        border: 1px solid var(--borda);
+        border-radius: 10px;
+      }
+
+      .tabela-chamadas table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.875rem;
+      }
+
+      .tabela-chamadas th,
+      .tabela-chamadas td {
+        padding: 8px 12px;
+        text-align: left;
+        vertical-align: top;
+        border-bottom: 1px solid var(--borda);
+      }
+
+      .tabela-chamadas tr:last-child td {
+        border-bottom: 0;
+      }
+
+      .tabela-chamadas thead th {
+        background: var(--fundo);
+        font-weight: 600;
+      }
+
+      .dica {
+        margin: 0 0 12px;
+        font-size: 0.875rem;
+        color: var(--texto-suave);
+      }
+
+      .notas {
+        padding-left: 20px;
+        color: var(--texto-suave);
+        font-size: 0.9rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Fluxo de telas — ClimaMonitor em Next.js</h1>
+      <p class="subtitulo">
+        Rotas do App Router previstas em <code>next.md</code> §3–§5, com a navegação e os dados
+        que cada tela troca, iguais aos da Etapa 1.
+      </p>
+
+      <figure class="diagrama">
+        <svg viewBox="0 0 1000 600" role="img" aria-labelledby="diagrama-titulo diagrama-desc">
+          <title id="diagrama-titulo">Diagrama do fluxo de telas</title>
+          <desc id="diagrama-desc">
+            O layout global envolve as quatro rotas. A rota raiz envia o formulário, consulta a
+            OpenWeather, salva o resultado no sessionStorage e navega para /resultado.
+            /resultado lê o sessionStorage, favorita no localStorage e leva ao mapa.
+            /mapa lê o sessionStorage para pré-selecionar as localidades. /favoritos lê o
+            localStorage, refaz a consulta e abre /resultado, ou volta para a raiz.
+          </desc>
+          <defs>
+            <marker id="seta-nav" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path class="ponta--nav" d="M0 0 L10 5 L0 10 z"/>
+            </marker>
+            <marker id="seta-dado" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path class="ponta--dado" d="M0 0 L10 5 L0 10 z"/>
+            </marker>
+            <marker id="seta-externo" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path class="ponta--externo" d="M0 0 L10 5 L0 10 z"/>
+            </marker>
+          </defs>
+
+          <!-- Layout global -->
+          <g class="no no--layout">
+            <rect x="20" y="12" width="960" height="54" rx="10"/>
+            <text x="40" y="35" class="titulo">app/layout.js</text>
+            <text x="40" y="54" class="suave">Server · &lt;html lang="pt-BR"&gt;</text>
+            <text x="260" y="35">Cabecalho · Navegacao · Rodape — renderizados em todas as rotas</text>
+            <text x="260" y="54" class="suave">Nav: Comparar → /  ·  Mapa → /mapa  ·  Favoritos → /favoritos  ·  marca “ClimaMonitor” → /</text>
+          </g>
+
+          <!-- OpenWeather -->
+          <g class="no no--externo">
+            <rect x="390" y="94" width="220" height="54" rx="10"/>
+            <text x="500" y="117" text-anchor="middle" class="titulo">OpenWeather</text>
+            <text x="500" y="136" text-anchor="middle" class="suave">lib/montar-leitura.js (A e B)</text>
+          </g>
+
+          <!-- Rotas -->
+          <g class="no no--rota">
+            <rect x="40" y="200" width="220" height="120" rx="10"/>
+            <text x="56" y="226" class="titulo">/</text>
+            <text x="76" y="226" class="suave">app/page.js</text>
+            <text x="56" y="250">Comparar</text>
+            <text x="56" y="272" class="suave">FormularioComparar (Client)</text>
+            <text x="56" y="292" class="suave">A, B, período → “Comparando…”</text>
+            <text x="56" y="310" class="suave">erro → status aria-live</text>
+          </g>
+
+          <g class="no no--rota">
+            <rect x="390" y="200" width="220" height="120" rx="10"/>
+            <text x="406" y="226" class="titulo">/resultado</text>
+            <text x="406" y="250">Resultado da comparação</text>
+            <text x="406" y="272" class="suave">ResultadoComparacao</text>
+            <text x="406" y="290" class="suave">FiltroIndicador (?indicador=X)</text>
+            <text x="406" y="308" class="suave">Botões Favoritar · Compartilhar</text>
+          </g>
+
+          <g class="no no--rota">
+            <rect x="740" y="200" width="220" height="120" rx="10"/>
+            <text x="756" y="226" class="titulo">/favoritos</text>
+            <text x="756" y="250">Minhas comparações</text>
+            <text x="756" y="272" class="suave">ListaFavoritos (Client)</text>
+            <text x="756" y="292" class="suave">abrir: refaz consulta e salva</text>
+            <text x="756" y="310" class="suave">no sessionStorage · remover</text>
+          </g>
+
+          <g class="no no--rota">
+            <rect x="390" y="470" width="220" height="100" rx="10"/>
+            <text x="406" y="496" class="titulo">/mapa</text>
+            <text x="406" y="520">Mapa das localidades</text>
+            <text x="406" y="542" class="suave">MapaLocalidades (Client)</text>
+            <text x="406" y="560" class="suave">selects A/B · SVG de /img/</text>
+          </g>
+
+          <!-- Armazenamento -->
+          <g class="no no--dado">
+            <rect x="40" y="400" width="220" height="60" rx="10"/>
+            <text x="150" y="425" text-anchor="middle" class="titulo">sessionStorage</text>
+            <text x="150" y="445" text-anchor="middle" class="suave">climamonitor:resultado-comparacao</text>
+          </g>
+
+          <g class="no no--dado">
+            <rect x="740" y="400" width="220" height="60" rx="10"/>
+            <text x="850" y="425" text-anchor="middle" class="titulo">localStorage</text>
+            <text x="850" y="445" text-anchor="middle" class="suave">climamonitor:favoritos</text>
+          </g>
+
+          <!-- Navegação -->
+          <path class="aresta aresta--nav" d="M260 250 H388" marker-end="url(#seta-nav)"/>
+          <text x="324" y="242" text-anchor="middle" class="rotulo rotulo--nav">submit</text>
+          <text x="324" y="268" text-anchor="middle" class="rotulo">router.push</text>
+
+          <path class="aresta aresta--nav" d="M740 250 H612" marker-end="url(#seta-nav)"/>
+          <text x="676" y="242" text-anchor="middle" class="rotulo rotulo--nav">abrir favorito</text>
+          <text x="676" y="268" text-anchor="middle" class="rotulo">router.push</text>
+
+          <path class="aresta aresta--nav" d="M560 320 V468" marker-end="url(#seta-nav)"/>
+          <text x="568" y="400" class="rotulo rotulo--nav">nav: Mapa</text>
+
+          <path class="aresta aresta--nav" d="M780 200 V176 H220 V198" marker-end="url(#seta-nav)"/>
+          <text x="676" y="170" text-anchor="middle" class="rotulo rotulo--nav">“Nova comparação”</text>
+
+          <!-- Consulta externa -->
+          <path class="aresta aresta--externo" d="M120 200 V121 H388" marker-end="url(#seta-externo)"/>
+          <path class="aresta aresta--externo" d="M880 200 V121 H612" marker-end="url(#seta-externo)"/>
+          <text x="254" y="113" text-anchor="middle" class="rotulo">busca leitura A e B</text>
+          <text x="746" y="113" text-anchor="middle" class="rotulo">refaz a consulta</text>
+
+          <!-- Dados -->
+          <path class="aresta aresta--dado" d="M150 320 V398" marker-end="url(#seta-dado)"/>
+          <text x="158" y="364" class="rotulo">salva</text>
+
+          <path class="aresta aresta--dado" d="M260 418 H440 V322" marker-end="url(#seta-dado)"/>
+          <text x="300" y="410" class="rotulo">lê em useEffect</text>
+
+          <path class="aresta aresta--dado" d="M150 460 V520 H388" marker-end="url(#seta-dado)"/>
+          <text x="200" y="512" class="rotulo">pré-seleciona A e B</text>
+
+          <path class="aresta aresta--dado" d="M600 320 V430 H738" marker-end="url(#seta-dado)"/>
+          <text x="620" y="422" class="rotulo">favoritar</text>
+
+          <path class="aresta aresta--dado" d="M850 398 V322" marker-start="url(#seta-dado)" marker-end="url(#seta-dado)"/>
+          <text x="858" y="364" class="rotulo">lê / remove</text>
+        </svg>
+        <figcaption>
+          A navegação global do layout liga qualquer rota a qualquer outra. As setas azuis mostram
+          só as transições que a própria tela dispara.
+        </figcaption>
+        <ul class="legenda">
+          <li><span class="amostra"></span> navegação (<code>Link</code> / <code>router.push</code>)</li>
+          <li><span class="amostra amostra--dado"></span> leitura ou escrita em storage</li>
+          <li><span class="amostra amostra--externo"></span> chamada à API</li>
+          <li><span class="amostra amostra--caixa"></span> rota (<code>app/**/page.js</code>)</li>
+          <li><span class="amostra amostra--caixa amostra--caixa-layout"></span> componente Server</li>
+          <li><span class="amostra amostra--caixa amostra--caixa-dado"></span> storage do navegador</li>
+        </ul>
+      </figure>
+
+      <h2>Caminho do critério de aceite (next.md §8, item 2)</h2>
+      <ol class="caminho">
+        <li>Comparar <small><code>/</code> · envia o formulário</small></li>
+        <li>Resultado <small><code>/resultado</code> · lê o sessionStorage</small></li>
+        <li>Mapa <small><code>/mapa</code> · mesmas localidades</small></li>
+        <li>Favoritar <small>botão em <code>/resultado</code></small></li>
+        <li>Favoritos <small><code>/favoritos</code> · lê o localStorage</small></li>
+      </ol>
+
+      <h2>Rotas</h2>
+      <div class="rotas">
+        <article class="rota">
+          <h3><code>/</code> — Comparar</h3>
+          <p>← <code>HTML/index.html</code> · <span class="etiqueta etiqueta--servidor">Server</span> + formulário <span class="etiqueta">Client</span></p>
+          <dl>
+            <dt>Componentes</dt>
+            <dd><code>FormularioComparar</code></dd>
+            <dt>Entrada</dt>
+            <dd>Localidade A, localidade B, período</dd>
+            <dt>Saída</dt>
+            <dd><code>montarLeitura</code> × 2 → <code>compararLocalidades</code> → <code>salvarResultadoComparacao</code> → <code>/resultado</code></dd>
+            <dt>Erro</dt>
+            <dd>Mensagem no status <code>aria-live</code>, botão reativado, continua na tela</dd>
+          </dl>
+        </article>
+
+        <article class="rota">
+          <h3><code>/resultado</code> — Resultado</h3>
+          <p>← <code>HTML/resultado.html</code> · <span class="etiqueta">Client</span></p>
+          <dl>
+            <dt>Componentes</dt>
+            <dd><code>ResultadoComparacao</code>, <code>FiltroIndicador</code>, <code>BotaoFavoritar</code>, <code>BotaoCompartilhar</code></dd>
+            <dt>Entrada</dt>
+            <dd>sessionStorage (em <code>useEffect</code>); <code>?indicador=X</code> define o filtro inicial</dd>
+            <dt>Sem dado salvo</dt>
+            <dd>Mantém o conteúdo estático de exemplo (acesso direto)</dd>
+            <dt>Saída</dt>
+            <dd>Favoritar → localStorage · Compartilhar → <code>navigator.share</code> ou área de transferência</dd>
+          </dl>
+        </article>
+
+        <article class="rota">
+          <h3><code>/mapa</code> — Mapa</h3>
+          <p>← <code>HTML/mapa.html</code> · <span class="etiqueta">Client</span></p>
+          <dl>
+            <dt>Componentes</dt>
+            <dd><code>MapaLocalidades</code></dd>
+            <dt>Entrada</dt>
+            <dd>sessionStorage pré-seleciona A e B; os selects da tela trocam a ilustração</dd>
+            <dt>Saída</dt>
+            <dd>Nenhuma navegação própria, só a do layout</dd>
+          </dl>
+        </article>
+
+        <article class="rota">
+          <h3><code>/favoritos</code> — Favoritos</h3>
+          <p>← <code>HTML/favoritos.html</code> · <span class="etiqueta">Client</span></p>
+          <dl>
+            <dt>Componentes</dt>
+            <dd><code>ListaFavoritos</code></dd>
+            <dt>Entrada</dt>
+            <dd>localStorage (em <code>useEffect</code>)</dd>
+            <dt>Saída</dt>
+            <dd>Abrir favorito → refaz a consulta, salva no sessionStorage, atualiza a “última consulta” → <code>/resultado</code> · “Nova comparação” → <code>/</code> · Remover → localStorage</dd>
+          </dl>
+        </article>
+      </div>
+
+      <h2>Fluxo de componentes — quem chama quem</h2>
+      <p class="dica">
+        Levantado dos <code>import</code> de <code>ETAPA 2/app</code>, <code>components</code> e
+        <code>lib</code>. Passe o mouse ou o foco (Tab) num bloco para destacar só as ligações dele.
+      </p>
+
+      <figure class="diagrama">
+        <svg class="grafo" viewBox="0 0 1000 600" role="img" aria-labelledby="arvore-titulo arvore-desc">
+          <title id="arvore-titulo">Árvore de renderização</title>
+          <desc id="arvore-desc">
+            Cada rota renderiza um componente Client principal. FormularioComparar e
+            MapaLocalidades usam OpcoesLocalidade. ResultadoComparacao renderiza Cabecalho,
+            Navegacao, FiltroIndicador, BotaoFavoritar e BotaoCompartilhar. ListaFavoritos não tem
+            componentes filhos.
+          </desc>
+          <defs>
+            <marker id="seta-render" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path class="ponta--render" d="M0 0 L10 5 L0 10 z"/>
+            </marker>
+          </defs>
+
+          <g class="no no--layout" data-no="layout" tabindex="0">
+            <rect x="20" y="10" width="960" height="44" rx="10"/>
+            <text x="36" y="37" class="titulo">app/layout.js</text>
+            <text x="200" y="37" class="suave">Server · &lt;html lang="pt-BR"&gt; + globals.css + título “%s — ClimaMonitor” · envolve {children} de todas as rotas</text>
+          </g>
+
+          <text x="20" y="78" class="cabeca-coluna">Rota (app/)</text>
+          <text x="330" y="78" class="cabeca-coluna">Componente da página</text>
+          <text x="700" y="78" class="cabeca-coluna">Filhos</text>
+
+          <!-- Rotas -->
+          <g class="no no--layout" data-no="r-raiz" tabindex="0">
+            <rect x="20" y="90" width="200" height="44" rx="10"/>
+            <text x="36" y="109" class="titulo">/</text>
+            <text x="36" y="126" class="suave">app/page.js · Server</text>
+          </g>
+          <g class="no no--layout" data-no="r-mapa" tabindex="0">
+            <rect x="20" y="210" width="200" height="44" rx="10"/>
+            <text x="36" y="229" class="titulo">/mapa</text>
+            <text x="36" y="246" class="suave">app/mapa/page.js · Server</text>
+          </g>
+          <g class="no no--layout" data-no="r-resultado" tabindex="0">
+            <rect x="20" y="340" width="200" height="44" rx="10"/>
+            <text x="36" y="359" class="titulo">/resultado</text>
+            <text x="36" y="376" class="suave">app/resultado/page.js · Server</text>
+          </g>
+          <g class="no no--layout" data-no="r-favoritos" tabindex="0">
+            <rect x="20" y="480" width="200" height="44" rx="10"/>
+            <text x="36" y="499" class="titulo">/favoritos</text>
+            <text x="36" y="516" class="suave">+ Link “Nova comparação” → /</text>
+          </g>
+
+          <!-- Componentes da página -->
+          <g class="no no--rota" data-no="c-form" tabindex="0">
+            <rect x="330" y="90" width="240" height="44" rx="10"/>
+            <text x="346" y="109" class="titulo-p">FormularioComparar</text>
+            <text x="346" y="126" class="suave">Client · router.push('/resultado')</text>
+          </g>
+          <g class="no no--rota" data-no="c-mapa" tabindex="0">
+            <rect x="330" y="210" width="240" height="44" rx="10"/>
+            <text x="346" y="229" class="titulo-p">MapaLocalidades</text>
+            <text x="346" y="246" class="suave">Client · selects A/B + &lt;img&gt;</text>
+          </g>
+          <g class="no no--rota" data-no="c-resultado" tabindex="0">
+            <rect x="330" y="340" width="240" height="44" rx="10"/>
+            <text x="346" y="359" class="titulo-p">ResultadoComparacao</text>
+            <text x="346" y="376" class="suave">Client · estado do indicador</text>
+          </g>
+          <g class="no no--rota" data-no="c-lista" tabindex="0">
+            <rect x="330" y="480" width="240" height="44" rx="10"/>
+            <text x="346" y="499" class="titulo-p">ListaFavoritos</text>
+            <text x="346" y="516" class="suave">Client · Link + router.push</text>
+          </g>
+
+          <!-- Filhos -->
+          <g class="no no--rota" data-no="f-opcoes" tabindex="0">
+            <rect x="700" y="150" width="280" height="44" rx="10"/>
+            <text x="716" y="169" class="titulo-p">OpcoesLocalidade</text>
+            <text x="716" y="186" class="suave">as 8 &lt;option&gt; dos selects A e B</text>
+          </g>
+          <g class="no no--layout" data-no="f-cab" tabindex="0">
+            <rect x="700" y="266" width="280" height="44" rx="10"/>
+            <text x="716" y="285" class="titulo-p">Cabecalho · Navegacao</text>
+            <text x="716" y="302" class="suave">Server · props: titulo, descricao</text>
+          </g>
+          <g class="no no--rota" data-no="f-filtro" tabindex="0">
+            <rect x="700" y="316" width="280" height="44" rx="10"/>
+            <text x="716" y="335" class="titulo-p">FiltroIndicador</text>
+            <text x="716" y="352" class="suave">props: valor, aoMudar</text>
+          </g>
+          <g class="no no--rota" data-no="f-fav" tabindex="0">
+            <rect x="700" y="366" width="280" height="44" rx="10"/>
+            <text x="716" y="385" class="titulo-p">BotaoFavoritar</text>
+            <text x="716" y="402" class="suave">props: nomeA, nomeB</text>
+          </g>
+          <g class="no no--rota" data-no="f-comp" tabindex="0">
+            <rect x="700" y="416" width="280" height="44" rx="10"/>
+            <text x="716" y="435" class="titulo-p">BotaoCompartilhar</text>
+            <text x="716" y="452" class="suave">props: texto</text>
+          </g>
+
+          <g class="no no--layout" data-no="compartilhados" tabindex="0">
+            <rect x="20" y="542" width="960" height="48" rx="10"/>
+            <text x="36" y="562">Cabecalho · Navegacao · Rodape (Server)</text>
+            <text x="36" y="580" class="suave">/, /mapa e /favoritos renderizam os três na página. /resultado só o Rodape: Cabecalho e Navegacao vêm de ResultadoComparacao.</text>
+          </g>
+
+          <!-- Arestas -->
+          <path class="aresta aresta--render" data-liga="r-raiz c-form" d="M220 112 H328" marker-end="url(#seta-render)"/>
+          <path class="aresta aresta--render" data-liga="r-mapa c-mapa" d="M220 232 H328" marker-end="url(#seta-render)"/>
+          <path class="aresta aresta--render" data-liga="r-resultado c-resultado" d="M220 362 H328" marker-end="url(#seta-render)"/>
+          <path class="aresta aresta--render" data-liga="r-favoritos c-lista" d="M220 502 H328" marker-end="url(#seta-render)"/>
+
+          <path class="aresta aresta--render" data-liga="c-form f-opcoes" d="M570 112 C635 112 635 172 698 172" marker-end="url(#seta-render)"/>
+          <path class="aresta aresta--render" data-liga="c-mapa f-opcoes" d="M570 232 C635 232 635 172 698 172" marker-end="url(#seta-render)"/>
+          <path class="aresta aresta--render" data-liga="c-resultado f-cab" d="M570 362 C635 362 635 288 698 288" marker-end="url(#seta-render)"/>
+          <path class="aresta aresta--render" data-liga="c-resultado f-filtro" d="M570 362 C635 362 635 338 698 338" marker-end="url(#seta-render)"/>
+          <path class="aresta aresta--render" data-liga="c-resultado f-fav" d="M570 362 C635 362 635 388 698 388" marker-end="url(#seta-render)"/>
+          <path class="aresta aresta--render" data-liga="c-resultado f-comp" d="M570 362 C635 362 635 438 698 438" marker-end="url(#seta-render)"/>
+        </svg>
+        <figcaption>Árvore de renderização: quem renderiza quem no JSX.</figcaption>
+        <ul class="legenda">
+          <li><span class="amostra amostra--render"></span> renderiza (JSX)</li>
+          <li><span class="amostra amostra--caixa amostra--caixa-layout"></span> componente Server</li>
+          <li><span class="amostra amostra--caixa"></span> componente Client (<code>'use client'</code>)</li>
+        </ul>
+      </figure>
+
+      <figure class="diagrama">
+        <svg class="grafo" viewBox="0 0 1000 520" role="img" aria-labelledby="chamadas-titulo chamadas-desc">
+          <title id="chamadas-titulo">Chamadas dos componentes para lib/ e para o navegador</title>
+          <desc id="chamadas-desc">
+            FormularioComparar e ListaFavoritos chamam montar-leitura, comparar-clima e
+            armazenamento-comparacao; ListaFavoritos também chama armazenamento-favoritos.
+            ResultadoComparacao chama comparar-clima e armazenamento-comparacao. MapaLocalidades
+            chama armazenamento-comparacao e dados-mapa. BotaoFavoritar chama
+            armazenamento-favoritos. BotaoCompartilhar usa a Web Share API ou a área de
+            transferência. montar-leitura chama localidades, indice-climatico, orientacao e
+            cliente-openweather, que consulta a OpenWeather.
+          </desc>
+          <defs>
+            <marker id="seta-chamada" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path class="ponta--chamada" d="M0 0 L10 5 L0 10 z"/>
+            </marker>
+          </defs>
+
+          <text x="20" y="20" class="cabeca-coluna">Componente</text>
+          <text x="300" y="20" class="cabeca-coluna">lib/ chamada direto</text>
+          <text x="590" y="20" class="cabeca-coluna">lib/ interna</text>
+          <text x="820" y="20" class="cabeca-coluna">Navegador / externo</text>
+
+          <g transform="translate(0 30)">
+            <!-- Componentes -->
+            <g class="no no--rota" data-no="k-form" tabindex="0">
+              <rect x="20" y="20" width="190" height="40" rx="8"/>
+              <text x="34" y="45" class="titulo-p">FormularioComparar</text>
+            </g>
+            <g class="no no--rota" data-no="k-lista" tabindex="0">
+              <rect x="20" y="90" width="190" height="40" rx="8"/>
+              <text x="34" y="115" class="titulo-p">ListaFavoritos</text>
+            </g>
+            <g class="no no--rota" data-no="k-resultado" tabindex="0">
+              <rect x="20" y="160" width="190" height="40" rx="8"/>
+              <text x="34" y="185" class="titulo-p">ResultadoComparacao</text>
+            </g>
+            <g class="no no--rota" data-no="k-mapa" tabindex="0">
+              <rect x="20" y="230" width="190" height="40" rx="8"/>
+              <text x="34" y="255" class="titulo-p">MapaLocalidades</text>
+            </g>
+            <g class="no no--rota" data-no="k-fav" tabindex="0">
+              <rect x="20" y="300" width="190" height="40" rx="8"/>
+              <text x="34" y="325" class="titulo-p">BotaoFavoritar</text>
+            </g>
+            <g class="no no--rota" data-no="k-filtro" tabindex="0">
+              <rect x="20" y="370" width="190" height="40" rx="8"/>
+              <text x="34" y="395" class="titulo-p">FiltroIndicador</text>
+            </g>
+            <text x="34" y="427" class="rotulo">não chama lib: só devolve a escolha por aoMudar</text>
+            <g class="no no--rota" data-no="k-comp" tabindex="0">
+              <rect x="20" y="440" width="190" height="40" rx="8"/>
+              <text x="34" y="465" class="titulo-p">BotaoCompartilhar</text>
+            </g>
+
+            <!-- lib/ chamada direto -->
+            <g class="no no--lib" data-no="l-montar" tabindex="0">
+              <rect x="300" y="20" width="230" height="40" rx="8"/>
+              <text x="314" y="45" class="titulo-p">montar-leitura</text>
+            </g>
+            <g class="no no--lib" data-no="l-comparar" tabindex="0">
+              <rect x="300" y="100" width="230" height="40" rx="8"/>
+              <text x="314" y="125" class="titulo-p">comparar-clima</text>
+            </g>
+            <g class="no no--lib" data-no="l-armc" tabindex="0">
+              <rect x="300" y="200" width="230" height="40" rx="8"/>
+              <text x="314" y="225" class="titulo-p">armazenamento-comparacao</text>
+            </g>
+            <g class="no no--lib" data-no="l-dados" tabindex="0">
+              <rect x="300" y="280" width="230" height="40" rx="8"/>
+              <text x="314" y="305" class="titulo-p">dados-mapa</text>
+            </g>
+            <g class="no no--lib" data-no="l-armf" tabindex="0">
+              <rect x="300" y="360" width="230" height="40" rx="8"/>
+              <text x="314" y="385" class="titulo-p">armazenamento-favoritos</text>
+            </g>
+
+            <!-- lib/ interna -->
+            <g class="no no--lib" data-no="i-loc" tabindex="0">
+              <rect x="590" y="12" width="170" height="36" rx="8"/>
+              <text x="604" y="35" class="titulo-p">localidades</text>
+            </g>
+            <g class="no no--lib" data-no="i-ind" tabindex="0">
+              <rect x="590" y="56" width="170" height="36" rx="8"/>
+              <text x="604" y="79" class="titulo-p">indice-climatico</text>
+            </g>
+            <g class="no no--lib" data-no="i-ori" tabindex="0">
+              <rect x="590" y="100" width="170" height="36" rx="8"/>
+              <text x="604" y="123" class="titulo-p">orientacao</text>
+            </g>
+            <g class="no no--lib" data-no="i-cli" tabindex="0">
+              <rect x="590" y="144" width="170" height="36" rx="8"/>
+              <text x="604" y="167" class="titulo-p">cliente-openweather</text>
+            </g>
+
+            <!-- Navegador / externo -->
+            <g class="no no--externo" data-no="e-ow" tabindex="0">
+              <rect x="820" y="142" width="160" height="40" rx="8"/>
+              <text x="834" y="167" class="titulo-p">OpenWeather</text>
+            </g>
+            <g class="no no--dado" data-no="e-ss" tabindex="0">
+              <rect x="820" y="200" width="160" height="40" rx="8"/>
+              <text x="834" y="225" class="titulo-p">sessionStorage</text>
+            </g>
+            <g class="no no--externo" data-no="e-img" tabindex="0">
+              <rect x="820" y="280" width="160" height="40" rx="8"/>
+              <text x="834" y="305" class="titulo-p">public/img/*.svg</text>
+            </g>
+            <g class="no no--dado" data-no="e-ls" tabindex="0">
+              <rect x="820" y="360" width="160" height="40" rx="8"/>
+              <text x="834" y="385" class="titulo-p">localStorage</text>
+            </g>
+            <g class="no no--externo" data-no="e-nav" tabindex="0">
+              <rect x="820" y="440" width="160" height="40" rx="8"/>
+              <text x="834" y="465" class="titulo-p">share / clipboard</text>
+            </g>
+
+            <!-- Componente → lib -->
+            <path class="aresta aresta--chamada" data-liga="k-form l-montar" d="M210 40 H298" marker-end="url(#seta-chamada)"/>
+            <path class="aresta aresta--chamada" data-liga="k-form l-comparar" d="M210 40 C254 40 254 120 298 120" marker-end="url(#seta-chamada)"/>
+            <path class="aresta aresta--chamada" data-liga="k-form l-armc" d="M210 40 C254 40 254 220 298 220" marker-end="url(#seta-chamada)"/>
+            <path class="aresta aresta--chamada" data-liga="k-lista l-montar" d="M210 110 C254 110 254 40 298 40" marker-end="url(#seta-chamada)"/>
+            <path class="aresta aresta--chamada" data-liga="k-lista l-comparar" d="M210 110 C254 110 254 120 298 120" marker-end="url(#seta-chamada)"/>
+            <path class="aresta aresta--chamada" data-liga="k-lista l-armc" d="M210 110 C254 110 254 220 298 220" marker-end="url(#seta-chamada)"/>
+            <path class="aresta aresta--chamada" data-liga="k-lista l-armf" d="M210 110 C254 110 254 380 298 380" marker-end="url(#seta-chamada)"/>
+            <path class="aresta aresta--chamada" data-liga="k-resultado l-comparar" d="M210 180 C254 180 254 120 298 120" marker-end="url(#seta-chamada)"/>
+            <path class="aresta aresta--chamada" data-liga="k-resultado l-armc" d="M210 180 C254 180 254 220 298 220" marker-end="url(#seta-chamada)"/>
+            <path class="aresta aresta--chamada" data-liga="k-mapa l-armc" d="M210 250 C254 250 254 220 298 220" marker-end="url(#seta-chamada)"/>
+            <path class="aresta aresta--chamada" data-liga="k-mapa l-dados" d="M210 250 C254 250 254 300 298 300" marker-end="url(#seta-chamada)"/>
+            <path class="aresta aresta--chamada" data-liga="k-fav l-armf" d="M210 320 C254 320 254 380 298 380" marker-end="url(#seta-chamada)"/>
+            <path class="aresta aresta--externo" data-liga="k-comp e-nav" d="M210 460 H818" marker-end="url(#seta-externo)"/>
+
+            <!-- lib → lib interna -->
+            <path class="aresta aresta--chamada" data-liga="l-montar i-loc" d="M530 40 C560 40 560 30 588 30" marker-end="url(#seta-chamada)"/>
+            <path class="aresta aresta--chamada" data-liga="l-montar i-ind" d="M530 40 C560 40 560 74 588 74" marker-end="url(#seta-chamada)"/>
+            <path class="aresta aresta--chamada" data-liga="l-montar i-ori" d="M530 40 C560 40 560 118 588 118" marker-end="url(#seta-chamada)"/>
+            <path class="aresta aresta--chamada" data-liga="l-montar i-cli" d="M530 40 C560 40 560 162 588 162" marker-end="url(#seta-chamada)"/>
+
+            <!-- lib → navegador / externo -->
+            <path class="aresta aresta--externo" data-liga="i-cli e-ow" d="M760 162 H818" marker-end="url(#seta-externo)"/>
+            <path class="aresta aresta--dado" data-liga="l-armc e-ss" d="M530 220 H818" marker-end="url(#seta-dado)"/>
+            <path class="aresta aresta--externo" data-liga="l-dados e-img" d="M530 300 H818" marker-end="url(#seta-externo)"/>
+            <path class="aresta aresta--dado" data-liga="l-armf e-ls" d="M530 380 H818" marker-end="url(#seta-dado)"/>
+            <text x="675" y="212" text-anchor="middle" class="rotulo">sessão da aba</text>
+            <text x="675" y="292" text-anchor="middle" class="rotulo">caminho do SVG</text>
+            <text x="675" y="372" text-anchor="middle" class="rotulo">persiste entre sessões</text>
+          </g>
+        </svg>
+        <figcaption>
+          Chamadas de função: componentes → <code>lib/*.js</code> → navegador ou API. A chave de
+          <code>cliente-openweather</code> vem de <code>configuracao-api.js</code>.
+        </figcaption>
+        <ul class="legenda">
+          <li><span class="amostra amostra--chamada"></span> importa e chama</li>
+          <li><span class="amostra amostra--dado"></span> lê ou grava storage</li>
+          <li><span class="amostra amostra--externo"></span> rede / API do navegador</li>
+          <li><span class="amostra amostra--caixa amostra--caixa-lib"></span> módulo de <code>lib/</code> (sem React, sem DOM)</li>
+        </ul>
+      </figure>
+
+      <h3>Tabela de chamadas</h3>
+      <div class="tabela-chamadas">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Quem</th>
+              <th scope="col">Renderiza</th>
+              <th scope="col">Chama (lib / navegador)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row"><code>app/layout.js</code></th>
+              <td><code>{children}</code></td>
+              <td><code>globals.css</code></td>
+            </tr>
+            <tr>
+              <th scope="row"><code>app/page.js</code> (<code>/</code>)</th>
+              <td>Cabecalho, Navegacao, FormularioComparar, Rodape</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <th scope="row"><code>app/mapa/page.js</code></th>
+              <td>Cabecalho, Navegacao, MapaLocalidades, Rodape</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <th scope="row"><code>app/resultado/page.js</code></th>
+              <td>ResultadoComparacao, Rodape</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <th scope="row"><code>app/favoritos/page.js</code></th>
+              <td>Cabecalho, Navegacao, ListaFavoritos, Rodape, Link “Nova comparação”</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <th scope="row">FormularioComparar</th>
+              <td>OpcoesLocalidade</td>
+              <td><code>montarLeitura</code>, <code>compararLocalidades</code>, <code>salvarResultadoComparacao</code>, <code>router.push('/resultado')</code></td>
+            </tr>
+            <tr>
+              <th scope="row">MapaLocalidades</th>
+              <td>OpcoesLocalidade</td>
+              <td><code>obterResultadoComparacao</code>, <code>obterMapa</code></td>
+            </tr>
+            <tr>
+              <th scope="row">ResultadoComparacao</th>
+              <td>Cabecalho, Navegacao, FiltroIndicador, BotaoFavoritar, BotaoCompartilhar</td>
+              <td><code>obterResultadoComparacao</code>, <code>compararLocalidades</code>, <code>formatarNumero</code>, <code>formatarIndicador</code>, <code>calcularDiferenca</code>, <code>descreverDiferenca</code>, <code>?indicador</code> da URL</td>
+            </tr>
+            <tr>
+              <th scope="row">ListaFavoritos</th>
+              <td>Link</td>
+              <td><code>obterFavoritos</code>, <code>removerFavorito</code>, <code>favoritarComparacao</code>, <code>montarLeitura</code>, <code>compararLocalidades</code>, <code>salvarResultadoComparacao</code>, <code>router.push('/resultado')</code></td>
+            </tr>
+            <tr>
+              <th scope="row">BotaoFavoritar</th>
+              <td>—</td>
+              <td><code>ehFavorito</code>, <code>favoritarComparacao</code>, <code>removerFavorito</code></td>
+            </tr>
+            <tr>
+              <th scope="row">BotaoCompartilhar</th>
+              <td>—</td>
+              <td><code>navigator.share</code>, senão <code>navigator.clipboard.writeText</code></td>
+            </tr>
+            <tr>
+              <th scope="row">FiltroIndicador</th>
+              <td>—</td>
+              <td>— (devolve a escolha por <code>aoMudar</code>)</td>
+            </tr>
+            <tr>
+              <th scope="row">Cabecalho, Navegacao</th>
+              <td>Link</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <th scope="row"><code>lib/montar-leitura</code></th>
+              <td>—</td>
+              <td><code>obterCoordenadas</code>, <code>buscarClima</code>, <code>calcularRiscos</code>, <code>calcularIndice</code>, <code>classificar</code>, <code>gerarOrientacao</code></td>
+            </tr>
+            <tr>
+              <th scope="row"><code>lib/cliente-openweather</code></th>
+              <td>—</td>
+              <td><code>OPENWEATHER_API_KEY</code> (de <code>configuracao-api</code>) → OpenWeather</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Notas da migração</h2>
+      <ul class="notas">
+        <li><code>window.location.href = 'resultado.html'</code> vira <code>router.push('/resultado')</code>; os <code>&lt;a href&gt;</code> viram <code>&lt;Link&gt;</code>.</li>
+        <li>No servidor não existem sessionStorage nem localStorage: o primeiro render sai vazio e os dados entram no <code>useEffect</code>, o que evita erro de hidratação.</li>
+        <li><code>lib/</code> continua sendo a única fonte da regra de negócio. Nenhuma rota recalcula índice nem escreve orientação.</li>
+      </ul>
+    </main>
+    <script>
+      // Destaca só as ligações do bloco sob o mouse ou com foco.
+      document.querySelectorAll('.grafo').forEach((grafo) => {
+        const arestas = grafo.querySelectorAll('[data-liga]');
+
+        function destacar(id) {
+          const ligados = new Set([id]);
+          arestas.forEach((aresta) => {
+            const pontas = aresta.dataset.liga.split(' ');
+            const liga = pontas.includes(id);
+            aresta.classList.toggle('realce', liga);
+            if (liga) pontas.forEach((ponta) => ligados.add(ponta));
+          });
+          grafo.querySelectorAll('[data-no]').forEach((no) => {
+            no.classList.toggle('realce', ligados.has(no.dataset.no));
+          });
+          grafo.classList.add('focado');
+        }
+
+        function limpar() {
+          grafo.classList.remove('focado');
+        }
+
+        grafo.querySelectorAll('[data-no]').forEach((no) => {
+          no.addEventListener('mouseenter', () => destacar(no.dataset.no));
+          no.addEventListener('focus', () => destacar(no.dataset.no));
+          no.addEventListener('mouseleave', limpar);
+          no.addEventListener('blur', limpar);
+        });
+      });
+    </script>
+  </body>
+</html>

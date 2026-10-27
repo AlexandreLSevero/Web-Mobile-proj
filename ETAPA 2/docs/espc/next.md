@@ -51,6 +51,10 @@ Convenções da Etapa 1 continuam: arquivos em minúsculas com hífen, 2 espaço
 simples, ponto e vírgula, pt-BR. O componente exportado usa PascalCase
 (`cartao-localidade.js` → `CartaoLocalidade`).
 
+> **Desvio registrado (enxugamento pós-migração):** nem todo componente tem `.module.css`
+> próprio. `BotaoFavoritar` e `BotaoCompartilhar` usam o módulo de `ResultadoComparacao`
+> (só existem dentro dele) e o `Rodape` usa a classe global `.rodape` de `globals.css`.
+
 ## 4. Páginas
 
 | Etapa 1 | Rota | Tipo | Por quê |
@@ -81,6 +85,13 @@ Ajustes pontuais permitidos:
 
 A chave da OpenWeather continua em `lib/configuracao-api.js`, versionada, como na
 Etapa 1.
+
+> **Desvio registrado (enxugamento pós-migração):** dois ajustes em `lib/` fora da lista
+> acima, sem mudar regra de negócio nem resultado na tela:
+> - `localidades.js` exporta `LOCALIDADES` (chaves de `COORDENADAS`), usada pelas
+>   `<option>` dos selects em vez de repetir as 8 cidades num componente.
+> - `comparar-clima.js`: `compararLocalidades` devolve só `{ maiorNivelAtencao }`, único
+>   campo lido pela tela; os outros quatro (`maiorTemperatura` etc.) não eram usados.
 
 ### 5.2 Convertidos em componentes
 
@@ -125,6 +136,10 @@ componente recalcula índice nem escreve texto de orientação.
   componentes de cada página.
 - Valores e media queries copiados como estão. Só muda a forma de aplicar
   (`className={estilos.cartao}`).
+- **Desvio registrado:** `.rodape` ficou em `globals.css`, e as regras dos botões
+  Favoritar/Compartilhar (`.acoes-resultado*`, `.analise__acao/__status`) ficaram em
+  `resultado-comparacao.module.css` — ver nota em §3. Declarações que só repetiam o reset
+  ou o padrão do navegador foram removidas.
 
 ## 7. Equivalências obrigatórias
 

@@ -2,8 +2,6 @@
 .claude/
 
 # Chaves das APIs meteorologicas e afins — nunca versionar (ver CLAUDE.md)
-.env
-.env.local
 *.key
 *.pem
 

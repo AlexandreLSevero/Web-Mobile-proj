@@ -69,6 +69,18 @@ igual ao da Etapa 1.
 
 **Pronto quando:** o PR está aberto com todos os critérios de aceite marcados.
 
+## Fase 6 — Backend e JSON estático (`feature/api-backend`)
+
+- [x] 6.1 Criar `public/dados/localidades.json` (dropdown e mapa)
+- [x] 6.2 Criar `app/api/clima/[slug]/route.js` (OpenWeather no servidor)
+- [x] 6.3 Mover a chave para `.env.local` e apagar `lib/configuracao-api.js`
+- [x] 6.4 Criar `lib/cliente-api.js` e ajustar `montar-leitura`, formulário e mapa
+- [x] 6.5 Apagar `localidades.js`, `dados-mapa.js`, `dados-mock.js`, `cliente-openweather.js`
+- [x] 6.6 Converter os relatórios de `docs/relatorios/` para HTML
+- [ ] 6.7 Revogar a chave antiga na OpenWeather (só o dono da conta)
+
+**Pronto quando:** `npm run build` passa e o front só chama `/api/clima/*` e `/dados/*`.
+
 ---
 
 ## Primeiro passo agora

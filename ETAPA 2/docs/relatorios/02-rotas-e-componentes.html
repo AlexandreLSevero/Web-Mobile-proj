@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Rotas e componentes — ClimaMonitor</title>
+    <style>
+      :root {
+        --fundo: #f6f7f9;
+        --superficie: #ffffff;
+        --texto: #1b1f24;
+        --texto-suave: #5b6470;
+        --borda: #d5dae1;
+        --destaque: #1d6fd8;
+        --destaque-suave: #e5efff;
+        --dado: #8a6d1f;
+        --dado-suave: #fbf4e0;
+        --servidor: #2f7d4f;
+        --servidor-suave: #e3f3e9;
+        --externo: #7a4bc2;
+        --externo-suave: #f0e9fb;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --fundo: #111418;
+          --superficie: #1a1f25;
+          --texto: #e6e9ed;
+          --texto-suave: #9aa4b0;
+          --borda: #333b45;
+          --destaque: #6aa8ff;
+          --destaque-suave: #1a2a42;
+          --dado: #e0bf63;
+          --dado-suave: #2e2716;
+          --servidor: #6fcf97;
+          --servidor-suave: #16291e;
+          --externo: #b693f0;
+          --externo-suave: #261d36;
+        }
+      }
+
+      :root[data-theme="dark"] {
+        --fundo: #111418;
+        --superficie: #1a1f25;
+        --texto: #e6e9ed;
+        --texto-suave: #9aa4b0;
+        --borda: #333b45;
+        --destaque: #6aa8ff;
+        --destaque-suave: #1a2a42;
+        --dado: #e0bf63;
+        --dado-suave: #2e2716;
+        --servidor: #6fcf97;
+        --servidor-suave: #16291e;
+        --externo: #b693f0;
+        --externo-suave: #261d36;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--fundo);
+        color: var(--texto);
+        font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      }
+
+      main {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 32px 16px 48px;
+      }
+
+      h1 {
+        margin: 0 0 4px;
+        font-size: 1.6rem;
+      }
+
+      h2 {
+        margin: 40px 0 12px;
+        font-size: 1.2rem;
+      }
+
+      .subtitulo {
+        margin: 0 0 24px;
+        color: var(--texto-suave);
+      }
+
+      code {
+        font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+        font-size: 0.9em;
+      }
+
+      /* ---------- Diagrama ---------- */
+
+      .diagrama {
+        margin: 0;
+        padding: 16px;
+        background: var(--superficie);
+        border: 1px solid var(--borda);
+        border-radius: 12px;
+        overflow-x: auto;
+      }
+
+      .diagrama svg {
+        display: block;
+        width: 100%;
+        min-width: 760px;
+        height: auto;
+      }
+
+      .diagrama figcaption {
+        margin-top: 8px;
+        font-size: 0.875rem;
+        color: var(--texto-suave);
+      }
+
+      .no rect {
+        stroke-width: 1.5;
+      }
+
+      .no--rota rect {
+        fill: var(--destaque-suave);
+        stroke: var(--destaque);
+      }
+
+      .no--layout rect {
+        fill: var(--servidor-suave);
+        stroke: var(--servidor);
+      }
+
+      .no--dado rect {
+        fill: var(--dado-suave);
+        stroke: var(--dado);
+      }
+
+      .no--externo rect {
+        fill: var(--externo-suave);
+        stroke: var(--externo);
+      }
+
+      .no text {
+        fill: var(--texto);
+        font-size: 13px;
+      }
+
+      .no .titulo {
+        font-size: 16px;
+        font-weight: 700;
+        font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+      }
+
+      .no .suave {
+        fill: var(--texto-suave);
+        font-size: 12px;
+      }
+
+      .aresta {
+        fill: none;
+        stroke-width: 2;
+      }
+
+      .aresta--nav {
+        stroke: var(--destaque);
+      }
+
+      .aresta--dado {
+        stroke: var(--dado);
+        stroke-dasharray: 6 4;
+      }
+
+      .aresta--externo {
+        stroke: var(--externo);
+        stroke-dasharray: 2 4;
+      }
+
+      .rotulo {
+        font-size: 12px;
+        fill: var(--texto-suave);
+      }
+
+      .rotulo--nav {
+        fill: var(--destaque);
+        font-weight: 600;
+      }
+
+      .ponta--nav {
+        fill: var(--destaque);
+      }
+
+      .ponta--dado {
+        fill: var(--dado);
+      }
+
+      .ponta--externo {
+        fill: var(--externo);
+      }
+
+      /* ---------- Legenda ---------- */
+
+      .legenda {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 20px;
+        margin: 12px 0 0;
+        padding: 0;
+        list-style: none;
+        font-size: 0.875rem;
+        color: var(--texto-suave);
+      }
+
+      .legenda li {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .amostra {
+        display: inline-block;
+        width: 28px;
+        height: 0;
+        border-top: 2px solid var(--destaque);
+      }
+
+      .amostra--dado {
+        border-top: 2px dashed var(--dado);
+      }
+
+      .amostra--externo {
+        border-top: 2px dotted var(--externo);
+      }
+
+      .amostra--caixa {
+        width: 16px;
+        height: 12px;
+        border: 1.5px solid var(--destaque);
+        background: var(--destaque-suave);
+        border-radius: 3px;
+      }
+
+      .amostra--caixa-dado {
+        border-color: var(--dado);
+        background: var(--dado-suave);
+      }
+
+      .amostra--caixa-layout {
+        border-color: var(--servidor);
+        background: var(--servidor-suave);
+      }
+
+      /* ---------- Caminho do critério de aceite ---------- */
+
+      .caminho {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        counter-reset: passo;
+      }
+
+      .caminho li {
+        counter-increment: passo;
+        padding: 8px 12px;
+        background: var(--superficie);
+        border: 1px solid var(--borda);
+        border-radius: 8px;
+        font-size: 0.9rem;
+      }
+
+      .caminho li::before {
+        content: counter(passo) ". ";
+        font-weight: 700;
+        color: var(--destaque);
+      }
+
+      .caminho small {
+        display: block;
+        color: var(--texto-suave);
+      }
+
+      /* ---------- Cartões das rotas ---------- */
+
+      .rotas {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 16px;
+      }
+
+      .rota {
+        padding: 16px;
+        background: var(--superficie);
+        border: 1px solid var(--borda);
+        border-top: 4px solid var(--destaque);
+        border-radius: 10px;
+      }
+
+      .rota h3 {
+        margin: 0 0 4px;
+        font-size: 1.05rem;
+      }
+
+      .rota p {
+        margin: 0 0 8px;
+        color: var(--texto-suave);
+        font-size: 0.875rem;
+      }
+
+      .rota dl {
+        margin: 0;
+        font-size: 0.875rem;
+      }
+
+      .rota dt {
+        margin-top: 8px;
+        font-weight: 600;
+      }
+
+      .rota dd {
+        margin: 0;
+      }
+
+      .etiqueta {
+        display: inline-block;
+        padding: 0 6px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        background: var(--destaque-suave);
+        color: var(--destaque);
+      }
+
+      .etiqueta--servidor {
+        background: var(--servidor-suave);
+        color: var(--servidor);
+      }
+
+      /* ---------- Fluxo de componentes ---------- */
+
+      .no--lib rect {
+        fill: var(--superficie);
+        stroke: var(--texto-suave);
+      }
+
+      .no .etiqueta-svg {
+        font-size: 11px;
+        font-weight: 600;
+        fill: var(--texto-suave);
+      }
+
+      .aresta--render {
+        stroke: var(--servidor);
+      }
+
+      .aresta--chamada {
+        stroke: var(--texto-suave);
+        stroke-width: 1.5;
+      }
+
+      .ponta--render {
+        fill: var(--servidor);
+      }
+
+      .ponta--chamada {
+        fill: var(--texto-suave);
+      }
+
+      .grafo .no {
+        cursor: default;
+        outline: none;
+      }
+
+      .grafo .no:focus-visible rect {
+        stroke-width: 3;
+      }
+
+      .grafo .aresta,
+      .grafo .no {
+        transition: opacity 0.15s;
+      }
+
+      .grafo.focado .aresta:not(.realce),
+      .grafo.focado .no:not(.realce) {
+        opacity: 0.15;
+      }
+
+      .grafo.focado .aresta.realce {
+        stroke-width: 2.5;
+      }
+
+      .no .titulo-p {
+        font-size: 13px;
+        font-weight: 700;
+        font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+      }
+
+      .cabeca-coluna {
+        font-size: 12px;
+        font-weight: 600;
+        fill: var(--texto-suave);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+
+      .amostra--render {
+        border-top-color: var(--servidor);
+      }
+
+      .amostra--chamada {
+        border-top: 1.5px solid var(--texto-suave);
+      }
+
+      .amostra--caixa-lib {
+        border-color: var(--texto-suave);
+        background: var(--superficie);
+      }
+
+      .amostra--caixa-externo {
+        border-color: var(--externo);
+        background: var(--externo-suave);
+      }
+
+      .tabela-chamadas {
+        overflow-x: auto;
+        background: var(--superficie);
+        border: 1px solid var(--borda);
+        border-radius: 10px;
+      }
+
+      .tabela-chamadas table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.875rem;
+      }
+
+      .tabela-chamadas th,
+      .tabela-chamadas td {
+        padding: 8px 12px;
+        text-align: left;
+        vertical-align: top;
+        border-bottom: 1px solid var(--borda);
+      }
+
+      .tabela-chamadas tr:last-child td {
+        border-bottom: 0;
+      }
+
+      .tabela-chamadas thead th {
+        background: var(--fundo);
+        font-weight: 600;
+      }
+
+      .dica {
+        margin: 0 0 12px;
+        font-size: 0.875rem;
+        color: var(--texto-suave);
+      }
+
+      .notas {
+        padding-left: 20px;
+        color: var(--texto-suave);
+        font-size: 0.9rem;
+      }
+
+      /* ---------- Extras dos relatórios ---------- */
+
+      :root {
+        --erro: #b42318;
+        --erro-suave: #fde8e6;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --erro: #ff9a90;
+          --erro-suave: #3a1a18;
+        }
+      }
+
+      :root[data-theme="dark"] {
+        --erro: #ff9a90;
+        --erro-suave: #3a1a18;
+      }
+
+      .etiqueta--erro {
+        background: var(--erro-suave);
+        color: var(--erro);
+      }
+
+      .etiqueta--aviso {
+        background: var(--dado-suave);
+        color: var(--dado);
+      }
+
+      .etiqueta--lib {
+        background: var(--fundo);
+        color: var(--texto-suave);
+        border: 1px solid var(--borda);
+      }
+
+      .etiqueta--externo {
+        background: var(--externo-suave);
+        color: var(--externo);
+      }
+
+      .rota--servidor { border-top-color: var(--servidor); }
+      .rota--dado { border-top-color: var(--dado); }
+      .rota--externo { border-top-color: var(--externo); }
+      .rota--erro { border-top-color: var(--erro); }
+
+      .tabela-chamadas + h2,
+      .tabela-chamadas + .dica {
+        margin-top: 40px;
+      }
+
+      td.centro,
+      th.centro {
+        text-align: center;
+      }
+
+      .tabela-chamadas caption {
+        padding: 8px 12px;
+        text-align: left;
+        font-weight: 600;
+        border-bottom: 1px solid var(--borda);
+      }
+
+      .rotulo--erro {
+        fill: var(--erro);
+        font-weight: 600;
+      }
+
+      .no--erro rect {
+        fill: var(--erro-suave);
+        stroke: var(--erro);
+      }
+
+      .rodape-relatorio {
+        margin-top: 40px;
+        color: var(--texto-suave);
+        font-size: 0.875rem;
+      }
+
+      .no .rotulo--erro {
+        fill: var(--erro);
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Rotas e componentes — ClimaMonitor em Next.js</h1>
+      <p class="subtitulo">
+        Qual componente aparece em qual rota, e o que cada rota lê e chama.
+      </p>
+
+      <figure class="diagrama">
+        <svg class="grafo" viewBox="0 0 1000 600" role="img" aria-labelledby="arvore-titulo arvore-desc">
+          <title id="arvore-titulo">Árvore de renderização</title>
+          <desc id="arvore-desc">
+            Cada rota renderiza um componente Client principal. FormularioComparar e
+            MapaLocalidades usam OpcoesLocalidade. ResultadoComparacao renderiza Cabecalho,
+            Navegacao, FiltroIndicador, BotaoFavoritar e BotaoCompartilhar. ListaFavoritos não tem
+            componentes filhos.
+          </desc>
+          <defs>
+            <marker id="seta-render" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path class="ponta--render" d="M0 0 L10 5 L0 10 z"/>
+            </marker>
+            <marker id="seta-dado" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path class="ponta--dado" d="M0 0 L10 5 L0 10 z"/>
+            </marker>
+            <marker id="seta-externo" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path class="ponta--externo" d="M0 0 L10 5 L0 10 z"/>
+            </marker>
+          </defs>
+
+          <g class="no no--layout" data-no="layout" tabindex="0">
+            <rect x="20" y="10" width="960" height="44" rx="10"/>
+            <text x="36" y="37" class="titulo">app/layout.js</text>
+            <text x="200" y="37" class="suave">Server · &lt;html lang="pt-BR"&gt; + globals.css + título “%s — ClimaMonitor” · envolve {children} de todas as rotas</text>
+          </g>
+
+          <text x="20" y="78" class="cabeca-coluna">Rota (app/)</text>
+          <text x="330" y="78" class="cabeca-coluna">Componente da página</text>
+          <text x="700" y="78" class="cabeca-coluna">Filhos</text>
+
+          <g class="no no--layout" data-no="r-raiz" tabindex="0">
+            <rect x="20" y="90" width="200" height="44" rx="10"/>
+            <text x="36" y="109" class="titulo">/</text>
+            <text x="36" y="126" class="suave">app/page.js · Server</text>
+          </g>
+          <g class="no no--layout" data-no="r-mapa" tabindex="0">
+            <rect x="20" y="210" width="200" height="44" rx="10"/>
+            <text x="36" y="229" class="titulo">/mapa</text>
+            <text x="36" y="246" class="suave">app/mapa/page.js · Server</text>
+          </g>
+          <g class="no no--layout" data-no="r-resultado" tabindex="0">
+            <rect x="20" y="340" width="200" height="44" rx="10"/>
+            <text x="36" y="359" class="titulo">/resultado</text>
+            <text x="36" y="376" class="suave">app/resultado/page.js · Server</text>
+          </g>
+          <g class="no no--layout" data-no="r-favoritos" tabindex="0">
+            <rect x="20" y="480" width="200" height="44" rx="10"/>
+            <text x="36" y="499" class="titulo">/favoritos</text>
+            <text x="36" y="516" class="suave">+ Link “Nova comparação” → /</text>
+          </g>
+
+          <g class="no no--rota" data-no="c-form" tabindex="0">
+            <rect x="330" y="90" width="240" height="44" rx="10"/>
+            <text x="346" y="109" class="titulo-p">FormularioComparar</text>
+            <text x="346" y="126" class="suave">Client · router.push('/resultado')</text>
+          </g>
+          <g class="no no--rota" data-no="c-mapa" tabindex="0">
+            <rect x="330" y="210" width="240" height="44" rx="10"/>
+            <text x="346" y="229" class="titulo-p">MapaLocalidades</text>
+            <text x="346" y="246" class="suave">Client · selects A/B + &lt;img&gt;</text>
+          </g>
+          <g class="no no--rota" data-no="c-resultado" tabindex="0">
+            <rect x="330" y="340" width="240" height="44" rx="10"/>
+            <text x="346" y="359" class="titulo-p">ResultadoComparacao</text>
+            <text x="346" y="376" class="suave">Client · estado do indicador</text>
+          </g>
+          <g class="no no--rota" data-no="c-lista" tabindex="0">
+            <rect x="330" y="480" width="240" height="44" rx="10"/>
+            <text x="346" y="499" class="titulo-p">ListaFavoritos</text>
+            <text x="346" y="516" class="suave">Client · Link + router.push</text>
+          </g>
+
+          <g class="no no--layout" data-no="f-opcoes" tabindex="0">
+            <rect x="700" y="150" width="280" height="44" rx="10"/>
+            <text x="716" y="169" class="titulo-p">OpcoesLocalidade</text>
+            <text x="716" y="186" class="suave">&lt;option&gt; das 8 cidades · prop localidades</text>
+          </g>
+          <g class="no no--layout" data-no="f-cab" tabindex="0">
+            <rect x="700" y="266" width="280" height="44" rx="10"/>
+            <text x="716" y="285" class="titulo-p">Cabecalho · Navegacao</text>
+            <text x="716" y="302" class="suave">Server · props: titulo, descricao</text>
+          </g>
+          <g class="no no--rota" data-no="f-filtro" tabindex="0">
+            <rect x="700" y="316" width="280" height="44" rx="10"/>
+            <text x="716" y="335" class="titulo-p">FiltroIndicador</text>
+            <text x="716" y="352" class="suave">props: valor, aoMudar</text>
+          </g>
+          <g class="no no--rota" data-no="f-fav" tabindex="0">
+            <rect x="700" y="366" width="280" height="44" rx="10"/>
+            <text x="716" y="385" class="titulo-p">BotaoFavoritar</text>
+            <text x="716" y="402" class="suave">props: nomeA, nomeB</text>
+          </g>
+          <g class="no no--rota" data-no="f-comp" tabindex="0">
+            <rect x="700" y="416" width="280" height="44" rx="10"/>
+            <text x="716" y="435" class="titulo-p">BotaoCompartilhar</text>
+            <text x="716" y="452" class="suave">props: texto</text>
+          </g>
+
+          <g class="no no--layout" data-no="compartilhados" tabindex="0">
+            <rect x="20" y="542" width="960" height="48" rx="10"/>
+            <text x="36" y="562">Cabecalho · Navegacao · Rodape (Server)</text>
+            <text x="36" y="580" class="suave">/, /mapa e /favoritos renderizam os três na página. /resultado só o Rodape: Cabecalho e Navegacao vêm de ResultadoComparacao.</text>
+          </g>
+
+          <path class="aresta aresta--render" data-liga="r-raiz c-form" d="M220 112 H328" marker-end="url(#seta-render)"/>
+          <path class="aresta aresta--render" data-liga="r-mapa c-mapa" d="M220 232 H328" marker-end="url(#seta-render)"/>
+          <path class="aresta aresta--render" data-liga="r-resultado c-resultado" d="M220 362 H328" marker-end="url(#seta-render)"/>
+          <path class="aresta aresta--render" data-liga="r-favoritos c-lista" d="M220 502 H328" marker-end="url(#seta-render)"/>
+
+          <path class="aresta aresta--render" data-liga="c-form f-opcoes" d="M570 112 C635 112 635 172 698 172" marker-end="url(#seta-render)"/>
+          <path class="aresta aresta--render" data-liga="c-mapa f-opcoes" d="M570 232 C635 232 635 172 698 172" marker-end="url(#seta-render)"/>
+          <path class="aresta aresta--render" data-liga="c-resultado f-cab" d="M570 362 C635 362 635 288 698 288" marker-end="url(#seta-render)"/>
+          <path class="aresta aresta--render" data-liga="c-resultado f-filtro" d="M570 362 C635 362 635 338 698 338" marker-end="url(#seta-render)"/>
+          <path class="aresta aresta--render" data-liga="c-resultado f-fav" d="M570 362 C635 362 635 388 698 388" marker-end="url(#seta-render)"/>
+          <path class="aresta aresta--render" data-liga="c-resultado f-comp" d="M570 362 C635 362 635 438 698 438" marker-end="url(#seta-render)"/>
+        </svg>
+        <figcaption>Árvore de renderização: quem renderiza quem no JSX. Passe o mouse ou o foco (Tab) num bloco para destacar as ligações dele.</figcaption>
+        <ul class="legenda">
+          <li><span class="amostra amostra--render"></span> renderiza (JSX)</li>
+          <li><span class="amostra amostra--caixa amostra--caixa-layout"></span> componente Server</li>
+          <li><span class="amostra amostra--caixa"></span> componente Client (<code>'use client'</code>)</li>
+        </ul>
+      </figure>
+
+      <h2>O que cada rota lê e chama</h2>
+      <p class="dica">Cada rota liga a um ou mais recursos. Passe o mouse ou o foco (Tab) numa rota para ver só as ligações dela.</p>
+
+      <figure class="diagrama">
+        <svg class="grafo" viewBox="0 0 1000 320" role="img" aria-labelledby="rec-titulo rec-desc">
+          <title id="rec-titulo">Rotas e recursos que elas usam</title>
+          <desc id="rec-desc">
+            A rota raiz carrega /dados/localidades.json, chama /api/clima/{slug} e grava o
+            sessionStorage. /resultado lê o sessionStorage e grava o localStorage. /mapa carrega o
+            JSON e lê o sessionStorage. /favoritos lê e grava o localStorage, carrega o JSON, chama
+            a API de clima e grava o sessionStorage.
+          </desc>
+
+          <text x="20" y="18" class="cabeca-coluna">Rota</text>
+          <text x="600" y="18" class="cabeca-coluna">Recurso</text>
+
+          <g class="no no--rota" data-no="u-raiz" tabindex="0">
+            <rect x="20" y="30" width="200" height="44" rx="10"/>
+            <text x="36" y="58" class="titulo">/</text>
+          </g>
+          <g class="no no--rota" data-no="u-resultado" tabindex="0">
+            <rect x="20" y="100" width="200" height="44" rx="10"/>
+            <text x="36" y="128" class="titulo">/resultado</text>
+          </g>
+          <g class="no no--rota" data-no="u-mapa" tabindex="0">
+            <rect x="20" y="170" width="200" height="44" rx="10"/>
+            <text x="36" y="198" class="titulo">/mapa</text>
+          </g>
+          <g class="no no--rota" data-no="u-favoritos" tabindex="0">
+            <rect x="20" y="240" width="200" height="44" rx="10"/>
+            <text x="36" y="268" class="titulo">/favoritos</text>
+          </g>
+
+          <g class="no no--dado" data-no="x-json" tabindex="0">
+            <rect x="600" y="30" width="380" height="44" rx="10"/>
+            <text x="616" y="49" class="titulo-p">/dados/localidades.json</text>
+            <text x="616" y="66" class="suave">GET estático · dropdown, mapa e lat/lon do backend</text>
+          </g>
+          <g class="no no--layout" data-no="x-api" tabindex="0">
+            <rect x="600" y="100" width="380" height="44" rx="10"/>
+            <text x="616" y="119" class="titulo-p">/api/clima/{slug}</text>
+            <text x="616" y="136" class="suave">GET backend · clima atual via OpenWeather</text>
+          </g>
+          <g class="no no--dado" data-no="x-ss" tabindex="0">
+            <rect x="600" y="170" width="380" height="44" rx="10"/>
+            <text x="616" y="189" class="titulo-p">sessionStorage</text>
+            <text x="616" y="206" class="suave">climamonitor:resultado-comparacao</text>
+          </g>
+          <g class="no no--dado" data-no="x-ls" tabindex="0">
+            <rect x="600" y="240" width="380" height="44" rx="10"/>
+            <text x="616" y="259" class="titulo-p">localStorage</text>
+            <text x="616" y="276" class="suave">climamonitor:favoritos</text>
+          </g>
+
+          <path class="aresta aresta--externo" data-liga="u-raiz x-json" d="M220 52 H598" marker-end="url(#seta-externo)"/>
+          <path class="aresta aresta--externo" data-liga="u-raiz x-api" d="M220 52 C400 52 400 122 598 122" marker-end="url(#seta-externo)"/>
+          <path class="aresta aresta--dado" data-liga="u-raiz x-ss" d="M220 52 C340 52 340 192 598 192" marker-end="url(#seta-dado)"/>
+          <path class="aresta aresta--dado" data-liga="u-resultado x-ss" d="M220 122 C400 122 400 192 598 192" marker-end="url(#seta-dado)"/>
+          <path class="aresta aresta--dado" data-liga="u-resultado x-ls" d="M220 122 C340 122 340 262 598 262" marker-end="url(#seta-dado)"/>
+          <path class="aresta aresta--externo" data-liga="u-mapa x-json" d="M220 192 C340 192 340 52 598 52" marker-end="url(#seta-externo)"/>
+          <path class="aresta aresta--dado" data-liga="u-mapa x-ss" d="M220 192 H598" marker-end="url(#seta-dado)"/>
+          <path class="aresta aresta--dado" data-liga="u-favoritos x-ls" d="M220 262 H598" marker-end="url(#seta-dado)"/>
+          <path class="aresta aresta--externo" data-liga="u-favoritos x-json" d="M220 262 C300 262 300 52 598 52" marker-end="url(#seta-externo)"/>
+          <path class="aresta aresta--externo" data-liga="u-favoritos x-api" d="M220 262 C320 262 320 122 598 122" marker-end="url(#seta-externo)"/>
+          <path class="aresta aresta--dado" data-liga="u-favoritos x-ss" d="M220 262 C420 262 420 192 598 192" marker-end="url(#seta-dado)"/>
+        </svg>
+        <figcaption>Pontilhado roxo = chamada de rede (<code>fetch</code>). Tracejado dourado = leitura ou escrita em storage.</figcaption>
+        <ul class="legenda">
+          <li><span class="amostra amostra--externo"></span> <code>fetch</code> (JSON estático ou API)</li>
+          <li><span class="amostra amostra--dado"></span> storage do navegador</li>
+          <li><span class="amostra amostra--caixa amostra--caixa-layout"></span> backend</li>
+        </ul>
+      </figure>
+
+      <h2>Rotas</h2>
+      <div class="rotas">
+        <article class="rota">
+          <h3><code>/</code> — Comparar</h3>
+          <p><span class="etiqueta etiqueta--servidor">Server</span> + formulário <span class="etiqueta">Client</span></p>
+          <dl>
+            <dt>Componentes</dt>
+            <dd><code>FormularioComparar</code>, <code>OpcoesLocalidade</code> ×2</dd>
+            <dt>Ao montar</dt>
+            <dd><code>GET /dados/localidades.json</code> → dropdown. Enquanto carrega: selects e botão desabilitados, mensagem em <code>aria-live</code></dd>
+            <dt>Ao comparar</dt>
+            <dd><code>GET /api/clima/{slug}</code> ×2 → <code>compararLocalidades</code> → <code>sessionStorage</code> → <code>/resultado</code></dd>
+          </dl>
+        </article>
+
+        <article class="rota">
+          <h3><code>/resultado</code> — Resultado</h3>
+          <p><span class="etiqueta">Client</span></p>
+          <dl>
+            <dt>Componentes</dt>
+            <dd><code>ResultadoComparacao</code>, <code>FiltroIndicador</code>, <code>BotaoFavoritar</code>, <code>BotaoCompartilhar</code></dd>
+            <dt>Rede</dt>
+            <dd>Nenhuma. Lê o <code>sessionStorage</code>; sem dado salvo mostra <code>RESULTADO_EXEMPLO</code> (em código)</dd>
+            <dt>URL</dt>
+            <dd><code>?indicador=geral|temperatura|chuva|umidade|vento</code></dd>
+          </dl>
+        </article>
+
+        <article class="rota">
+          <h3><code>/mapa</code> — Mapa</h3>
+          <p><span class="etiqueta">Client</span></p>
+          <dl>
+            <dt>Componentes</dt>
+            <dd><code>MapaLocalidades</code>, <code>CartaoMapa</code> ×2, <code>OpcoesLocalidade</code> ×2</dd>
+            <dt>Rede</dt>
+            <dd><code>GET /dados/localidades.json</code>: lista e campo <code>mapa</code> (SVG + <code>alt</code>) de cada cidade</dd>
+            <dt>Entrada</dt>
+            <dd><code>sessionStorage</code> pré-seleciona A e B</dd>
+          </dl>
+        </article>
+
+        <article class="rota">
+          <h3><code>/favoritos</code> — Favoritos</h3>
+          <p><span class="etiqueta">Client</span></p>
+          <dl>
+            <dt>Componentes</dt>
+            <dd><code>ListaFavoritos</code> + Link “Nova comparação”</dd>
+            <dt>Entrada</dt>
+            <dd><code>localStorage</code> (em <code>useEffect</code>)</dd>
+            <dt>Abrir favorito</dt>
+            <dd><code>GET /dados/localidades.json</code> + <code>GET /api/clima/{slug}</code> ×2 → <code>sessionStorage</code> → <code>/resultado</code></dd>
+          </dl>
+        </article>
+
+        <article class="rota rota--servidor">
+          <h3><code>/api/clima/[slug]</code></h3>
+          <p><span class="etiqueta etiqueta--servidor">Backend</span> Route Handler</p>
+          <dl>
+            <dt>Entrada</dt>
+            <dd>Slug (ex.: <code>sao-paulo-sp</code>)</dd>
+            <dt>Saída</dt>
+            <dd><code>{temperatura, umidade, chuva, vento}</code> em °C, %, mm, km/h</dd>
+            <dt>Erros</dt>
+            <dd><code>404</code> slug desconhecido · <code>502</code> OpenWeather · <code>500</code> sem chave</dd>
+          </dl>
+        </article>
+      </div>
+
+      <h2>Matriz componente × rota</h2>
+      <div class="tabela-chamadas">
+        <table>
+          <caption>Onde cada componente aparece</caption>
+          <thead>
+            <tr>
+              <th scope="col">Componente</th>
+              <th scope="col">Tipo</th>
+              <th scope="col" class="centro"><code>/</code></th>
+              <th scope="col" class="centro"><code>/resultado</code></th>
+              <th scope="col" class="centro"><code>/mapa</code></th>
+              <th scope="col" class="centro"><code>/favoritos</code></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Cabecalho</th><td><span class="etiqueta etiqueta--servidor">Server</span></td><td class="centro">✔</td><td class="centro">✔ (via cliente)</td><td class="centro">✔</td><td class="centro">✔</td></tr>
+            <tr><th scope="row">Navegacao</th><td><span class="etiqueta etiqueta--servidor">Server</span></td><td class="centro">✔</td><td class="centro">✔ (via cliente)</td><td class="centro">✔</td><td class="centro">✔</td></tr>
+            <tr><th scope="row">Rodape</th><td><span class="etiqueta etiqueta--servidor">Server</span></td><td class="centro">✔</td><td class="centro">✔</td><td class="centro">✔</td><td class="centro">✔</td></tr>
+            <tr><th scope="row">OpcoesLocalidade</th><td><span class="etiqueta etiqueta--servidor">Server</span> → cliente</td><td class="centro">✔</td><td class="centro"></td><td class="centro">✔</td><td class="centro"></td></tr>
+            <tr><th scope="row">FormularioComparar</th><td><span class="etiqueta">Client</span></td><td class="centro">✔</td><td class="centro"></td><td class="centro"></td><td class="centro"></td></tr>
+            <tr><th scope="row">ResultadoComparacao</th><td><span class="etiqueta">Client</span></td><td class="centro"></td><td class="centro">✔</td><td class="centro"></td><td class="centro"></td></tr>
+            <tr><th scope="row">FiltroIndicador</th><td><span class="etiqueta">Client</span></td><td class="centro"></td><td class="centro">✔</td><td class="centro"></td><td class="centro"></td></tr>
+            <tr><th scope="row">BotaoFavoritar</th><td><span class="etiqueta">Client</span></td><td class="centro"></td><td class="centro">✔</td><td class="centro"></td><td class="centro"></td></tr>
+            <tr><th scope="row">BotaoCompartilhar</th><td><span class="etiqueta">Client</span></td><td class="centro"></td><td class="centro">✔</td><td class="centro"></td><td class="centro"></td></tr>
+            <tr><th scope="row">MapaLocalidades</th><td><span class="etiqueta">Client</span></td><td class="centro"></td><td class="centro"></td><td class="centro">✔</td><td class="centro"></td></tr>
+            <tr><th scope="row">ListaFavoritos</th><td><span class="etiqueta">Client</span></td><td class="centro"></td><td class="centro"></td><td class="centro"></td><td class="centro">✔</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Notas</h2>
+      <ul class="notas">
+        <li><code>resultado-comparacao.module.css</code> também é usado por <code>BotaoFavoritar</code> e <code>BotaoCompartilhar</code>; <code>lista-favoritos.module.css</code> é importado direto por <code>app/favoritos/page.js</code>.</li>
+        <li><code>/resultado</code> não tem item no menu, conforme a especificação.</li>
+        <li>O fluxo de navegação entre telas está em <code>docs/fluxo-telas.html</code>.</li>
+      </ul>
+      <p class="rodape-relatorio">Relatório 2 de 3 · gerado a partir do código em <code>ETAPA 2/</code> · Projeto de extensão, ODS 11 e 13.</p>
+    </main>
+    <script>
+      // Destaca só as ligações do bloco sob o mouse ou com foco.
+      document.querySelectorAll('.grafo').forEach((grafo) => {
+        const arestas = grafo.querySelectorAll('[data-liga]');
+
+        function destacar(id) {
+          const ligados = new Set([id]);
+          arestas.forEach((aresta) => {
+            const pontas = aresta.dataset.liga.split(' ');
+            const liga = pontas.includes(id);
+            aresta.classList.toggle('realce', liga);
+            if (liga) pontas.forEach((ponta) => ligados.add(ponta));
+          });
+          grafo.querySelectorAll('[data-no]').forEach((no) => {
+            no.classList.toggle('realce', ligados.has(no.dataset.no));
+          });
+          grafo.classList.add('focado');
+        }
+
+        function limpar() {
+          grafo.classList.remove('focado');
+        }
+
+        grafo.querySelectorAll('[data-no]').forEach((no) => {
+          no.addEventListener('mouseenter', () => destacar(no.dataset.no));
+          no.addEventListener('focus', () => destacar(no.dataset.no));
+          no.addEventListener('mouseleave', limpar);
+          no.addEventListener('blur', limpar);
+        });
+      });
+    </script>
+  </body>
+</html>

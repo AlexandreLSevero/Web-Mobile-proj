@@ -93,6 +93,18 @@ Etapa 1.
 > - `comparar-clima.js`: `compararLocalidades` devolve só `{ maiorNivelAtencao }`, único
 >   campo lido pela tela; os outros quatro (`maiorTemperatura` etc.) não eram usados.
 
+> **Desvio registrado (backend da Etapa 2, `feature/api-backend`):** a Etapa 2 **não**
+> segue a regra "sem backend" da Etapa 1. Mudanças em relação ao texto acima:
+> - `public/dados/localidades.json` (envelope `{ versao, atualizadoEm, dados }`) substitui
+>   `localidades.js` e `dados-mapa.js`; alimenta o dropdown e o mapa via `fetch`.
+> - `app/api/clima/[slug]/route.js` (Route Handler) chama a OpenWeather no servidor, com
+>   `OPENWEATHER_API_KEY` em `.env.local` (ignorado; modelo em `.env.example`). A chave
+>   saiu do código e do bundle.
+> - `lib/cliente-api.js` é o cliente único do front (`fetch` + `async/await`, timeout,
+>   cache da lista) e substitui `cliente-openweather.js` e `configuracao-api.js`.
+> - `dados-mock.js` foi apagado (não era importado por ninguém).
+> - A regra de negócio (índice, orientação, comparação) continua em `lib/`, no cliente.
+
 ### 5.2 Convertidos em componentes
 
 Módulos que manipulam o DOM viram componentes React. A lógica de manipulação

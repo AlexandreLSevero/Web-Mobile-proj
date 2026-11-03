@@ -2,6 +2,11 @@
 
 > Proposta de desenho. **Não contém implementação**: os trechos de código são só
 > ilustrativos.
+>
+> **Status na Etapa 2 (2026-11-03):** implementada de forma enxuta, com desvios: um único
+> `public/dados/localidades.json` (mapa embutido em cada item, sem arquivo por slug) e
+> `lib/cliente-api.js`; o clima vem de `GET /api/clima/[slug]` (Route Handler). Detalhes
+> em `next.md §5.1`.
 
 ---
 
